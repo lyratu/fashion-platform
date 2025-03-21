@@ -4,7 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import second from '@/components/scene'
+import { scene } from "@/components/scene";
+
 import {
   Form,
   FormControl,
@@ -70,6 +71,7 @@ export default function LoginPage() {
   }
   return (
     <div className="bg-[#ecf0f3] w-screen h-screen flex justify-center items-center">
+      <scene />
       <div className="loginCard">
         <div className={`flex-1 z-99 ${isLogin ? "toRight" : "recovery"}`}>
           <div className="px-12 tips">

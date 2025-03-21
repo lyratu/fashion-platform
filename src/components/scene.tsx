@@ -7,12 +7,7 @@ import {
   MathUtils,
   Material,
 } from "three";
-import {
-  useRef,
-  useState,
-  useLayoutEffect,
-  ReactNode,
-} from "react";
+import { useRef, useState, useLayoutEffect, ReactNode } from "react";
 import { createRoot, events, extend, useFrame, Root } from "@react-three/fiber";
 import { Plane, useAspect, useTexture } from "@react-three/drei";
 import {
@@ -23,12 +18,12 @@ import {
 } from "@react-three/postprocessing";
 import { MaskFunction } from "postprocessing";
 import Fireflies from "./fireflies";
-import bgUrl from "../resources/bg.jpg";
-import starsUrl from "../resources/stars.png";
-import groundUrl from "../resources/ground.png";
-import bearUrl from "../resources/bear.png";
-import leaves1Url from "../resources/leaves1.png";
-import leaves2Url from "../resources/leaves2.png";
+import bgUrl from "@/assets/resource/bg.jpg";
+import starsUrl from "@/assets/resource/stars.png";
+import groundUrl from "@/assets/resource/ground.png";
+import bearUrl from "@/assets/resource/bear.png";
+import leaves1Url from "@/assets/resource/leaves1.png";
+import leaves2Url from "@/assets/resource/leaves2.png";
 import "../materials/layerMaterial";
 
 interface LayerMaterialProps {
