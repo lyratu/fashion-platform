@@ -1,0 +1,43 @@
+$neu-1: #f9f9f9;
+$neu-2: #d1d9e6;
+$white: #ecf0f3;
+
+.loginCard {
+  display: flex;
+  border-radius: 12px;
+  background-color: $neu-1;
+  box-shadow: 10px 10px 10px $neu-2, -10px -10px 10px $white;
+  .tips {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: $neu-1;
+    box-shadow: 4px 4px 10px $neu-2, -4px -4px 10px $white;
+  }
+  .toLeft {
+    transition: all 1s;
+    transform: translateX(-50%);
+    .tips {
+      border-top-left-radius: 12px;
+      border-bottom-left-radius: 12px;
+    }
+  }
+  .toRight {
+    transition: all 1s;
+    transform: translateX(200%);
+    .tips {
+      border-top-right-radius: 12px;
+      border-bottom-right-radius: 12px;
+    }
+  }
+  .recovery {
+    transition: all 1s;
+    transform: translateX(0%);
+    .tips {
+      border-top-left-radius: 12px;
+      border-bottom-left-radius: 12px;
+    }
+  }
+}
