@@ -22,19 +22,19 @@ const instance = axios.create({
   },
 });
 
-// 请求拦截器（已修复）
+// 请求拦截器
 instance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem("token");
     if (token) {
-      (config.headers as AxiosHeaders).set("Authorization", `Bearer ${token}`);
+      (config.headers as AxiosHeaders).set("Authorization", `${token}`);
     }
     return config;
   },
   (error: AxiosError) => Promise.reject(error)
 );
 
-// 响应拦截器（核心修复）
+// 响应拦截器
 instance.interceptors.response.use(
   (response: AxiosResponse<ApiResponse>) => {
     const { data } = response;
@@ -47,21 +47,23 @@ instance.interceptors.response.use(
         data: data.data, // 将业务数据提升到顶层
       };
     } else {
-      handleBusinessError(data.code, data.message);
+      // handleBusinessError(data.code, data.message);
       return Promise.reject(new Error(data.message || "Request Failed"));
     }
   },
   (error: AxiosError) => {
-    handleNetworkError(error);
+    // handleNetworkError(error);
     return Promise.reject(error);
   }
 );
 
 // 封装GET请求（更新返回类型）
-export const get = <T = unknown>(
-  url: string,
-  params?: Record<string, unknown>,
-  config?: AxiosRequestConfig
-): Promise<T> => {
-  return instance.get<T>(url, { params, ...config }).then((res) => res.data);
-};
+// export const get = <T = unknown>(
+//   url: string,
+//   params?: Record<string, unknown>,
+//   config?: AxiosRequestConfig
+// ): Promise<T> => {
+//   return instance.get<T>(url, { params, ...config }).then((res) => res.data);
+// };
+
+export default instance;

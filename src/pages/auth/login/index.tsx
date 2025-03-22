@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useLogin } from "@/services/auth/login";
 import "./index.scss";
 
 const formSchema = z.object({
@@ -40,6 +41,7 @@ const formSchema = z.object({
 export default function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
+  const { login, loading } = useLogin();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -51,7 +53,7 @@ export default function LoginPage() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
     if (!isLogin && values.rePassword !== values.password) {
       form.setError("rePassword", {
@@ -61,12 +63,7 @@ export default function LoginPage() {
       setIsSubmitting(false);
       return;
     }
-
-    console.log(
-      "%c [ values ]-74",
-      "font-size:13px; background:pink; color:#bf2c9f;",
-      values
-    );
+    await login(values);
   }
   return (
     <div className="bg-[#ecf0f3] w-screen h-screen flex justify-center items-center">
