@@ -10,4 +10,17 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    host: true,
+    port: 3000,
+    proxy: {
+      "/app": {
+        target: "http://localhost:8001",
+        changeOrigin: true,
+        headers: {
+          Referer: "http://localhost:8001",
+        },
+      },
+    },
+  },
 });

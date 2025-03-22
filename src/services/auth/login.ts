@@ -9,7 +9,7 @@ import { response } from "@/types/response";
 import { loginForm } from "@/types/auth";
 
 export const login = async (data: loginForm) => {
-  const response = await axios.post<response>("/user/login/password", data);
+  const response = await axios.post<response>("/app/user/login/password", data);
 
   return response.data;
 };
