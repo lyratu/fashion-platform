@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -16,7 +15,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useLogin } from "@/services/auth/login";
+import { useRegister } from "@/services/auth";
+
 import "./index.scss";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   phone: z.string().regex(/^(?:(?:\+|00)86)?1[3-9]\d{9}$/, {
@@ -39,9 +41,9 @@ const formSchema = z.object({
 });
 
 export default function LoginPage() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
-  const { login, loading } = useLogin();
+  const { login, logLoading } = useLogin();
+  const { register, regLoading, data } = useRegister();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -54,16 +56,19 @@ export default function LoginPage() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsSubmitting(true);
-    if (!isLogin && values.rePassword !== values.password) {
-      form.setError("rePassword", {
-        type: "manual",
-        message: "两次密码输入不一致",
-      });
-      setIsSubmitting(false);
-      return;
-    }
-    await login(values);
+    if (!isLogin) {
+      if (values.rePassword !== values.password)
+        form.setError("rePassword", {
+          type: "manual",
+          message: "两次密码输入不一致",
+        });
+      await register(values);
+      if (data?.status == 200) {
+        setIsLogin(true);
+        form.reset();
+        toast.success("注册成功，请登录~");
+      }
+    } else await login(values);
   }
   return (
     <div className="bg-[#ecf0f3] w-screen h-screen flex justify-center items-center">
@@ -86,7 +91,7 @@ export default function LoginPage() {
               }}
               type="submit"
               className="w-fit"
-              disabled={isSubmitting}
+              disabled={logLoading || regLoading}
             >
               {isLogin ? "注册账号" : "登录账号"}
             </Button>
@@ -185,9 +190,9 @@ export default function LoginPage() {
                 <Button
                   type="submit"
                   className="w-full"
-                  disabled={isSubmitting}
+                  disabled={logLoading || logLoading}
                 >
-                  {isSubmitting ? "确认中..." : "确认"}
+                  {logLoading || logLoading ? "确认中..." : "确认"}
                 </Button>
               </form>
             </Form>

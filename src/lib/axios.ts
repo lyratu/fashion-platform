@@ -1,17 +1,11 @@
 import axios, {
-  AxiosRequestConfig,
   AxiosError,
   AxiosResponse,
   InternalAxiosRequestConfig,
   AxiosHeaders,
 } from "axios";
-
-// 定义严格的响应类型
-interface ApiResponse<T = unknown> {
-  code: number;
-  message: string;
-  data: T;
-}
+import { toast } from "sonner";
+import { ApiResponse } from "@/types/apiResponse";
 
 // 创建axios实例
 const instance = axios.create({
@@ -38,7 +32,6 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response: AxiosResponse<ApiResponse>) => {
     const { data } = response;
-
     // 业务状态码判断
     if (data.code === 1000) {
       // 返回重构后的 AxiosResponse 对象
@@ -48,22 +41,22 @@ instance.interceptors.response.use(
       };
     } else {
       // handleBusinessError(data.code, data.message);
-      return Promise.reject(new Error(data.message || "Request Failed"));
+      toast.error(data.message || "请求失败", { duration: 1500 });
+      console.log(
+        "%c [  ]-45",
+        "font-size:13px; background:pink; color:#bf2c9f;"
+      );
+
+      return Promise.reject(new Error(data.message || "请求失败"));
     }
   },
   (error: AxiosError) => {
     // handleNetworkError(error);
+    toast.error(`服务器请求异常，错误信息：${error.message}`, {
+      duration: 2000,
+    });
     return Promise.reject(error);
   }
 );
-
-// 封装GET请求（更新返回类型）
-// export const get = <T = unknown>(
-//   url: string,
-//   params?: Record<string, unknown>,
-//   config?: AxiosRequestConfig
-// ): Promise<T> => {
-//   return instance.get<T>(url, { params, ...config }).then((res) => res.data);
-// };
 
 export default instance;

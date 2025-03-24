@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,27 +18,27 @@ export function MainNav() {
   const routes = [
     {
       to: "/",
-      label: "Home",
+      label: "首页",
       active: pathname === "/",
     },
     {
       to: "/articles",
-      label: "Articles",
+      label: "穿搭分享",
       active: pathname === "/articles",
     },
     {
       to: "/mall",
-      label: "Mall",
+      label: "商城",
       active: pathname === "/mall",
     },
     {
       to: "/community",
-      label: "Community",
+      label: "社区",
       active: pathname === "/community",
     },
     {
       to: "/wardrobe",
-      label: "Wardrobe",
+      label: "衣橱",
       active: pathname === "/wardrobe",
     },
   ];
