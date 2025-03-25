@@ -117,7 +117,7 @@ export default function CartPage() {
                       <img
                         src={item.image || "/placeholder.svg"}
                         alt={item.name}
-                        className="object-cover rounded-md"
+                        className="object-cover object-top rounded-md"
                       />
                     </div>
                     <div className="flex-1">

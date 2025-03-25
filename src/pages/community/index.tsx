@@ -210,7 +210,7 @@ export default function CommunityPage() {
                             <img
                               src={post.image || "/placeholder.svg"}
                               alt="Post image"
-                              className="object-cover"
+                              className="object-cover object-top"
                             />
                           </div>
                         )}

@@ -37,7 +37,7 @@ export default function HomeCarousel() {
                     <CardContent className="flex flex-col p-4 relative text-white cursor-pointer">
                       <img
                         src={_.CarouselImg}
-                        className="w-auto aspect-[5/2] object-cover rounded-lg"
+                        className="w-auto aspect-[5/2] object-cover object-top rounded-lg"
                         alt="网络错误，未获取到图片"
                       />
                       <div className="absolute left-4 bottom-4 right-4 p-4 bg-black/50 rounded-b-lg">

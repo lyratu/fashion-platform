@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,6 +15,7 @@ import { Menu } from "lucide-react";
 export function MainNav() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = location.href;
+  const navigate = useNavigate();
   const routes = [
     {
       to: "/",
@@ -50,14 +51,13 @@ export function MainNav() {
           <NavigationMenuList>
             {routes.map((route) => (
               <NavigationMenuItem key={route.to}>
-                <Link to={route.to}>
-                  <NavigationMenuLink
-                    className={navigationMenuTriggerStyle()}
-                    active={route.active}
-                  >
-                    {route.label}
-                  </NavigationMenuLink>
-                </Link>
+                <NavigationMenuLink
+                  className={navigationMenuTriggerStyle()}
+                  active={route.active}
+                  onClick={() => navigate(route.to)}
+                >
+                  {route.label}
+                </NavigationMenuLink>
               </NavigationMenuItem>
             ))}
           </NavigationMenuList>

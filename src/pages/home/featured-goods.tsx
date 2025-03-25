@@ -21,7 +21,7 @@ export default function TrendingGoods() {
             <img
               src={outfit.mainImage || "/placeholder.svg"}
               alt={outfit.title}
-              className="object-cover"
+              className="object-cover object-top w-full h-full"
             />
             <div className="absolute top-2 right-2 flex gap-2">
               <Button

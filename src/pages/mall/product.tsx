@@ -168,7 +168,7 @@ export default function ProductDetailPage() {
             <img
               src={product.images[selectedImage] || "/placeholder.svg"}
               alt={product.name}
-              className="object-cover"
+              className="object-cover object-top"
             />
             {product.isNew && (
               <Badge className="absolute top-4 left-4">New</Badge>
@@ -191,7 +191,7 @@ export default function ProductDetailPage() {
                 <img
                   src={image || "/placeholder.svg"}
                   alt={`${product.name} thumbnail ${index + 1}`}
-                  className="object-cover"
+                  className="object-cover object-top"
                 />
               </button>
             ))}
@@ -530,7 +530,7 @@ export default function ProductDetailPage() {
                   <img
                     src={product.image || "/placeholder.svg"}
                     alt={product.name}
-                    className="object-cover"
+                    className="object-cover object-top"
                   />
                 </div>
                 {product.isSale && (

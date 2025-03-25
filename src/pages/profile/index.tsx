@@ -407,7 +407,7 @@ export default function ProfilePage() {
                               <img
                                 src={order.items[0].image || "/placeholder.svg"}
                                 alt={order.items[0].name}
-                                className="object-cover"
+                                className="object-cover object-top"
                               />
                               {order.items.length > 1 && (
                                 <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
@@ -468,7 +468,7 @@ export default function ProfilePage() {
                             <img
                               src={item.image || "/placeholder.svg"}
                               alt={item.name}
-                              className="object-cover"
+                              className="object-cover object-top"
                             />
                             {!item.inStock && (
                               <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
@@ -647,7 +647,7 @@ export default function ProfilePage() {
                                   <img
                                     src={item.image || "/placeholder.svg"}
                                     alt={item.name}
-                                    className="object-cover rounded-md"
+                                    className="object-cover object-top rounded-md"
                                   />
                                 </div>
                                 <div className="flex-1">
@@ -733,7 +733,7 @@ export default function ProfilePage() {
                           <img
                             src={item.image || "/placeholder.svg"}
                             alt={item.name}
-                            className="object-cover"
+                            className="object-cover object-top"
                           />
                           {!item.inStock && (
                             <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
@@ -785,7 +785,7 @@ export default function ProfilePage() {
                             <img
                               src={item.image || "/placeholder.svg"}
                               alt={item.name}
-                              className="object-cover group-hover:scale-105 transition-transform duration-300"
+                              className="object-cover object-top group-hover:scale-105 transition-transform duration-300"
                             />
                           </div>
                           <div className="mt-2">

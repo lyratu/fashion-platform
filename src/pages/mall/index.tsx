@@ -164,7 +164,7 @@ export default function MallPage() {
                     <img
                       src={product.image || "/placeholder.svg"}
                       alt={product.name}
-                      className="object-cover"
+                      className="object-cover object-top"
                     />
                   </div>
                   {product.isNew && (
@@ -241,7 +241,7 @@ export default function MallPage() {
                         <img
                           src={product.image || "/placeholder.svg"}
                           alt={product.name}
-                          className="object-cover"
+                          className="object-cover object-top"
                         />
                       </div>
                       {product.isNew && (

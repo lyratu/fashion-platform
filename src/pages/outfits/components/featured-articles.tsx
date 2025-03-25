@@ -21,7 +21,7 @@ export default function FeaturedArticles() {
                 <img
                   src={article.coverImage || "/placeholder.svg"}
                   alt={article.title}
-                  className="object-cover h-full w-full"
+                  className="object-cover object-top  h-full w-full"
                 />
                 <div className="absolute top-4 left-4">
                   <Badge variant="secondary">{article.category}</Badge>
@@ -33,7 +33,7 @@ export default function FeaturedArticles() {
                     <img
                       src={article.user.avatarUrl || "/placeholder.svg"}
                       alt={article.user.nickName}
-                      className="object-cover"
+                      className="object-cover object-top"
                     />
                   </div> */}
                   <Avatar>

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import FeaturedArticles from "./featured-articles";
+import FeaturedArticles from "./components/featured-articles";
 import { outfits } from "@/types/outfits";
 export default function ArticlesPage() {
   const categories = ["全部", "季节", "流行", "风格", "新闻"];
@@ -38,7 +38,7 @@ export default function ArticlesPage() {
                   <img
                     src={article.user.avatarUrl || "/placeholder.svg"}
                     alt={article.title}
-                    className="object-cover"
+                    className="object-cover object-top"
                   />
                 </div>
                 <CardContent className="p-4">
@@ -56,7 +56,7 @@ export default function ArticlesPage() {
                 </CardContent>
                 <CardFooter className="pt-0 pb-4 px-4">
                   <Button variant="outline" asChild className="w-full">
-                    <Link to={`/articles/${article.id}`}>查看详情</Link>
+                    <Link to={`/outfits/${article.id}`}>查看详情</Link>
                   </Button>
                 </CardFooter>
               </Card>
@@ -76,7 +76,7 @@ export default function ArticlesPage() {
                       <img
                         src={article.coverImage || "/placeholder.svg"}
                         alt={article.title}
-                        className="object-cover"
+                        className="object-cover object-top"
                       />
                     </div>
                     <CardContent className="p-4">
@@ -96,7 +96,7 @@ export default function ArticlesPage() {
                     </CardContent>
                     <CardFooter className="pt-0 pb-4 px-4">
                       <Button variant="outline" asChild className="w-full">
-                        <Link to={`/articles/${article.id}`}>Read More</Link>
+                        <Link to={`/outfits/${article.id}`}>Read More</Link>
                       </Button>
                     </CardFooter>
                   </Card>

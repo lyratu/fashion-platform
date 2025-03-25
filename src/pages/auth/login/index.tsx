@@ -19,6 +19,7 @@ import { useRegister } from "@/services/auth";
 
 import "./index.scss";
 import { toast } from "sonner";
+import { useNavigate } from "react-router";
 
 const formSchema = z.object({
   phone: z.string().regex(/^(?:(?:\+|00)86)?1[3-9]\d{9}$/, {
@@ -44,6 +45,7 @@ export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(false);
   const { login, logLoading } = useLogin();
   const { register, regLoading, data } = useRegister();
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -84,18 +86,26 @@ export default function LoginPage() {
                 ? "创建您的时尚账户，开始您的时尚之旅~"
                 : "登录您的时尚账户，继续您的时尚之旅~"}
             </div>
-            <Button
-              onClick={() => {
-                setIsLogin(!isLogin);
-                form.reset();
-              }}
-              type="submit"
-              className="w-fit"
-              disabled={logLoading || regLoading}
-            >
-              {isLogin ? "注册账号" : "登录账号"}
-            </Button>
-            <Button className="mt-2">返回首页</Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={() => {
+                  setIsLogin(!isLogin);
+                  form.reset();
+                }}
+                type="submit"
+                className="w-fit"
+                disabled={logLoading || regLoading}
+              >
+                {isLogin ? "注册账号" : "登录账号"}
+              </Button>
+              <Button
+                className="w-fit"
+                variant="outline"
+                onClick={() => navigate("/")}
+              >
+                返回首页
+              </Button>
+            </div>
           </div>
         </div>
 

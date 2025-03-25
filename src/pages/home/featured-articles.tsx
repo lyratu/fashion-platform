@@ -44,7 +44,7 @@ export default function FeaturedArticles() {
             <img
               src={article.coverImage || "/placeholder.svg"}
               alt={article.title}
-              className="h-full  object-cover w-full"
+              className="h-full  object-cover object-top w-full"
             />
           </div>
           <CardContent className="p-4 z-10 relative">
@@ -61,7 +61,7 @@ export default function FeaturedArticles() {
             <div className="flex justify-between items-center">
               <span className="text-xs">By {article.authorId}</span>
               <Link
-                to={`/articles/${article.id}`}
+                to={`/outfits/${article.id}`}
                 className="text-sm font-medium text-primary"
               >
                 查看更多
