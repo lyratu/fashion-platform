@@ -22,9 +22,9 @@ export function MainNav() {
       active: pathname === "/",
     },
     {
-      to: "/articles",
+      to: "/outfits",
       label: "穿搭分享",
-      active: pathname === "/articles",
+      active: pathname === "/outfits",
     },
     {
       to: "/mall",

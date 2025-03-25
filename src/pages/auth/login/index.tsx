@@ -95,6 +95,7 @@ export default function LoginPage() {
             >
               {isLogin ? "注册账号" : "登录账号"}
             </Button>
+            <Button className="mt-2">返回首页</Button>
           </div>
         </div>
 

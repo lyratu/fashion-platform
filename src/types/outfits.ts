@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export interface outfits {
   id: number;
   coverImage: string;
@@ -11,4 +13,6 @@ export interface outfits {
   collectCount: number;
   authorId: number;
   createTime: string;
+  user: User;
+  isFeature: number;
 }

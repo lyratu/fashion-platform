@@ -1,9 +1,9 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
-import { useGetOutfits } from "@/services/home";
+import { useGetOutfitsRec } from "@/services/home";
 export default function FeaturedArticles() {
-  const { data, isLoading } = useGetOutfits();
+  const { data } = useGetOutfitsRec();
 
   // const articles = [
   //   {
@@ -36,7 +36,6 @@ export default function FeaturedArticles() {
   //     date: "March 5, 2025",
   //   },
   // ];
-
   return (
     <div className="grid md:grid-cols-3 gap-6">
       {data?.map((article) => (

@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import FeaturedArticles from "@/pages/home/featured-articles";
-import TrendingOutfits from "@/components/trending-outfits";
-import CommunityHighlights from "@/components/community-highlights";
+import TrendingOutfits from "@/pages/home/featured-goods";
+import CommunityHighlights from "@/pages/home/community-highlights";
 import { Link } from "react-router-dom";
 import HomeCarousel from "./homeCarousel";
 
@@ -49,7 +49,7 @@ export default function HomePage() {
               我们的时尚专业人士提供专业的时尚建议和精心策划的服装。
             </p>
             <Button variant="outline" asChild className="w-full">
-              <Link to="/articles">查看更多</Link>
+              <Link to="/outfits">查看更多</Link>
             </Button>
           </CardContent>
         </Card>

@@ -5,4 +5,5 @@ export interface User {
   gender: number;
   type: number;
   description: string;
+  position: string;
 }

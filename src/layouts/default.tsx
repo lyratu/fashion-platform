@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { User, ShoppingCart, Search } from "lucide-react";
 import { MainNav } from "@/components/main-nav";
 import { Outlet } from "react-router-dom"; // 引入 Outlet 组件
 import logo from "@/assets/logo.svg";
 export default function NavBar() {
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -27,11 +29,19 @@ export default function NavBar() {
                 <span className="sr-only">Cart</span>
               </Link>
             </Button>
-            <Button variant="ghost" size="icon" asChild>
-              <Link to="/auth">
+            <Button
+              variant="ghost"
+              size="icon"
+              asChild
+              onClick={() => {
+                if (token) navigate("/profile");
+                else navigate("/auth");
+              }}
+            >
+              <div>
                 <User className="h-5 w-5" />
                 <span className="sr-only">Account</span>
-              </Link>
+              </div>
             </Button>
           </div>
         </div>
@@ -42,7 +52,7 @@ export default function NavBar() {
       <footer className="border-t py-6 md:py-0">
         <div className="mx-auto container flex flex-col items-center justify-between gap-4 md:h-16 md:flex-row">
           <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-          © 2025 武汉匿迹科技有限公司 版权所有
+            © 2025 武汉匿迹科技有限公司 版权所有
           </p>
           <div className="flex gap-4">
             <Link
