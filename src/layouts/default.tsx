@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { User, ShoppingCart, Search } from "lucide-react";
-import { MainNav } from "@/components/main-nav";
+import { MainNav } from "@/layouts/main-nav";
 import { Outlet } from "react-router-dom"; // 引入 Outlet 组件
 import logo from "@/assets/logo.svg";
 export default function NavBar() {
