@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 
-import Creator from "./creator";
-import MyWardrobe from "./myWardrobe";
-import Assistant from "./assistant";
+import Creator from "./components/creator";
+import MyWardrobe from "./components/myWardrobe";
+import Assistant from "./components/assistant";
 
 // Define clothing item types
 type ClothingItem = {

@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import FeaturedArticles from "@/pages/home/featured-articles";
-import TrendingOutfits from "@/pages/home/featured-goods";
-import CommunityHighlights from "@/pages/home/community-highlights";
+import FeaturedArticles from "@/pages/home/components/featured-articles";
+import TrendingOutfits from "@/pages/home/components/featured-goods";
+import CommunityHighlights from "@/pages/home/components/community-highlights";
 import { Link } from "react-router-dom";
-import HomeCarousel from "./homeCarousel";
+import HomeCarousel from "./components/homeCarousel";
 
 export default function HomePage() {
   return (

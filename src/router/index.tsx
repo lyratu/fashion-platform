@@ -5,7 +5,7 @@ import {
 } from "react-router-dom";
 import Home from "@/pages/home";
 import DefaultLayout from "@/layouts/default";
-import Login from "@/pages/auth/login";
+import Login from "@/pages/auth";
 import Test from "@/test/reactQuery_Test";
 import { Providers } from "@/providers";
 import Outfits from "@/pages/outfits";
@@ -16,7 +16,7 @@ import Community from "@/pages/community";
 import Wardrobe from "@/pages/wardrobe";
 import Product from "@/pages/mall/product";
 import Profile from "@/pages/profile";
-import ErrorBoundary from "@/pages/error/errorBoundary";
+import ErrorBoundary from "@/pages/error";
 export const routes = createRoutesFromElements(
   <Route element={<Providers />} errorElement={<ErrorBoundary />}>
     <Route path="/test" element={<Test />} />
