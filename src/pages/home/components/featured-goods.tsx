@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart, ShoppingBag } from "lucide-react";
-import { useGetGoods } from "@/services/home/goods";
+import { useGetGoods } from "@/services/mall";
 import { useNavigate } from "react-router";
 
 export default function TrendingGoods() {

@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
-import { useGetCommentRec } from "@/services/home/comment";
+import { useGetCommentRec } from "@/services/comment";
 import { MessageCircle, Heart } from "lucide-react";
 
 export default function CommunityHighlights() {

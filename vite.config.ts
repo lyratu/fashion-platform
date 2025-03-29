@@ -17,9 +17,10 @@ export default defineConfig({
       "/app": {
         target: "http://192.168.5.220:8001",
         changeOrigin: true,
-        headers: {
-          Referer: "http://192.168.5.220:8001",
-        },
+      },
+      "/upload": {
+        target: "http://192.168.5.220:8001",
+        changeOrigin: true,
       },
     },
   },
