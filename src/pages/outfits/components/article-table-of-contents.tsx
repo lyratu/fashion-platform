@@ -45,7 +45,7 @@ export function ArticleTableOfContents({ toc }: ArticleTableOfContentsProps) {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-xl font-bold tracking-tight">Table of Contents</h3>
+      <h3 className="text-xl font-bold tracking-tight">内容提要</h3>
       <nav className="space-y-1">
         {toc.map((item) => (
           <a

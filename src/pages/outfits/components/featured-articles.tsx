@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useGetOutfitsFea } from "@/services/outfits";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import dateTool from "@/utils/dateTool";
 
 export default function FeaturedArticles() {
   const { data } = useGetOutfitsFea();
@@ -60,7 +61,7 @@ export default function FeaturedArticles() {
                 </p>
                 <div className="flex justify-between items-center">
                   <div className="text-sm text-muted-foreground">
-                    {article.createTime}
+                    {dateTool.formattedDate(article?.createTime as string)}
                   </div>
                   <Button asChild>
                     <Link to={`/articles/${article.id}`}>查看详情</Link>

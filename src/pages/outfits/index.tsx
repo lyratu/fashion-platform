@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import FeaturedArticles from "./components/featured-articles";
 import { outfits } from "@/types/outfits";
+import dateTool from "@/utils/dateTool";
 export default function ArticlesPage() {
   const categories = ["全部", "季节", "流行", "风格", "新闻"];
   const regularArticles: Array<outfits> = [];
@@ -51,7 +52,9 @@ export default function ArticlesPage() {
                   </p>
                   <div className="flex items-center justify-between text-xs text-muted-foreground">
                     <span>{article.content}</span>
-                    <span>{article.createTime}</span>
+                    <span>
+                      {dateTool.formattedDate(article?.createTime as string)}
+                    </span>
                   </div>
                 </CardContent>
                 <CardFooter className="pt-0 pb-4 px-4">
@@ -91,7 +94,11 @@ export default function ArticlesPage() {
                       </p>
                       <div className="flex items-center justify-between text-xs text-muted-foreground">
                         <span>{article.content}</span>
-                        <span>{article.createTime}</span>
+                        <span>
+                          {dateTool.formattedDate(
+                            article?.createTime as string
+                          )}
+                        </span>
                       </div>
                     </CardContent>
                     <CardFooter className="pt-0 pb-4 px-4">

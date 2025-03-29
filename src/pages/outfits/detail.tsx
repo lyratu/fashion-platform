@@ -16,7 +16,9 @@ import { ArticleTableOfContents } from "./components/article-table-of-contents";
 import { RelatedArticles } from "./components/related-articles";
 import { CommentSection } from "./components/comment-section";
 import { AuthorCard } from "./components/author-card";
-import { useSearchParams } from "react-router-dom";
+import { useParams } from "react-router";
+import { useGetOutfitsDet } from "@/services/outfits";
+import dateTool from "@/utils/dateTool";
 
 // Mock data for the article
 const getArticle = (id: string) => {
@@ -243,15 +245,9 @@ The evolution of sustainable fashion from niche to necessity represents a fundam
 export default function ArticlePage() {
   // const [searchParams] = useSearchParams();
   const article = getArticle("1");
+  const { id } = useParams();
 
-  const formattedDate = new Date(article.publishedAt).toLocaleDateString(
-    "en-US",
-    {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }
-  );
+  const { data: info } = useGetOutfitsDet(id as string);
 
   return (
     <>
@@ -267,44 +263,46 @@ export default function ArticlePage() {
                   variant="outline"
                   className="bg-primary/10 hover:bg-primary/20"
                 >
-                  {article.category}
+                  {info?.category}
                 </Badge>
-                <div className="flex items-center text-sm text-muted-foreground">
+                {/* <div className="flex items-center text-sm text-muted-foreground">
                   <Clock className="mr-1 h-3 w-3" />
                   <span>{article.readingTime} min read</span>
-                </div>
+                </div> */}
               </div>
 
               <h1 className="text-4xl font-bold tracking-tight lg:text-5xl">
-                {article.title}
+                {info?.title}
               </h1>
 
               <p className="text-xl text-muted-foreground">
-                {article.subtitle}
+                {info?.description}
               </p>
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Avatar>
                     <AvatarImage
-                      src={article.author.avatar}
-                      alt={article.author.name}
+                      src={info?.user.avatarUrl}
+                      alt={info?.user.nickName}
                     />
                     <AvatarFallback>
-                      {article.author.name.charAt(0)}
+                      {info?.user.nickName.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="text-sm font-medium">{article.author.name}</p>
+                    <p className="text-sm font-medium">{info?.user.nickName}</p>
                     <p className="text-xs text-muted-foreground">
-                      {article.author.role}
+                      {info?.user.position}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Calendar className="h-4 w-4" />
-                  <span>{formattedDate}</span>
+                  <span>
+                    {dateTool.formattedDate(info?.createTime as string)}
+                  </span>
                 </div>
               </div>
             </div>
@@ -312,9 +310,9 @@ export default function ArticlePage() {
             {/* Featured Image */}
             <div className="relative aspect-video overflow-hidden rounded-lg">
               <img
-                src={article.coverImage || "/placeholder.svg"}
-                alt={article.title}
-                className="object-cover object-top"
+                src={info?.coverImage || "/placeholder.svg"}
+                alt={info?.title}
+                className="h-full"
               />
             </div>
 
@@ -367,28 +365,7 @@ export default function ArticlePage() {
             <div className="prose prose-lg dark:prose-invert max-w-none">
               <div
                 dangerouslySetInnerHTML={{
-                  __html: article.content
-                    .replace(
-                      /^## (.*$)/gm,
-                      '<h2 id="$1" class="scroll-m-20 text-2xl font-semibold tracking-tight mt-10 mb-4">$1</h2>'
-                    )
-                    .replace(
-                      /^### (.*$)/gm,
-                      '<h3 id="$1" class="scroll-m-20 text-xl font-semibold tracking-tight mt-8 mb-4">$1</h3>'
-                    )
-                    .replace(
-                      /^> (.*$)/gm,
-                      '<blockquote class="border-l-4 border-primary pl-4 italic my-6">$1</blockquote>'
-                    )
-                    .replace(
-                      /^\d\. (.*$)/gm,
-                      '<ol class="list-decimal pl-5 my-6"><li>$1</li></ol>'
-                    )
-                    .replace(
-                      /^- (.*$)/gm,
-                      '<ul class="list-disc pl-5 my-6"><li>$1</li></ul>'
-                    )
-                    .replace(/\n\n/g, "<br /><br />"),
+                  __html: info?.content as string,
                 }}
               />
             </div>
@@ -420,13 +397,11 @@ export default function ArticlePage() {
           {/* Sticky sidebar content */}
           <div className="sticky top-20 space-y-8">
             {/* Table of Contents */}
-            <ArticleTableOfContents toc={article.tableOfContents} />
+            {/* <ArticleTableOfContents toc={article.tableOfContents} /> */}
 
             {/* Related Articles */}
             <div className="space-y-4">
-              <h3 className="text-xl font-bold tracking-tight">
-                Related Articles
-              </h3>
+              <h3 className="text-xl font-bold tracking-tight">相关文章</h3>
               <RelatedArticles articles={article.relatedArticles} />
             </div>
           </div>

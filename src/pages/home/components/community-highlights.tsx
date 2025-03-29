@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { useGetCommentRec } from "@/services/comment";
+import dateTool from "@/utils/dateTool";
 import { MessageCircle, Heart } from "lucide-react";
 
 export default function CommunityHighlights() {
@@ -23,7 +24,7 @@ export default function CommunityHighlights() {
                 <div className="flex justify-between">
                   <h4 className="font-medium">{post.user.nickName}</h4>
                   <span className="text-xs text-muted-foreground">
-                    {post.createTime}
+                    {dateTool.formattedDate(post?.createTime as string)}
                   </span>
                 </div>
                 <p className="mt-1 mb-3">{post.content}</p>

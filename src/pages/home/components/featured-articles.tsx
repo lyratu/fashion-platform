@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { useGetOutfitsRec } from "@/services/outfits";
+import dateTool from "@/utils/dateTool";
 export default function FeaturedArticles() {
   const { data } = useGetOutfitsRec();
 
@@ -51,7 +52,7 @@ export default function FeaturedArticles() {
             <div className="flex justify-between items-center mb-2">
               <Badge variant="secondary">{article.category}</Badge>
               <span className="text-xs text-muted-foreground">
-                {article.createTime}
+                {dateTool.formattedDate(article?.createTime as string)}
               </span>
             </div>
             <h3 className="text-lg font-bold mb-2">{article.title}</h3>
