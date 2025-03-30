@@ -1,11 +1,11 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart, ShoppingBag } from "lucide-react";
-import { useGetGoods } from "@/services/mall";
+import { useGetGoodsRec } from "@/services/mall";
 import { useNavigate } from "react-router";
 
 export default function TrendingGoods() {
-  const { data } = useGetGoods();
+  const { data } = useGetGoodsRec();
   const navigate = useNavigate();
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

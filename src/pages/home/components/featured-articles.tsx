@@ -60,7 +60,7 @@ export default function FeaturedArticles() {
               {article.description}
             </p>
             <div className="flex justify-between items-center">
-              <span className="text-xs">By {article.authorId}</span>
+              <span className="text-xs"></span>
               <Link
                 to={`/outfits/${article.id}`}
                 className="text-sm font-medium text-primary"

@@ -15,11 +15,11 @@ export default defineConfig({
     port: 3000,
     proxy: {
       "/app": {
-        target: "http://192.168.5.220:8001",
+        target: "http://192.168.5.200:8001",
         changeOrigin: true,
       },
       "/upload": {
-        target: "http://192.168.5.220:8001",
+        target: "http://192.168.5.200:8001",
         changeOrigin: true,
       },
     },
