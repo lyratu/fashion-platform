@@ -9,10 +9,11 @@ import Autoplay from "embla-carousel-autoplay";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetCarousel } from "@/services/home";
 import { Card, CardContent } from "@/components/ui/card";
+import { useNavigate } from "react-router";
 
 export default function HomeCarousel() {
   const { data, isLoading } = useGetCarousel();
-
+  const navigate = useNavigate();
   return (
     <>
       {isLoading ? (
@@ -34,7 +35,12 @@ export default function HomeCarousel() {
               <CarouselItem key={index}>
                 <div className="p-1">
                   <Card>
-                    <CardContent className="flex flex-col p-4 relative text-white cursor-pointer">
+                    <CardContent
+                      className="flex flex-col p-4 relative text-white cursor-pointer"
+                      onClick={() =>
+                        _.outfitsId ? navigate(`/outfits/${_.outfitsId}`) : null
+                      }
+                    >
                       <img
                         src={_.CarouselImg}
                         className="w-auto aspect-[5/2] object-cover object-top rounded-lg"

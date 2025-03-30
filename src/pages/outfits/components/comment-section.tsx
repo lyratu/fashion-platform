@@ -73,13 +73,13 @@ export function CommentSection({ comments }: CommentSectionProps) {
       {/* Comment Form */}
       <form onSubmit={handleSubmitComment} className="space-y-4">
         <Textarea
-          placeholder="Add a comment..."
+          placeholder="输入评论..."
           value={commentText}
           onChange={(e) => setCommentText(e.target.value)}
           className="min-h-[100px]"
         />
         <Button type="submit" disabled={!commentText.trim()}>
-          Post Comment
+          发送
         </Button>
       </form>
 

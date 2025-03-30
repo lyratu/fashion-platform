@@ -5,8 +5,11 @@ import TrendingOutfits from "@/pages/home/components/featured-goods";
 import CommunityHighlights from "@/pages/home/components/community-highlights";
 import { Link } from "react-router-dom";
 import HomeCarousel from "./components/homeCarousel";
+import { useGetDictTypes } from "@/services/home/dict";
 
 export default function HomePage() {
+  const { data } = useGetDictTypes();
+  console.log('%c [ data ]-12', 'font-size:13px; background:pink; color:#bf2c9f;', data)
   return (
     <div className="container mx-auto px-4 py-4">
       {/* <section className="mb-6">

@@ -64,7 +64,7 @@ export default function FeaturedArticles() {
                     {dateTool.formattedDate(article?.createTime as string)}
                   </div>
                   <Button asChild>
-                    <Link to={`/articles/${article.id}`}>查看详情</Link>
+                    <Link to={`/outfits/${article.id}`}>查看详情</Link>
                   </Button>
                 </div>
               </CardContent>

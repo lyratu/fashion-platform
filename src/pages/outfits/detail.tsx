@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import {
   Bookmark,
   Calendar,
-  Clock,
   Eye,
   Heart,
   MessageSquare,
@@ -12,10 +11,10 @@ import {
   ThumbsUp,
 } from "lucide-react";
 import { ArticleProgress } from "./components/article-progress";
-import { ArticleTableOfContents } from "./components/article-table-of-contents";
+// import { ArticleTableOfContents } from "./components/article-table-of-contents";
 import { RelatedArticles } from "./components/related-articles";
 import { CommentSection } from "./components/comment-section";
-import { AuthorCard } from "./components/author-card";
+// import { AuthorCard } from "./components/author-card";
 import { useParams } from "react-router";
 import { useGetOutfitsDet } from "@/services/outfits";
 import dateTool from "@/utils/dateTool";
@@ -263,7 +262,7 @@ export default function ArticlePage() {
                   variant="outline"
                   className="bg-primary/10 hover:bg-primary/20"
                 >
-                  {info?.category}
+                  {info?.categoryText}
                 </Badge>
                 {/* <div className="flex items-center text-sm text-muted-foreground">
                   <Clock className="mr-1 h-3 w-3" />
@@ -380,12 +379,12 @@ export default function ArticlePage() {
             </div>
 
             {/* Author Card */}
-            <AuthorCard author={article.author} />
+            {/* <AuthorCard author={article.author} /> */}
 
             {/* Comments Section */}
             <div className="space-y-6">
               <h2 className="text-2xl font-bold tracking-tight">
-                Comments ({article.commentCount})
+                评论 ({article.commentCount})
               </h2>
               <CommentSection comments={article.comments} />
             </div>
