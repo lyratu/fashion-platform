@@ -54,7 +54,7 @@ export default function NavBar() {
           <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
             © 2025 武汉匿迹科技有限公司 版权所有
           </p>
-          <div className="flex gap-4">
+          {/* <div className="flex gap-4">
             <Link
               to="/terms"
               className="text-sm text-muted-foreground hover:underline"
@@ -79,7 +79,7 @@ export default function NavBar() {
             >
               联系
             </Link>
-          </div>
+          </div> */}
         </div>
       </footer>
     </div>

@@ -371,9 +371,9 @@ export default function ArticlePage() {
 
             {/* Tags */}
             <div className="flex flex-wrap gap-2">
-              {article.tags.map((tag) => (
-                <Badge key={tag} variant="secondary">
-                  {tag}
+              {info?.tags.map((tag) => (
+                <Badge key={tag.id} variant="secondary">
+                  {tag.name}
                 </Badge>
               ))}
             </div>

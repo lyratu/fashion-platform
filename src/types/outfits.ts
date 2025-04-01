@@ -1,5 +1,11 @@
 import { User } from "./user";
 
+type tag = {
+  id: number;
+  name: string;
+  outfitId: number;
+};
+
 export interface outfits {
   id: number;
   coverImage: string;
@@ -16,4 +22,5 @@ export interface outfits {
   createTime: string;
   user: User;
   isFeature: number;
+  tags: Array<tag>;
 }
