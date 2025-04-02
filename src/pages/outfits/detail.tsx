@@ -16,7 +16,14 @@ import { RelatedArticles } from "./components/related-articles";
 import { CommentSection } from "./components/comment-section";
 // import { AuthorCard } from "./components/author-card";
 import { useParams } from "react-router";
-import { useDoLike, useGetOutfitsDet } from "@/services/outfits";
+import {
+  useDoCollect,
+  useDoLike,
+  useGetCollectRecord,
+  useGetLikeRecord,
+  useGetOutfitsDet,
+} from "@/services/outfits";
+import { toast } from "sonner";
 import dateTool from "@/utils/dateTool";
 
 // Mock data for the article
@@ -221,6 +228,7 @@ The evolution of sustainable fashion from niche to necessity represents a fundam
           content:
             "I appreciate the balanced perspective here. It's important to acknowledge that even fast fashion brands are making some efforts, while also recognizing that much more needs to be done.",
           publishedAt: "2023-09-16T14:20:00Z",
+
           likeCount: 8,
         },
         {
@@ -247,7 +255,11 @@ export default function ArticlePage() {
   const { id } = useParams();
 
   const { data: info } = useGetOutfitsDet(id as string);
+  const { data: likeRec } = useGetLikeRecord(id as string);
+  const { data: collectRec } = useGetCollectRecord(id as string);
+
   const { doLikeFn } = useDoLike();
+  const { doCollectFn } = useDoCollect();
 
   return (
     <>
@@ -329,15 +341,15 @@ export default function ArticlePage() {
                     </span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">
-                      {info.likeCount}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1">
                     <Bookmark className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm text-muted-foreground">
                       {info.collectCount}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <MessageSquare className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground">
+                      {info.likeCount}
                     </span>
                   </div>
                 </div>
@@ -347,18 +359,51 @@ export default function ArticlePage() {
                     variant="ghost"
                     size="icon"
                     className="h-8 w-8"
-                    onClick={() => {
-                      doLikeFn(info.id);
+                    onClick={async () => {
+                      const data = await doLikeFn(info.id);
+                      if (likeRec) {
+                        likeRec.likeStatus = data.likeStatus;
+                        if (likeRec.likeStatus) info.likeCount++;
+                        else info.likeCount--;
+                      }
                     }}
                   >
-                    <ThumbsUp className="h-4 w-4" fill="red" color="red"/>
+                    <ThumbsUp
+                      className="h-4 w-4"
+                      color={likeRec?.likeStatus ? "red" : "black"}
+                    />
                     <span className="sr-only">喜欢</span>
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <Bookmark className="h-4 w-4" />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={async () => {
+                      const data = await doCollectFn(info.id);
+                      if (collectRec) {
+                        collectRec.collectStatus = data.collectStatus;
+                        if (collectRec.collectStatus) info.collectCount++;
+                        else info.collectCount--;
+                      }
+                    }}
+                  >
+                    <Bookmark
+                      className="h-4 w-4"
+                      color={collectRec?.collectStatus ? "red" : "black"}
+                    />
                     <span className="sr-only">收藏</span>
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => {
+                      navigator.clipboard.writeText(window.location.href);
+                      toast.success("已复制分享链接，请分享给好友吧~", {
+                        duration: 1500,
+                      });
+                    }}
+                  >
                     <Share2 className="h-4 w-4" />
                     <span className="sr-only">分享</span>
                   </Button>

@@ -1,5 +1,6 @@
 import axios from "@/lib/axios";
 import { outfits } from "@/types/outfits";
+import { pageQuery, pageQueryResponse } from "@/types/pageQuery";
 import { useQuery } from "@tanstack/react-query";
 
 export const getOutfits = async (type: number) => {
@@ -24,6 +25,23 @@ export const useGetOutfitsFea = () => {
     queryKey: ["outfitsFea"],
     queryFn: async () => {
       return await getOutfits(1);
+    },
+  });
+};
+
+export const getOutfitsPage = async (data: pageQuery) => {
+  const response = await axios.post<pageQueryResponse<outfits>>(
+    `/app/outfits/info/page`,
+    data
+  );
+  return response.data;
+};
+
+export const useGetOutfitsPage = (data: pageQuery) => {
+  return useQuery({
+    queryKey: ["outfitsPage"],
+    queryFn: async () => {
+      return await getOutfitsPage(data);
     },
   });
 };

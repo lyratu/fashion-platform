@@ -84,7 +84,7 @@ export default function MallPage() {
                     <img
                       src={product.mainImage || "/placeholder.svg"}
                       alt={product.title}
-                      className="object-cover object-top"
+                      className="h-full  object-cover object-top w-full"
                     />
                   </div>
                   {/* {product.isNew && (
@@ -108,7 +108,7 @@ export default function MallPage() {
                   </Button> */}
                 </div>
                 <CardContent className="p-4">
-                  <h3 className="font-medium line-clamp-1">{product.name}</h3>
+                  <h3 className="font-medium line-clamp-1">{product.title}</h3>
                   <div className="flex items-center justify-between mt-1">
                     <div className="flex items-center">
                       {/* {product.isSale ? (

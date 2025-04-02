@@ -15,7 +15,7 @@ export default function FeaturedArticles() {
     <>
       <section className="mb-12">
         <h2 className="text-2xl font-bold mb-6">精选文章</h2>
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {data?.map((article) => (
             <Card key={article.id} className="overflow-hidden">
               <div className="relative h-64 w-full z-0">
