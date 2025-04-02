@@ -1,12 +1,11 @@
 import axios from "@/lib/axios";
 import { useMutation } from "@tanstack/react-query";
-import { like } from "@/types/like";
 import { collect } from "@/types/collect";
 
-export const doLike = async (data: like) => {
+export const doLike = async (id: number) => {
   const response = await axios.post<unknown>(
-    "/app/outfits/like/likeOrUnlike",
-    data
+    `/app/outfits/like/likeOrUnlike?outfitsId=${id}`,
+    {}
   );
   return response;
 };

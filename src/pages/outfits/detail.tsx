@@ -247,144 +247,157 @@ export default function ArticlePage() {
   const { id } = useParams();
 
   const { data: info } = useGetOutfitsDet(id as string);
-  const {doLikeFn} = useDoLike();
+  const { doLikeFn } = useDoLike();
 
   return (
     <>
       <ArticleProgress />
       <div className="container max-w-screen-xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Main Content - 8 columns on desktop */}
-        <div className="lg:col-span-8">
-          <article className="space-y-8">
-            {/* Article Header */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <Badge
-                  variant="outline"
-                  className="bg-primary/10 hover:bg-primary/20"
-                >
-                  {info?.categoryText}
-                </Badge>
-                {/* <div className="flex items-center text-sm text-muted-foreground">
-                  <Clock className="mr-1 h-3 w-3" />
-                  <span>{article.readingTime} min read</span>
-                </div> */}
+        {info ? (
+          <div className="lg:col-span-8">
+            <article className="space-y-8">
+              {/* Article Header */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <Badge
+                    variant="outline"
+                    className="bg-primary/10 hover:bg-primary/20"
+                  >
+                    {info.categoryText}
+                  </Badge>
+                  {/* <div className="flex items-center text-sm text-muted-foreground">
+                    <Clock className="mr-1 h-3 w-3" />
+                    <span>{article.readingTime} min read</span>
+                  </div> */}
+                </div>
+
+                <h1 className="text-4xl font-bold tracking-tight lg:text-5xl">
+                  {info.title}
+                </h1>
+
+                <p className="text-xl text-muted-foreground">
+                  {info.description}
+                </p>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Avatar>
+                      <AvatarImage
+                        src={info.user.avatarUrl}
+                        alt={info.user.nickName}
+                      />
+                      <AvatarFallback>
+                        {info.user.nickName.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="text-sm font-medium">
+                        {info.user.nickName}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {info.user.position}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Calendar className="h-4 w-4" />
+                    <span>
+                      {dateTool.formattedDate(info.createTime as string)}
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              <h1 className="text-4xl font-bold tracking-tight lg:text-5xl">
-                {info?.title}
-              </h1>
+              {/* Featured Image */}
+              <div className="relative aspect-video overflow-hidden rounded-lg">
+                <img
+                  src={info.coverImage || "/placeholder.svg"}
+                  alt={info.title}
+                  className="h-full"
+                />
+              </div>
 
-              <p className="text-xl text-muted-foreground">
-                {info?.description}
-              </p>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Avatar>
-                    <AvatarImage
-                      src={info?.user.avatarUrl}
-                      alt={info?.user.nickName}
-                    />
-                    <AvatarFallback>
-                      {info?.user.nickName.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="text-sm font-medium">{info?.user.nickName}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {info?.user.position}
-                    </p>
+              {/* Article Stats */}
+              <div className="flex items-center justify-between border-y py-4">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-1">
+                    <Heart className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground">
+                      {info.likeCount}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <MessageSquare className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground">
+                      {info.likeCount}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Bookmark className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground">
+                      {info.collectCount}
+                    </span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Calendar className="h-4 w-4" />
-                  <span>
-                    {dateTool.formattedDate(info?.createTime as string)}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Featured Image */}
-            <div className="relative aspect-video overflow-hidden rounded-lg">
-              <img
-                src={info?.coverImage || "/placeholder.svg"}
-                alt={info?.title}
-                className="h-full"
-              />
-            </div>
-
-            {/* Article Stats */}
-            <div className="flex items-center justify-between border-y py-4">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1">
-                  <Heart className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">
-                    {info?.likeCount}
-                  </span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">
-                    {info?.likeCount}
-                  </span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Bookmark className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">
-                    {info?.collectCount}
-                  </span>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => {
+                      doLikeFn(info.id);
+                    }}
+                  >
+                    <ThumbsUp className="h-4 w-4" fill="red" color="red"/>
+                    <span className="sr-only">喜欢</span>
+                  </Button>
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <Bookmark className="h-4 w-4" />
+                    <span className="sr-only">收藏</span>
+                  </Button>
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <Share2 className="h-4 w-4" />
+                    <span className="sr-only">分享</span>
+                  </Button>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <ThumbsUp className="h-4 w-4" />
-                  <span className="sr-only">Like</span>
-                </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <Bookmark className="h-4 w-4" />
-                  <span className="sr-only">Bookmark</span>
-                </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <Share2 className="h-4 w-4" />
-                  <span className="sr-only">Share</span>
-                </Button>
+              {/* Article Content */}
+              <div className="prose prose-lg dark:prose-invert max-w-none">
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: info.content as string,
+                  }}
+                />
               </div>
-            </div>
 
-            {/* Article Content */}
-            <div className="prose prose-lg dark:prose-invert max-w-none">
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: info?.content as string,
-                }}
-              />
-            </div>
+              {/* Tags */}
+              <div className="flex flex-wrap gap-2">
+                {info.tags.map((tag) => (
+                  <Badge key={tag.id} variant="secondary">
+                    {tag.name}
+                  </Badge>
+                ))}
+              </div>
 
-            {/* Tags */}
-            <div className="flex flex-wrap gap-2">
-              {info?.tags.map((tag) => (
-                <Badge key={tag.id} variant="secondary">
-                  {tag.name}
-                </Badge>
-              ))}
-            </div>
+              {/* Author Card */}
+              {/* <AuthorCard author={article.author} /> */}
 
-            {/* Author Card */}
-            {/* <AuthorCard author={article.author} /> */}
-
-            {/* Comments Section */}
-            <div className="space-y-6">
-              <h2 className="text-2xl font-bold tracking-tight">
-                评论 ({article.commentCount})
-              </h2>
-              <CommentSection comments={article.comments} />
-            </div>
-          </article>
-        </div>
+              {/* Comments Section */}
+              <div className="space-y-6">
+                <h2 className="text-2xl font-bold tracking-tight">
+                  评论 ({article.commentCount})
+                </h2>
+                <CommentSection comments={article.comments} />
+              </div>
+            </article>
+          </div>
+        ) : (
+          ""
+        )}
 
         {/* Sidebar - 4 columns on desktop */}
         <div className="lg:col-span-4 space-y-8">
