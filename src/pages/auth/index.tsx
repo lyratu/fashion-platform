@@ -20,6 +20,7 @@ import { useRegister } from "@/services/auth";
 import "./index.scss";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
+import WaveAnimation from "./components/svg";
 
 const formSchema = z.object({
   phone: z.string().regex(/^(?:(?:\+|00)86)?1[3-9]\d{9}$/, {
@@ -74,12 +75,18 @@ export default function LoginPage() {
   }
   return (
     <div className="bg-[#ecf0f3] w-screen h-screen flex justify-center items-center">
+      <WaveAnimation
+        color="rgba(58, 83, 155, 0.6)"
+        duration={25}
+        blurAmount={1}
+        waveCount={3}
+      />
       <div className="loginCard">
         <div className={`flex-1 z-99 ${isLogin ? "toRight" : "recovery"}`}>
           <div className="px-12 tips">
-            <div className="text-2xl font-bold">
+            <div className="text-xl font-bold">
               {" "}
-              {isLogin ? "你好朋友！" : "欢迎回来！"}
+              {isLogin ? "你好朋友！" : "时尚穿搭交流平台"}
             </div>
             <div className="py-6 text-sm text-center text-gray-500">
               {isLogin

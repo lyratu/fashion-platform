@@ -16,7 +16,7 @@ import { RelatedArticles } from "./components/related-articles";
 import { CommentSection } from "./components/comment-section";
 // import { AuthorCard } from "./components/author-card";
 import { useParams } from "react-router";
-import { useGetOutfitsDet } from "@/services/outfits";
+import { useDoLike, useGetOutfitsDet } from "@/services/outfits";
 import dateTool from "@/utils/dateTool";
 
 // Mock data for the article
@@ -247,6 +247,7 @@ export default function ArticlePage() {
   const { id } = useParams();
 
   const { data: info } = useGetOutfitsDet(id as string);
+  const {doLikeFn} = useDoLike();
 
   return (
     <>
@@ -319,27 +320,21 @@ export default function ArticlePage() {
             <div className="flex items-center justify-between border-y py-4">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1">
-                  <Eye className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">
-                    {article.viewCount}
-                  </span>
-                </div>
-                <div className="flex items-center gap-1">
                   <Heart className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">
-                    {article.likeCount}
+                    {info?.likeCount}
                   </span>
                 </div>
                 <div className="flex items-center gap-1">
                   <MessageSquare className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">
-                    {article.commentCount}
+                    {info?.likeCount}
                   </span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Bookmark className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">
-                    {article.bookmarkCount}
+                    {info?.collectCount}
                   </span>
                 </div>
               </div>
