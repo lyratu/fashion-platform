@@ -77,9 +77,9 @@ export default function ArticlesPage() {
         {/* Other category tabs would filter articles */}
         {categories.slice(0).map((category) => (
           <TabsContent key={category} value={category} className="mt-0">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
               {data?.list.map((article) => (
-                <Card key={article.id}>
+                <Card key={article.id} className=" h-fit">
                   <div className="relative h-48 w-full">
                     <img
                       src={article.coverImage || "/placeholder.svg"}
@@ -96,14 +96,17 @@ export default function ArticlesPage() {
                       {article.description}
                     </p>
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span>{article.content}</span>
                       <span>
                         {dateTool.formattedDate(article?.createTime as string)}
                       </span>
                     </div>
                   </CardContent>
-                  <CardFooter className="pt-0 pb-4 px-4">
-                    <Button variant="outline" asChild className="w-full">
+                  <CardFooter className="pt-0 pb-4 px-4 flex flex-col">
+                    <Button
+                      variant="outline"
+                      asChild
+                      className="w-full mt-auto"
+                    >
                       <Link to={`/outfits/${article.id}`}>查看详情</Link>
                     </Button>
                   </CardFooter>

@@ -54,7 +54,7 @@ export const getLikeRecord = async (id: string) => {
     `/app/outfits/like/getLikeRecord?outfitsId=${id}`,
     {}
   );
-  return response.data;
+  return response.data || { likeStatus: 0 };
 };
 
 export const useGetLikeRecord = (id: string) => {
@@ -71,7 +71,7 @@ export const getCollectRecord = async (id: string) => {
     `/app/outfits/collect/getCollectRecord?outfitsId=${id}`,
     {}
   );
-  return response.data;
+  return response.data || { collectStatus: 0 };
 };
 
 export const useGetCollectRecord = (id: string) => {

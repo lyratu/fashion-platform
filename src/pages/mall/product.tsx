@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -16,6 +16,7 @@ import {
   RotateCcw,
   Shield,
 } from "lucide-react";
+import { useGetGoodsDet } from "@/services/mall/detail";
 
 // Mock product data - in a real app, this would come from an API or database
 const products = [
@@ -79,7 +80,6 @@ const products = [
   },
 ];
 
-
 // Related products
 const relatedProducts = [
   {
@@ -115,11 +115,12 @@ const relatedProducts = [
 ];
 
 export default function ProductDetailPage() {
-//   const params = useParams();
-//   const productId = params.id as string;
+  const params = useParams();
+  const productId = params.id as string;
+  const { data } = useGetGoodsDet(productId);
 
   // Find the product by ID
-  const product = products.find((p) => p.id === '1') || products[0];
+  const product = products.find((p) => p.id === "1") || products[0];
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedColor, setSelectedColor] = useState(product.colors[0]);
@@ -142,10 +143,10 @@ export default function ProductDetailPage() {
         <ul className="flex items-center gap-2 text-muted-foreground">
           <li>
             <Link to="/mall" className="hover:text-primary">
-              Mall
+              商城
             </Link>
           </li>
-          <li>/</li>
+          {/* <li>/</li>
           <li>
             <Link
               to={`/mall?category=${product.category}`}
@@ -153,10 +154,10 @@ export default function ProductDetailPage() {
             >
               {product.category}
             </Link>
-          </li>
+          </li> */}
           <li>/</li>
           <li className="text-foreground font-medium truncate max-w-[200px]">
-            {product.name}
+            {data?.title}
           </li>
         </ul>
       </div>
@@ -166,7 +167,7 @@ export default function ProductDetailPage() {
         <div className="space-y-4">
           <div className="relative aspect-[4/5] w-full overflow-hidden rounded-lg border">
             <img
-              src={product.images[selectedImage] || "/placeholder.svg"}
+              src={data?.mainImage || "/placeholder.svg"}
               alt={product.name}
               className="object-cover object-top"
             />
@@ -201,9 +202,9 @@ export default function ProductDetailPage() {
         {/* Product Info */}
         <div className="space-y-6">
           <div>
-            <h1 className="text-3xl font-bold">{product.name}</h1>
+            <h1 className="text-3xl font-bold">{data?.title}</h1>
             <div className="flex items-center gap-2 mt-2">
-              <div className="flex">
+              {/* <div className="flex">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
@@ -214,10 +215,10 @@ export default function ProductDetailPage() {
                     }`}
                   />
                 ))}
-              </div>
-              <span className="text-sm text-muted-foreground">
+              </div> */}
+              {/* <span className="text-sm text-muted-foreground">
                 {product.rating} ({product.reviews} reviews)
-              </span>
+              </span> */}
             </div>
           </div>
 
@@ -238,7 +239,7 @@ export default function ProductDetailPage() {
                 </Badge>
               </>
             ) : (
-              <span className="text-3xl font-bold">${product.price}</span>
+              <span className="text-3xl font-bold">￥{data?.price}</span>
             )}
           </div>
 
@@ -246,7 +247,7 @@ export default function ProductDetailPage() {
 
           {/* Color Selection */}
           <div>
-            <h3 className="text-sm font-medium mb-3">Color: {selectedColor}</h3>
+            <h3 className="text-sm font-medium mb-3">颜色: {selectedColor}</h3>
             <div className="flex flex-wrap gap-2">
               {product.colors.map((color) => (
                 <button
@@ -280,10 +281,10 @@ export default function ProductDetailPage() {
           {/* Size Selection */}
           <div>
             <div className="flex justify-between mb-3">
-              <h3 className="text-sm font-medium">Size: {selectedSize}</h3>
-              <button className="text-sm text-primary hover:underline">
+              <h3 className="text-sm font-medium">尺码: {selectedSize}</h3>
+              {/* <button className="text-sm text-primary hover:underline">
                 Size Guide
-              </button>
+              </button> */}
             </div>
             <RadioGroup
               value={selectedSize}
@@ -314,7 +315,7 @@ export default function ProductDetailPage() {
 
           {/* Quantity */}
           <div className="flex items-center gap-2">
-            <h3 className="text-sm font-medium">Quantity:</h3>
+            <h3 className="text-sm font-medium">数量:</h3>
             <div className="flex items-center border rounded-md">
               <Button
                 variant="ghost"
@@ -341,7 +342,7 @@ export default function ProductDetailPage() {
           <div className="flex gap-4">
             <Button className="flex-1" onClick={handleAddToCart}>
               <ShoppingCart className="h-4 w-4 mr-2" />
-              Add to Cart
+              添加到购物车
             </Button>
             <Button variant="outline" size="icon">
               <Heart className="h-5 w-5" />
@@ -355,15 +356,15 @@ export default function ProductDetailPage() {
           <div className="space-y-4 pt-4">
             <div className="flex items-center gap-2 text-sm">
               <Truck className="h-4 w-4" />
-              <span>Free shipping on orders over $50</span>
+              <span>订单满200元免配送费</span>
             </div>
             <div className="flex items-center gap-2 text-sm">
               <RotateCcw className="h-4 w-4" />
-              <span>Free returns within 30 days</span>
+              <span>7天无理由退款</span>
             </div>
             <div className="flex items-center gap-2 text-sm">
               <Shield className="h-4 w-4" />
-              <span>1 year warranty</span>
+              <span>1年质量保证</span>
             </div>
           </div>
         </div>
@@ -376,50 +377,33 @@ export default function ProductDetailPage() {
             value="description"
             className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary"
           >
-            Description
+            描述
           </TabsTrigger>
           <TabsTrigger
             value="details"
             className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary"
           >
-            Details
+            详情
           </TabsTrigger>
           <TabsTrigger
             value="reviews"
             className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary"
           >
-            Reviews ({product.reviews})
+            评论 ({data?.collectCount})
           </TabsTrigger>
         </TabsList>
         <TabsContent value="description" className="pt-4">
-          <p className="text-muted-foreground">{product.description}</p>
+          <p className="text-muted-foreground">{data?.description}</p>
         </TabsContent>
         <TabsContent value="details" className="pt-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="">
             <div>
-              <h3 className="font-medium mb-2">Product Details</h3>
-              <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                {product.details.map((detail, index) => (
-                  <li key={index}>{detail}</li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-medium mb-2">Product Information</h3>
-              <div className="space-y-2 text-muted-foreground">
-                <div className="flex justify-between">
-                  <span>SKU</span>
-                  <span>{product.sku}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Category</span>
-                  <span>{product.category}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Tags</span>
-                  <span>Fashion, {product.category}, Trending</span>
-                </div>
-              </div>
+              <h3 className="font-medium mb-2">产品详情</h3>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: data?.detail as string,
+                }}
+              />
             </div>
           </div>
         </TabsContent>
@@ -521,7 +505,7 @@ export default function ProductDetailPage() {
 
       {/* Related Products */}
       <div className="mb-16">
-        <h2 className="text-2xl font-bold mb-6">You May Also Like</h2>
+        <h2 className="text-2xl font-bold mb-6">你可能会喜欢</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {relatedProducts.map((product) => (
             <Card key={product.id} className="overflow-hidden">
