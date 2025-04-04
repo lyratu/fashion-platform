@@ -216,7 +216,7 @@ export default function ProductDetailPage() {
                   />
                 ))}
               </div> */}
-              {/* <span className="text-sm text-muted-foreground">
+              {/* <span className="text-sm text-muted-foreground select-none">
                 {product.rating} ({product.reviews} reviews)
               </span> */}
             </div>
@@ -424,7 +424,7 @@ export default function ProductDetailPage() {
                     />
                   ))}
                 </div>
-                <div className="text-sm text-muted-foreground mt-1">
+                <div className="text-sm text-muted-foreground select-none mt-1">
                   {product.reviews} reviews
                 </div>
               </div>

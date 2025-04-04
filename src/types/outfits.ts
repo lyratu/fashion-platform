@@ -18,6 +18,7 @@ export interface outfits {
   viewNmber: number;
   likeCount: number;
   collectCount: number;
+  commentCount: number;
   authorId: number;
   createTime: string;
   user: User;

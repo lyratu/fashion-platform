@@ -57,25 +57,25 @@ export default function NavBar() {
           {/* <div className="flex gap-4">
             <Link
               to="/terms"
-              className="text-sm text-muted-foreground hover:underline"
+              className="text-sm text-muted-foreground select-none hover:underline"
             >
               条款
             </Link>
             <Link
               to="/privacy"
-              className="text-sm text-muted-foreground hover:underline"
+              className="text-sm text-muted-foreground select-none hover:underline"
             >
               隐私
             </Link>
             <Link
               to="/about"
-              className="text-sm text-muted-foreground hover:underline"
+              className="text-sm text-muted-foreground select-none hover:underline"
             >
               关于
             </Link>
             <Link
               to="/contact"
-              className="text-sm text-muted-foreground hover:underline"
+              className="text-sm text-muted-foreground select-none hover:underline"
             >
               联系
             </Link>

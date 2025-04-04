@@ -18,3 +18,20 @@ export const useGetOutfitsDet = (id: string) => {
     },
   });
 };
+
+export const getRelatedArticles = async (id: string) => {
+  const response = await axios.get<Array<outfits>>(
+    `/app/outfits/info/getRelatedArticles?id=${id}`,
+    {}
+  );
+  return response.data;
+};
+
+export const useGetRelatedArticles = (id: string) => {
+  return useQuery({
+    queryKey: [`outfitsRel${id}`],
+    queryFn: async () => {
+      return await getRelatedArticles(id);
+    },
+  });
+};

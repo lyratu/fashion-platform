@@ -26,7 +26,7 @@ export function AuthorCard({ author }: AuthorCardProps) {
           </Avatar>
           <div className="flex-1 text-center sm:text-left">
             <h3 className="text-xl font-bold">{author.name}</h3>
-            <p className="text-sm text-muted-foreground mb-2">{author.role}</p>
+            <p className="text-sm text-muted-foreground select-none mb-2">{author.role}</p>
             <p className="text-sm mb-4">{author.bio}</p>
             <div className="flex flex-wrap justify-center sm:justify-start gap-2">
               <Button variant="outline" size="sm">

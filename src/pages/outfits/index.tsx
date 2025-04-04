@@ -39,14 +39,14 @@ export default function ArticlesPage() {
         </TabsList>
 
         <TabsContent value="全部" className="mt-0">
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
             {regularArticles?.map((article) => (
-              <Card key={article.id}>
-                <div className="relative h-48 w-full">
+              <Card key={article.id} className="overflow-hidden h-fit">
+                <div className="relative w-full z-0">
                   <img
                     src={article.user.avatarUrl || "/placeholder.svg"}
                     alt={article.title}
-                    className="object-cover object-top"
+                    className="object-cover object-top aspect-[4/3] w-full"
                   />
                 </div>
                 <CardContent className="p-4">
@@ -54,7 +54,7 @@ export default function ArticlesPage() {
                     {article.category}
                   </Badge>
                   <h3 className="text-lg font-bold mb-2">{article.title}</h3>
-                  <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                  <p className="text-sm text-muted-foreground select-none line-clamp-2 mb-3">
                     {article.description}
                   </p>
                   <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -77,22 +77,22 @@ export default function ArticlesPage() {
         {/* Other category tabs would filter articles */}
         {categories.slice(0).map((category) => (
           <TabsContent key={category} value={category} className="mt-0">
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
               {data?.list.map((article) => (
                 <Card key={article.id} className=" h-fit">
-                  <div className="relative h-48 w-full">
+                  <div className="relative w-full">
                     <img
                       src={article.coverImage || "/placeholder.svg"}
                       alt={article.title}
-                      className="h-full  object-cover object-top w-full"
+                      className="object-cover object-top aspect-[4/3] w-full"
                     />
                   </div>
                   <CardContent className="p-4">
                     <Badge variant="outline" className="mb-2">
-                      {article.category}
+                      {article.categoryText}
                     </Badge>
                     <h3 className="text-lg font-bold mb-2">{article.title}</h3>
-                    <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                    <p className="text-sm text-muted-foreground select-none line-clamp-2 mb-3">
                       {article.description}
                     </p>
                     <div className="flex items-center justify-between text-xs text-muted-foreground">

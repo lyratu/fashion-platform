@@ -8,7 +8,7 @@ export default function TrendingGoods() {
   const { data } = useGetGoodsRec();
   const navigate = useNavigate();
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="grid  sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
       {data?.map((outfit) => (
         <Card
           key={outfit.id}
@@ -17,11 +17,11 @@ export default function TrendingGoods() {
             navigate("/mall/product/1");
           }}
         >
-          <div className="relative h-64 w-full">
+          <div className="relative w-full">
             <img
               src={outfit.mainImage || "/placeholder.svg"}
               alt={outfit.title}
-              className="object-cover object-top w-full h-full"
+              className="object-cover object-top aspect-[1/1] w-full"
             />
             <div className="absolute top-2 right-2 flex gap-2">
               <Button

@@ -127,7 +127,7 @@ export default function CartPage() {
                           ￥{(item.price * item.quantity).toFixed(2)}
                         </p>
                       </div>
-                      <div className="text-sm text-muted-foreground mb-2">
+                      <div className="text-sm text-muted-foreground select-none mb-2">
                         {item.size && (
                           <span className="mr-2">尺码: {item.size}</span>
                         )}

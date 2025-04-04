@@ -227,10 +227,10 @@ export default function ProfilePage() {
                   </Button>
                 </div>
                 <h2 className="text-xl font-bold">{user.name}</h2>
-                <p className="text-sm text-muted-foreground mb-2">
+                <p className="text-sm text-muted-foreground select-none mb-2">
                   {user.username}
                 </p>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-sm text-muted-foreground select-none mb-4">
                   {user.location}
                 </p>
                 <Button variant="outline" size="sm" className="w-full">
@@ -482,7 +482,7 @@ export default function ProfilePage() {
                             <p className="text-sm font-medium truncate">
                               {item.name}
                             </p>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-sm text-muted-foreground select-none">
                               ${item.price}
                             </p>
                           </div>
@@ -626,7 +626,7 @@ export default function ProfilePage() {
                                 {order.status}
                               </Badge>
                             </div>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-sm text-muted-foreground select-none">
                               {order.date}
                             </p>
                           </div>
@@ -657,7 +657,7 @@ export default function ProfilePage() {
                                       ${(item.price * item.quantity).toFixed(2)}
                                     </p>
                                   </div>
-                                  <div className="text-sm text-muted-foreground">
+                                  <div className="text-sm text-muted-foreground select-none">
                                     <p>
                                       尺码: {item.size} | 颜色: {item.color}
                                     </p>
@@ -690,7 +690,7 @@ export default function ProfilePage() {
                           <Separator className="my-4" />
                           <div className="flex justify-between">
                             <div>
-                              <p className="text-sm text-muted-foreground">
+                              <p className="text-sm text-muted-foreground select-none">
                                 总数
                               </p>
                               <p className="font-medium">
@@ -1115,7 +1115,7 @@ function NotificationSetting({
     <div className="flex items-center justify-between">
       <div>
         <h4 className="font-medium">{title}</h4>
-        <p className="text-sm text-muted-foreground">{description}</p>
+        <p className="text-sm text-muted-foreground select-none">{description}</p>
       </div>
       <div className="flex items-center h-6">
         <input
@@ -1156,7 +1156,7 @@ function NotificationItem({
           </h4>
           <p className="text-xs text-muted-foreground">{time}</p>
         </div>
-        <p className="text-sm text-muted-foreground mt-1">{description}</p>
+        <p className="text-sm text-muted-foreground select-none mt-1">{description}</p>
       </div>
       {!read && (
         <div className="h-2 w-2 rounded-full bg-primary mt-2 flex-shrink-0"></div>
