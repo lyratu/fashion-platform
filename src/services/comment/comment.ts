@@ -55,7 +55,7 @@ export const useGetPageComment = (id: string, limit: number) => {
 export const sendComment = async (form: commentForm) => {
   const response = await axios.post<Array<comment>>(
     `/app/comment/info/sendComment`,
-    { objectId: form.objectId, content: form.content }
+    form
   );
   return response.data;
 };
@@ -72,4 +72,25 @@ export const useSend = () => {
     onError: () => {},
   });
   return { sendFn, sendLoading, data, error };
+};
+
+export const delComment = async (id: number) => {
+  const response = await axios.post<Array<comment>>(
+    `/app/comment/info/delComment?id=${id}`,
+    {}
+  );
+  return response.data;
+};
+
+export const useDel = () => {
+  const {
+    error,
+    data,
+    mutateAsync: delFn,
+  } = useMutation({
+    mutationFn: delComment,
+    onSuccess: () => {},
+    onError: () => {},
+  });
+  return { delFn, data, error };
 };

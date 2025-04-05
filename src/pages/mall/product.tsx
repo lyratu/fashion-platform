@@ -502,59 +502,6 @@ export default function ProductDetailPage() {
           </div>
         </TabsContent>
       </Tabs>
-
-      {/* Related Products */}
-      <div className="mb-16">
-        <h2 className="text-2xl font-bold mb-6">你可能会喜欢</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {relatedProducts.map((product) => (
-            <Card key={product.id} className="overflow-hidden">
-              <div className="relative">
-                <div className="relative h-64 w-full">
-                  <img
-                    src={product.image || "/placeholder.svg"}
-                    alt={product.name}
-                    className="object-cover object-top"
-                  />
-                </div>
-                {product.isSale && (
-                  <Badge
-                    variant="destructive"
-                    className="absolute top-2 right-2"
-                  >
-                    Sale
-                  </Badge>
-                )}
-              </div>
-              <CardContent className="p-4">
-                <h3 className="font-medium line-clamp-1">{product.name}</h3>
-                <div className="flex items-center justify-between mt-1">
-                  <div className="flex items-center">
-                    {product.isSale ? (
-                      <>
-                        <span className="text-muted-foreground line-through mr-2">
-                          ${product.price}
-                        </span>
-                        <span className="font-bold text-destructive">
-                          ${product.salePrice}
-                        </span>
-                      </>
-                    ) : (
-                      <span className="font-bold">${product.price}</span>
-                    )}
-                  </div>
-                  <Link
-                    to={`/mall/product/${product.id}`}
-                    className="text-sm text-primary hover:underline"
-                  >
-                    View
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

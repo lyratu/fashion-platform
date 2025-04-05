@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useLocation } from "react-router";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,8 +14,8 @@ import { Menu } from "lucide-react";
 
 export function MainNav() {
   const [isOpen, setIsOpen] = useState(false);
-  const pathname = location.href;
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const routes = [
     {
       to: "/",
@@ -43,6 +43,7 @@ export function MainNav() {
       active: pathname === "/wardrobe",
     },
   ];
+  console.log("[ pathname ] >", useLocation());
 
   return (
     <div className="flex items-center">
@@ -50,7 +51,7 @@ export function MainNav() {
         <NavigationMenu>
           <NavigationMenuList>
             {routes.map((route) => (
-              <NavigationMenuItem key={route.to}>
+              <NavigationMenuItem key={route.to} className=" cursor-pointer">
                 <NavigationMenuLink
                   className={navigationMenuTriggerStyle()}
                   active={route.active}

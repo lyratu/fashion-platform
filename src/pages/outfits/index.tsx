@@ -7,8 +7,9 @@ import FeaturedArticles from "./components/featured-articles";
 import { outfits } from "@/types/outfits";
 import dateTool from "@/utils/dateTool";
 import { useGetOutfitsPage } from "@/services/outfits";
+import { useGetDictInfo } from "@/services/dict";
 export default function ArticlesPage() {
-  const categories = ["全部", "季节", "流行", "风格", "新闻"];
+  const { data: types } = useGetDictInfo(["category"]);
   const regularArticles: Array<outfits> = [];
   const { data } = useGetOutfitsPage({
     order: "createTime",
@@ -31,9 +32,12 @@ export default function ArticlesPage() {
       {/* Category Tabs */}
       <Tabs defaultValue="全部" className="mb-8">
         <TabsList className="mb-6 flex flex-wrap h-auto">
-          {categories.map((category) => (
-            <TabsTrigger key={category} value={category} className="mb-1">
-              {category}
+          <TabsTrigger key={-1} value={"-1"} className="mb-1 cursor-pointer">
+            全部
+          </TabsTrigger>
+          {types?.category.map((item) => (
+            <TabsTrigger key={item.id} value={item.name} className="mb-1 cursor-pointer">
+              {item.name}
             </TabsTrigger>
           ))}
         </TabsList>
@@ -75,8 +79,8 @@ export default function ArticlesPage() {
         </TabsContent>
 
         {/* Other category tabs would filter articles */}
-        {categories.slice(0).map((category) => (
-          <TabsContent key={category} value={category} className="mt-0">
+        {types?.category.slice(0).map((item) => (
+          <TabsContent key={item.id} value={item.name} className="mt-0">
             <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
               {data?.list.map((article) => (
                 <Card key={article.id} className=" h-fit">
