@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 
 export const Providers = () => (
   <QueryClientProvider client={queryClient}>
-    <Toaster position="top-center" richColors />
+    <Toaster position="top-center" />
     <Outlet />
     <ScrollRestoration />
   </QueryClientProvider>

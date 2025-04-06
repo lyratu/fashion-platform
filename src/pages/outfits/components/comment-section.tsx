@@ -32,7 +32,7 @@ export function CommentSection() {
   const [commentText, setCommentText] = useState("");
 
   const sendBreak = () => {
-    queryClient.invalidateQueries({ queryKey: [`commentPage`,id] });
+    queryClient.invalidateQueries({ queryKey: [`commentPage`, id] });
     setCommentText("");
     reply.status = false;
     setReply(reply);
@@ -107,7 +107,7 @@ export function CommentSection() {
         )}
         {isFetchingNextPage ? (
           <div className="flex items-center justify-center text-sm">
-            <Loader />
+            <Loader className="animate-spin" />
             <span>加载中...</span>
           </div>
         ) : null}

@@ -11,12 +11,15 @@ export const getGoodsRec = async () => {
 };
 
 export const getGoods = async (page: number, size: number, order: string) => {
-  const response = await axios.post<{list:Array<goods>}>("/app/goods/info/page", {
-    page,
-    size,
-    order,
-    sort: "desc",
-  });
+  const response = await axios.post<{ list: Array<goods> }>(
+    "/app/goods/info/page",
+    {
+      page,
+      size,
+      order,
+      sort: "desc",
+    }
+  );
   return response.data;
 };
 
@@ -29,7 +32,7 @@ export const useGetGoodsRec = () => {
 
 export const useGetGoods = (page: number, size: number, order: string) => {
   return useQuery({
-    queryKey: ["goods",page,size,order],
+    queryKey: ["goods", page, size, order],
     queryFn: () => getGoods(page, size, order),
   });
 };

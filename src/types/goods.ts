@@ -1,5 +1,3 @@
-
-
 export interface goods {
   id: number;
   title: string;
@@ -21,5 +19,8 @@ export interface goods {
   collectCount: number;
 
   sales: number;
+  subPics: Array<string>;
 
+  size: Array<{ label: string; value: string }>;
+  color: Array<{ label: string; value: string }>;
 }

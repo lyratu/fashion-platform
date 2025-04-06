@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,125 +17,39 @@ import {
   Shield,
 } from "lucide-react";
 import { useGetGoodsDet } from "@/services/mall/detail";
-
-// Mock product data - in a real app, this would come from an API or database
-const products = [
-  {
-    id: "1",
-    name: "Oversized Cotton Shirt",
-    price: 49.99,
-    images: [
-      "/placeholder.svg?height=600&width=500",
-      "/placeholder.svg?height=600&width=500",
-      "/placeholder.svg?height=600&width=500",
-      "/placeholder.svg?height=600&width=500",
-    ],
-    colors: ["White", "Black", "Blue", "Beige"],
-    sizes: ["XS", "S", "M", "L", "XL"],
-    description:
-      "This oversized cotton shirt offers both comfort and style. Made from 100% organic cotton, it features a relaxed fit with dropped shoulders and a classic collar. Perfect for casual everyday wear or dressed up with accessories for a more polished look.",
-    details: [
-      "100% organic cotton",
-      "Relaxed, oversized fit",
-      "Button-up front",
-      "Classic collar",
-      "Dropped shoulders",
-      "Machine washable",
-    ],
-    category: "Tops",
-    isNew: true,
-    isSale: false,
-    rating: 4.5,
-    reviews: 28,
-    sku: "TS-OSC-001",
-  },
-  {
-    id: "2",
-    name: "High-Waisted Jeans",
-    price: 79.99,
-    images: [
-      "/placeholder.svg?height=600&width=500",
-      "/placeholder.svg?height=600&width=500",
-      "/placeholder.svg?height=600&width=500",
-    ],
-    colors: ["Blue", "Black", "Light Wash"],
-    sizes: ["24", "25", "26", "27", "28", "29", "30", "31", "32"],
-    description:
-      "These high-waisted jeans are designed to flatter your figure with their slim fit and stretchy denim fabric. The high rise sits at your natural waist, elongating your legs and providing all-day comfort. Versatile enough to pair with any top in your wardrobe.",
-    details: [
-      "98% cotton, 2% elastane",
-      "High-rise waist",
-      "Slim fit through hip and thigh",
-      "Five-pocket styling",
-      "Button and zip fly closure",
-      "Machine washable",
-    ],
-    category: "Bottoms",
-    isNew: false,
-    isSale: true,
-    salePrice: 59.99,
-    rating: 4.8,
-    reviews: 42,
-    sku: "BT-HWJ-002",
-  },
-];
-
-// Related products
-const relatedProducts = [
-  {
-    id: "3",
-    name: "Floral Midi Dress",
-    price: 89.99,
-    image: "/placeholder.svg?height=400&width=300",
-    category: "Dresses",
-  },
-  {
-    id: "4",
-    name: "Leather Crossbody Bag",
-    price: 129.99,
-    image: "/placeholder.svg?height=400&width=300",
-    category: "Accessories",
-  },
-  {
-    id: "5",
-    name: "Wool Blend Coat",
-    price: 199.99,
-    image: "/placeholder.svg?height=400&width=300",
-    category: "Outerwear",
-    isSale: true,
-    salePrice: 149.99,
-  },
-  {
-    id: "6",
-    name: "Chunky Ankle Boots",
-    price: 119.99,
-    image: "/placeholder.svg?height=400&width=300",
-    category: "Shoes",
-  },
-];
+import { toast } from "sonner";
 
 export default function ProductDetailPage() {
   const params = useParams();
   const productId = params.id as string;
-  const { data } = useGetGoodsDet(productId);
+  const { data, isSuccess } = useGetGoodsDet(productId);
 
   // Find the product by ID
-  const product = products.find((p) => p.id === "1") || products[0];
-
   const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
-  const [selectedSize, setSelectedSize] = useState(product.sizes[2]); // Default to Medium or middle size
+
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(1);
 
-  const handleAddToCart = () => {
-    console.log("Added to cart:", {
-      product,
-      color: selectedColor,
-      size: selectedSize,
-      quantity,
-    });
-    // In a real app, this would dispatch to a cart state manager or API
-  };
+  useEffect(() => {
+    if (isSuccess) {
+      setSelectedColor(data.color[0].value);
+      setSelectedSize(data.size[0].value);
+      if (!data.subPics) data.subPics = [];
+      if (!data.subPics.includes(data.mainImage))
+        data.subPics = [data.mainImage, ...data.subPics];
+    }
+  }, [isSuccess, data]);
+
+  // const handleAddToCart = () => {
+  //   console.log("Added to cart:", {
+  //     product,
+  //     color: selectedColor,
+  //     size: selectedSize,
+  //     quantity,
+  //   });
+  //   // In a real app, this would dispatch to a cart state manager or API
+  // };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -167,35 +81,30 @@ export default function ProductDetailPage() {
         <div className="space-y-4">
           <div className="relative aspect-[4/5] w-full overflow-hidden rounded-lg border">
             <img
-              src={data?.mainImage || "/placeholder.svg"}
-              alt={product.name}
-              className="object-cover object-top"
+              src={
+                (data?.subPics && data?.subPics[selectedImage]) ||
+                "/placeholder.svg"
+              }
+              alt={data?.title}
+              className="object-cover object-top h-full"
             />
-            {product.isNew && (
-              <Badge className="absolute top-4 left-4">New</Badge>
-            )}
-            {product.isSale && (
-              <Badge variant="destructive" className="absolute top-4 right-4">
-                Sale
-              </Badge>
-            )}
           </div>
           <div className="flex gap-2 overflow-auto pb-2">
-            {product.images.map((image, index) => (
-              <button
-                key={index}
-                className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border ${
-                  selectedImage === index ? "ring-2 ring-primary" : ""
-                }`}
-                onClick={() => setSelectedImage(index)}
-              >
-                <img
-                  src={image || "/placeholder.svg"}
-                  alt={`${product.name} thumbnail ${index + 1}`}
-                  className="object-cover object-top"
-                />
-              </button>
-            ))}
+            {data?.subPics &&
+              data?.subPics.map((image, index) => (
+                <button
+                  key={index}
+                  className={` cursor-pointer relative ml-1 mt-1 h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border ${
+                    selectedImage === index ? "ring-2 ring-primary" : ""
+                  }`}
+                  onClick={() => setSelectedImage(index)}
+                >
+                  <img
+                    src={image || "/placeholder.svg"}
+                    className="object-cover object-top"
+                  />
+                </button>
+              ))}
           </div>
         </div>
 
@@ -223,90 +132,73 @@ export default function ProductDetailPage() {
           </div>
 
           <div className="flex items-center gap-4">
-            {product.isSale ? (
-              <>
-                <span className="text-3xl font-bold text-destructive">
-                  ${product.salePrice}
-                </span>
-                <span className="text-xl text-muted-foreground line-through">
-                  ${product.price}
-                </span>
-                <Badge variant="destructive">
-                  {Math.round(
-                    ((product.price - product.price) / product.price) * 100
-                  )}
-                  % OFF
-                </Badge>
-              </>
-            ) : (
-              <span className="text-3xl font-bold">￥{data?.price}</span>
-            )}
+            <span className="text-3xl font-bold">￥{data?.price}</span>
           </div>
 
           <Separator />
 
           {/* Color Selection */}
           <div>
-            <h3 className="text-sm font-medium mb-3">颜色: {selectedColor}</h3>
+            <h3 className="text-sm font-medium mb-3">
+              颜色: {data?.color.find((e) => e.value == selectedColor)?.label}
+            </h3>
             <div className="flex flex-wrap gap-2">
-              {product.colors.map((color) => (
-                <button
-                  key={color}
-                  className={`h-10 w-10 rounded-full border ${
-                    selectedColor === color
-                      ? "ring-2 ring-primary ring-offset-2"
-                      : ""
-                  }`}
-                  style={{
-                    backgroundColor:
-                      color.toLowerCase() === "white"
-                        ? "#ffffff"
-                        : color.toLowerCase() === "black"
-                        ? "#000000"
-                        : color.toLowerCase() === "blue"
-                        ? "#3b82f6"
-                        : color.toLowerCase() === "beige"
-                        ? "#f5f5dc"
-                        : color.toLowerCase() === "light wash"
-                        ? "#a0c4ff"
-                        : "#cccccc",
-                  }}
-                  onClick={() => setSelectedColor(color)}
-                  aria-label={`Select ${color} color`}
-                />
-              ))}
+              <RadioGroup
+                value={selectedColor}
+                onValueChange={setSelectedColor}
+                className="flex flex-wrap gap-2"
+              >
+                {data?.color.map((size) => (
+                  <div key={size.value}>
+                    <RadioGroupItem
+                      id={`color-${size.value}`}
+                      value={size.value}
+                      className="sr-only"
+                    />
+                    <Label
+                      htmlFor={`color-${size.value}`}
+                      className={`flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border ${
+                        selectedColor === size.value
+                          ? "border-primary bg-primary text-primary-foreground"
+                          : "border-input hover:bg-muted"
+                      }`}
+                    >
+                      {size.label}
+                    </Label>
+                  </div>
+                ))}
+              </RadioGroup>
             </div>
           </div>
 
           {/* Size Selection */}
           <div>
             <div className="flex justify-between mb-3">
-              <h3 className="text-sm font-medium">尺码: {selectedSize}</h3>
-              {/* <button className="text-sm text-primary hover:underline">
-                Size Guide
-              </button> */}
+              <h3 className="text-sm font-medium">
+                尺码: {data?.size.find((e) => e.value == selectedSize)?.label}
+              </h3>
             </div>
             <RadioGroup
               value={selectedSize}
               onValueChange={setSelectedSize}
               className="flex flex-wrap gap-2"
             >
-              {product.sizes.map((size) => (
-                <div key={size}>
+              {data?.size.map((size) => (
+                <div key={size.value}>
                   <RadioGroupItem
-                    id={`size-${size}`}
-                    value={size}
+                    id={`size-${size.value}`}
+                    value={size.value}
                     className="sr-only"
                   />
                   <Label
-                    htmlFor={`size-${size}`}
+                    htmlFor={`size-${size.value}`}
                     className={`flex h-10 w-10 cursor-pointer items-center justify-center rounded-md border ${
-                      selectedSize === size
+                      selectedSize === size.value
                         ? "border-primary bg-primary text-primary-foreground"
                         : "border-input hover:bg-muted"
                     }`}
                   >
-                    {size}
+                    {size.label}
                   </Label>
                 </div>
               ))}
@@ -340,14 +232,24 @@ export default function ProductDetailPage() {
 
           {/* Action Buttons */}
           <div className="flex gap-4">
-            <Button className="flex-1" onClick={handleAddToCart}>
-              <ShoppingCart className="h-4 w-4 mr-2" />
+            <Button className="flex-1 cursor-pointer">
+              <ShoppingCart className="h-4 w-4 mr-2 " />
               添加到购物车
             </Button>
-            <Button variant="outline" size="icon">
+            <Button variant="outline" size="icon" className="cursor-pointer">
               <Heart className="h-5 w-5" />
             </Button>
-            <Button variant="outline" size="icon">
+            <Button
+              variant="outline"
+              size="icon"
+              className="cursor-pointer"
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+                toast.success("已复制分享链接，请分享给好友吧~", {
+                  duration: 1500,
+                });
+              }}
+            >
               <Share2 className="h-5 w-5" />
             </Button>
           </div>
@@ -407,140 +309,7 @@ export default function ProductDetailPage() {
             </div>
           </div>
         </TabsContent>
-        <TabsContent value="reviews" className="pt-4">
-          <div className="space-y-6">
-            <div className="flex items-center gap-4">
-              <div className="text-center">
-                <div className="text-4xl font-bold">{product.rating}</div>
-                <div className="flex justify-center">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`h-4 w-4 ${
-                        i < Math.floor(product.rating)
-                          ? "fill-primary text-primary"
-                          : "fill-muted text-muted-foreground"
-                      }`}
-                    />
-                  ))}
-                </div>
-                <div className="text-sm text-muted-foreground select-none mt-1">
-                  {product.reviews} reviews
-                </div>
-              </div>
-              <div className="flex-1">
-                <div className="space-y-1">
-                  {[5, 4, 3, 2, 1].map((star) => (
-                    <div key={star} className="flex items-center gap-2">
-                      <div className="text-sm w-2">{star}</div>
-                      <Star className="h-3 w-3 fill-primary text-primary" />
-                      <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-primary rounded-full"
-                          style={{
-                            width: `${
-                              star === 5
-                                ? 70
-                                : star === 4
-                                ? 20
-                                : star === 3
-                                ? 5
-                                : star === 2
-                                ? 3
-                                : 2
-                            }%`,
-                          }}
-                        ></div>
-                      </div>
-                      <div className="text-xs text-muted-foreground w-8">
-                        {star === 5
-                          ? 70
-                          : star === 4
-                          ? 20
-                          : star === 3
-                          ? 5
-                          : star === 3
-                          ? 3
-                          : 2}
-                        %
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <Separator />
-
-            {/* Sample Reviews */}
-            <div className="space-y-6">
-              <ReviewItem
-                name="Sarah J."
-                date="2 weeks ago"
-                rating={5}
-                review="This shirt is exactly what I was looking for! The material is soft and comfortable, and the oversized fit is perfect. I ordered my usual size and it fits as expected. Highly recommend!"
-              />
-              <Separator />
-              <ReviewItem
-                name="Michael T."
-                date="1 month ago"
-                rating={4}
-                review="Great quality shirt, very comfortable. The only reason I'm giving 4 stars instead of 5 is because the color is slightly different than what's shown in the photos. Still very happy with my purchase though."
-              />
-              <Separator />
-              <ReviewItem
-                name="Emma L."
-                date="2 months ago"
-                rating={5}
-                review="I love everything about this shirt! The fabric is high quality and it washes well without shrinking. I've already ordered another one in a different color."
-              />
-
-              <div className="text-center pt-4">
-                <Button variant="outline">Load More Reviews</Button>
-              </div>
-            </div>
-          </div>
-        </TabsContent>
       </Tabs>
-    </div>
-  );
-}
-
-// Review Item Component
-function ReviewItem({
-  name,
-  date,
-  rating,
-  review,
-}: {
-  name: string;
-  date: string;
-  rating: number;
-  review: string;
-}) {
-  return (
-    <div className="space-y-2">
-      <div className="flex justify-between">
-        <div>
-          <h4 className="font-medium">{name}</h4>
-          <div className="flex items-center gap-2">
-            <div className="flex">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  className={`h-3 w-3 ${
-                    i < rating
-                      ? "fill-primary text-primary"
-                      : "fill-muted text-muted-foreground"
-                  }`}
-                />
-              ))}
-            </div>
-            <span className="text-xs text-muted-foreground">{date}</span>
-          </div>
-        </div>
-      </div>
-      <p className="text-muted-foreground">{review}</p>
     </div>
   );
 }

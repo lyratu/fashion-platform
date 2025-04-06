@@ -12,68 +12,34 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Minus, Plus, Trash2, ArrowLeft, CreditCard } from "lucide-react";
-
-type CartItem = {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  quantity: number;
-  size?: string;
-  color?: string;
-};
+import { useGetCart } from "@/services/mall/cart";
+import { Popover, PopoverContent } from "@/components/ui/popover";
+import { Close, PopoverTrigger } from "@radix-ui/react-popover";
 
 export default function CartPage() {
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 1,
-      name: "宽松棉质衬衫",
-      price: 49.99,
-      image: "/placeholder.svg?height=200&width=150",
-      quantity: 1,
-      size: "M码",
-      color: "白色",
-    },
-    {
-      id: 2,
-      name: "高腰牛仔裤",
-      price: 79.99,
-      image: "/placeholder.svg?height=200&width=150",
-      quantity: 1,
-      size: "28码",
-      color: "蓝色",
-    },
-    {
-      id: 5,
-      name: "皮革斜挎包",
-      price: 129.99,
-      image: "/placeholder.svg?height=200&width=150",
-      quantity: 1,
-      color: "黑色",
-    },
-  ]);
+  const { data: cartItems } = useGetCart();
 
-  const updateQuantity = (id: number, newQuantity: number) => {
-    if (newQuantity < 1) return;
+  // const updateQuantity = (id: number, newQuantity: number) => {
+  //   if (newQuantity < 1) return;
 
-    setCartItems(
-      cartItems.map((item) =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
-  };
+  //   setCartItems(
+  //     cartItems.map((item) =>
+  //       item.id === id ? { ...item, quantity: newQuantity } : item
+  //     )
+  //   );
+  // };
 
-  const removeItem = (id: number) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
-  };
+  // const removeItem = (id: number) => {
+  //   setCartItems(cartItems.filter((item) => item.id !== id));
+  // };
 
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
+  const subtotal = cartItems?.list.reduce(
+    (sum, item) => sum + (item.price || 0) * item.count,
     0
   );
-  const shipping = 4.99;
-  const tax = subtotal * 0.08;
-  const total = subtotal + shipping + tax;
+  // const shipping = 4.99;
+  // const tax = subtotal * 0.08;
+  // const total = subtotal + shipping + tax;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -84,10 +50,10 @@ export default function CartPage() {
             继续购物
           </Link>
         </Button>
-        <h1 className="text-3xl font-bold">购物车</h1>
+        <h1 className="text-xl font-bold">购物车</h1>
       </div>
 
-      {cartItems.length === 0 ? (
+      {cartItems?.list.length === 0 ? (
         <Card className="text-center py-12">
           <CardContent>
             <div className="mb-4">
@@ -108,24 +74,22 @@ export default function CartPage() {
           <div className="md:col-span-2">
             <Card>
               <CardHeader>
-                <CardTitle>商品 ({cartItems.length})</CardTitle>
+                <CardTitle>商品 ({cartItems?.pagination.total})</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {cartItems.map((item) => (
+                {cartItems?.list.map((item) => (
                   <div key={item.id} className="flex gap-4">
                     <div className="relative h-24 w-20 flex-shrink-0">
                       <img
-                        src={item.image || "/placeholder.svg"}
-                        alt={item.name}
+                        src={item.mainImage || "/placeholder.svg"}
+                        alt={item.title}
                         className="object-cover object-top rounded-md"
                       />
                     </div>
                     <div className="flex-1">
                       <div className="flex justify-between">
-                        <h3 className="font-medium">{item.name}</h3>
-                        <p className="font-bold">
-                          ￥{(item.price * item.quantity).toFixed(2)}
-                        </p>
+                        <h3 className="font-medium">{item.title}</h3>
+                        <p className="font-bold">￥{item.price}</p>
                       </div>
                       <div className="text-sm text-muted-foreground select-none mb-2">
                         {item.size && (
@@ -138,35 +102,49 @@ export default function CartPage() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 rounded-none"
-                            onClick={() =>
-                              updateQuantity(item.id, item.quantity - 1)
-                            }
+                            className="h-8 w-8 rounded-none cursor-pointer"
+                            onClick={() => {
+                              // updateQuantity(item.id, item.quantity - 1)
+                            }}
                           >
                             <Minus className="h-3 w-3" />
                           </Button>
-                          <span className="w-8 text-center">
-                            {item.quantity}
-                          </span>
+                          <span className="w-8 text-center">{item.count}</span>
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 rounded-none"
-                            onClick={() =>
-                              updateQuantity(item.id, item.quantity + 1)
-                            }
+                            className="h-8 w-8 rounded-none cursor-pointer"
+                            onClick={() => {
+                              // updateQuantity(item.id, item.quantity + 1)
+                            }}
                           >
                             <Plus className="h-3 w-3" />
                           </Button>
                         </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => removeItem(item.id)}
-                        >
-                          <Trash2 className="h-4 w-4 mr-1" />
-                          移除
-                        </Button>
+
+                        <Popover>
+                          <PopoverTrigger>
+                            <Trash2 className="h-4 w-4 cursor-pointer" />
+                          </PopoverTrigger>
+                          <PopoverContent className=" w-fit space-y-2 ">
+                            <div>确认删除此商品？</div>
+                            <Button
+                              size="sm"
+                              className="h-8 px-2 cursor-pointer mr-4"
+                            >
+                              确认
+                            </Button>
+                            <Close>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-8 px-2 cursor-pointer"
+                              >
+                                取消
+                              </Button>
+                            </Close>
+                          </PopoverContent>
+                        </Popover>
                       </div>
                     </div>
                   </div>
@@ -184,28 +162,23 @@ export default function CartPage() {
               <CardContent className="space-y-4">
                 <div className="flex justify-between">
                   <span>价格</span>
-                  <span>￥{subtotal.toFixed(2)}</span>
+                  <span>￥{subtotal?.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>运费</span>
-                  <span>￥{shipping.toFixed(2)}</span>
+                  {subtotal?.toFixed(2) || 0 >= 200 ? (
+                    <div>
+                      <span className="line-through text-xs mr-2">￥20</span>
+                      <span>￥0</span>
+                    </div>
+                  ) : (
+                    <span>￥{subtotal?.toFixed(2)}</span>
+                  )}
                 </div>
-                {/* <div className="flex justify-between">
-                  <span>Tax</span>
-                  <span>￥{tax.toFixed(2)}</span>
-                </div> */}
                 <Separator />
                 <div className="flex justify-between font-bold">
                   <span>合计</span>
-                  <span>￥{total.toFixed(2)}</span>
-                </div>
-
-                <div className="pt-4">
-                  <p className="text-sm mb-2">促销码</p>
-                  <div className="flex gap-2">
-                    <Input placeholder="请输入促销码" className="flex-1" />
-                    <Button variant="outline">应用</Button>
-                  </div>
+                  {/* <span>￥{total.toFixed(2)}</span> */}
                 </div>
               </CardContent>
               <CardFooter>

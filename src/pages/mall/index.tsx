@@ -5,32 +5,40 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heart, ShoppingCart } from "lucide-react";
 import { useGetGoods } from "@/services/mall";
 import { useGetDictInfo } from "@/services/dict";
+import { useCartStore } from "@/stores/cart";
+import { CartItem } from "@/types/cart";
+import { useAddCard } from "@/services/mall/cart";
+import { goods } from "@/types/goods";
+import { toast } from "sonner";
 
 export default function MallPage() {
   const { data: types } = useGetDictInfo(["goodsType"]);
   const { data } = useGetGoods(1, 10, "createTime");
-  // Fetch goods with page 1, size 10, and order by createdAt
 
-  // let products = [
-  //   {
-  //     id: 1,
-  //     name: "Oversized Cotton Shirt",
-  //     price: 49.99,
-  //     image: "/placeholder.svg?height=400&width=300",
-  //     category: "Tops",
-  //     isNew: true,
-  //     isSale: false,
-  //     rating: 4.5,
-  //     reviews: 28,
-  //   },
-  // ];
-  // products = products.filter((e) => e.id == -1);
+  const { addCardFn } = useAddCard();
   const products = data?.list;
-  console.log(
-    "%c [ data?.list ]-31",
-    "font-size:13px; background:pink; color:#bf2c9f;",
-    data?.list
-  );
+
+  const { addItem } = useCartStore();
+  // 示例：添加商品到购物车
+  const handleAddItem = (goods: goods) => {
+    const newItem: CartItem = {
+      goodsId: goods.id,
+      count: 1,
+      color: goods.color[0].label,
+      size: goods.size[0].label,
+    };
+    addCardFn(newItem, {
+      onSuccess: () => {
+        addItem(newItem);
+        toast.success("添加购物车成功！", {
+          position: "bottom-right",
+          duration: 1000,
+          closeButton: true,
+        });
+      },
+    });
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -106,7 +114,13 @@ export default function MallPage() {
                   >
                     <Link to={`/mall/product/${product.id}`}>详情</Link>
                   </Button>
-                  <Button size="sm" className="flex-1">
+                  <Button
+                    size="sm"
+                    className="flex-1 cursor-pointer"
+                    onClick={() => {
+                      handleAddItem(product);
+                    }}
+                  >
                     <ShoppingCart className="h-4 w-4 mr-2" />
                     加入
                   </Button>
