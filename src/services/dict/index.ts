@@ -37,14 +37,14 @@ export const useGetDictTypes = () => {
 
 export const useGetDictInfo = (types: Array<string>) => {
   return useQuery({
-    queryKey: ["dictInfo"],
+    queryKey: ["dictInfo", types],
     queryFn: () => getDictInfo(types),
   });
 };
 
 export const useGetDictValues = (value: string | string[], key: string) => {
   return useQuery({
-    queryKey: ["dictValues"],
+    queryKey: ["dictValues", value, key],
     queryFn: () => getDictValues(value, key),
   });
 };

@@ -12,7 +12,7 @@ export const getGoodsDet = async (id: string) => {
 };
 export const useGetGoodsDet = (id: string) => {
   return useQuery({
-    queryKey: [`goodsDet${id}`],
+    queryKey: [`goodsDet`,id],
     queryFn: () => getGoodsDet(id),
   });
 };

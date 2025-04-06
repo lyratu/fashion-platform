@@ -123,7 +123,7 @@ export const CommentUser: React.FC<ChildProps> = (params) => {
                   delFn(comment.id as number, {
                     onSuccess: () => {
                       queryClient.invalidateQueries({
-                        queryKey: [`commentPage${id}`],
+                        queryKey: [`commentPage`,id],
                       });
                     },
                   });

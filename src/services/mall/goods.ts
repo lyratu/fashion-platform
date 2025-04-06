@@ -29,7 +29,7 @@ export const useGetGoodsRec = () => {
 
 export const useGetGoods = (page: number, size: number, order: string) => {
   return useQuery({
-    queryKey: ["goods"],
+    queryKey: ["goods",page,size,order],
     queryFn: () => getGoods(page, size, order),
   });
 };

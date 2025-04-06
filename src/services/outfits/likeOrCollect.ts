@@ -59,7 +59,7 @@ export const getLikeRecord = async (id: string) => {
 
 export const useGetLikeRecord = (id: string) => {
   return useQuery({
-    queryKey: [`likeRec${id}`],
+    queryKey: [`likeRec`,id],
     queryFn: async () => {
       return await getLikeRecord(id);
     },
@@ -76,7 +76,7 @@ export const getCollectRecord = async (id: string) => {
 
 export const useGetCollectRecord = (id: string) => {
   return useQuery({
-    queryKey: [`collectRec${id}`],
+    queryKey: [`collectRec`,id],
     queryFn: async () => {
       return await getCollectRecord(id);
     },

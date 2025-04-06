@@ -32,7 +32,7 @@ export function CommentSection() {
   const [commentText, setCommentText] = useState("");
 
   const sendBreak = () => {
-    queryClient.invalidateQueries({ queryKey: [`commentPage${id}`] });
+    queryClient.invalidateQueries({ queryKey: [`commentPage`,id] });
     setCommentText("");
     reply.status = false;
     setReply(reply);

@@ -12,7 +12,7 @@ export const getOutfitsDet = async (id: string) => {
 
 export const useGetOutfitsDet = (id: string) => {
   return useQuery({
-    queryKey: [`outfitsDet${id}`],
+    queryKey: [`outfitsDet`,id],
     queryFn: async () => {
       return await getOutfitsDet(id);
     },
@@ -29,7 +29,7 @@ export const getRelatedArticles = async (id: string) => {
 
 export const useGetRelatedArticles = (id: string) => {
   return useQuery({
-    queryKey: [`outfitsRel${id}`],
+    queryKey: [`outfitsRel`,id],
     queryFn: async () => {
       return await getRelatedArticles(id);
     },
