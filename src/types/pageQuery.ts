@@ -3,6 +3,7 @@ export interface pageQuery {
   page: number;
   size: number;
   sort: string;
+  category?: string;
 }
 
 export interface pageQueryResponse<T> {

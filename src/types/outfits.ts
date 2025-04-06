@@ -13,7 +13,11 @@ export interface outfits {
   description: string;
   content: string;
   category: number;
-  categoryText: string;
+  categoryText: {
+    name: string;
+    typeId: number;
+    value: string;
+  };
   season: number;
   viewNmber: number;
   likeCount: number;

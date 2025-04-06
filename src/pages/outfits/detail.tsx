@@ -41,7 +41,7 @@ export default function ArticlePage() {
                     variant="outline"
                     className="bg-primary/10 hover:bg-primary/20"
                   >
-                    {info.categoryText}
+                    {info.categoryText.name}
                   </Badge>
                   {/* <div className="flex items-center text-sm text-muted-foreground select-none">
                     <Clock className="mr-1 h-3 w-3" />

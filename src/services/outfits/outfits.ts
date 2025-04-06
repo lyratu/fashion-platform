@@ -1,7 +1,7 @@
 import axios from "@/lib/axios";
 import { outfits } from "@/types/outfits";
-import { pageQuery, pageQueryResponse } from "@/types/pageQuery";
-import { useQuery } from "@tanstack/react-query";
+import { pageQuery } from "@/types/pageQuery";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 export const getOutfits = async (type: number) => {
   const response = await axios.get<Array<outfits>>(
@@ -29,8 +29,14 @@ export const useGetOutfitsFea = () => {
   });
 };
 
+type pageOutfits = {
+  list: Array<outfits>;
+  total: number;
+};
+
 export const getOutfitsPage = async (data: pageQuery) => {
-  const response = await axios.post<pageQueryResponse<outfits>>(
+  if (data.category == "0") delete data.category;
+  const response = await axios.post<pageOutfits>(
     `/app/outfits/info/page`,
     data
   );
@@ -38,10 +44,20 @@ export const getOutfitsPage = async (data: pageQuery) => {
 };
 
 export const useGetOutfitsPage = (data: pageQuery) => {
-  return useQuery({
-    queryKey: ["outfitsPage"],
-    queryFn: async () => {
-      return await getOutfitsPage(data);
+  return useInfiniteQuery<pageOutfits, Error>({
+    queryKey: ["outfitsPage", data],
+    queryFn: ({ pageParam }) =>
+      getOutfitsPage({ ...data, page: pageParam as number }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      const loadedArticles = allPages.reduce(
+        (acc, page) => acc + page.list.length,
+        0
+      );
+      if (loadedArticles < lastPage.total) {
+        return allPages.length + 1;
+      }
+      return undefined;
     },
   });
 };

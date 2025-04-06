@@ -25,7 +25,7 @@ export default function FeaturedArticles() {
                   className="object-cover object-top aspect-[4/3] w-full"
                 />
                 <div className="absolute top-4 left-4">
-                  <Badge variant="secondary">{article.categoryText}</Badge>
+                  <Badge variant="secondary">{article.categoryText.name}</Badge>
                 </div>
               </div>
               <CardContent className=" relative p-6 z-10">

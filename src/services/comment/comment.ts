@@ -36,7 +36,7 @@ export const getPageComment = async (
 
 export const useGetPageComment = (id: string, limit: number) => {
   return useInfiniteQuery<pageComment, Error>({
-    queryKey: [`commentPage${id}`, id, limit],
+    queryKey: [`commentPage`, id, limit],
     queryFn: ({ pageParam }) => getPageComment(id, pageParam, limit),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {

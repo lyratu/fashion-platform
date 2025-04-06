@@ -43,7 +43,6 @@ export function MainNav() {
       active: pathname === "/wardrobe",
     },
   ];
-  console.log("[ pathname ] >", useLocation());
 
   return (
     <div className="flex items-center">

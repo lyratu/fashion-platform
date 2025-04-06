@@ -26,7 +26,7 @@ export function RelatedArticles() {
                     {article.title}
                   </h4>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
-                    <span>{article.categoryText}</span>
+                    <span>{article.categoryText.name}</span>
                   </div>
                   <p className="text-sm text-muted-foreground select-none line-clamp-2">
                     {article.description}

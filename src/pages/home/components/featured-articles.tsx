@@ -19,7 +19,7 @@ export default function FeaturedArticles() {
           </div>
           <CardContent className="p-4 z-10 relative">
             <div className="flex justify-between items-center mb-2">
-              <Badge variant="secondary">{article.categoryText}</Badge>
+              <Badge variant="secondary">{article.categoryText.name}</Badge>
               <span className="text-xs text-muted-foreground">
                 {dateTool.formattedDate(article?.createTime as string)}
               </span>

@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heart, ShoppingCart } from "lucide-react";
 import { useGetGoods } from "@/services/mall";
@@ -11,7 +10,6 @@ export default function MallPage() {
   const { data: types } = useGetDictInfo(["goodsType"]);
   const { data } = useGetGoods(1, 10, "createTime");
   // Fetch goods with page 1, size 10, and order by createdAt
-  const categories = types?.goodsType;
 
   // let products = [
   //   {
@@ -64,7 +62,7 @@ export default function MallPage() {
           <TabsTrigger key={0} value={"全部"} className="mb-1">
             全部
           </TabsTrigger>
-          {categories?.map((category) => (
+          {types?.goodsType.map((category) => (
             <TabsTrigger
               key={category.id}
               value={category.name}
@@ -87,42 +85,11 @@ export default function MallPage() {
                       className="h-full  object-cover object-top w-full"
                     />
                   </div>
-                  {/* {product.isNew && (
-                    <Badge className="absolute top-2 left-2">New</Badge>
-                  )}
-                  {product.isSale && (
-                    <Badge
-                      variant="destructive"
-                      className="absolute top-2 right-2"
-                    >
-                      Sale
-                    </Badge>
-                  )} */}
-                  {/* <Button
-                    size="icon"
-                    variant="ghost"
-                    className="absolute top-2 right-2 h-8 w-8 rounded-full bg-background/80"
-                    style={{ top: product.isSale ? "40px" : "8px" }}
-                  >
-                    <Heart className="h-4 w-4" />
-                  </Button> */}
                 </div>
                 <CardContent className="p-4">
                   <h3 className="font-medium line-clamp-1">{product.title}</h3>
                   <div className="flex items-center justify-between mt-1">
                     <div className="flex items-center">
-                      {/* {product.isSale ? (
-                        <>
-                          <span className="text-muted-foreground line-through mr-2">
-                            ${product.price}
-                          </span>
-                          <span className="font-bold text-destructive">
-                            ${product.salePrice}
-                          </span>
-                        </>
-                      ) : (
-                        <span className="font-bold">${product.price}</span>
-                      )} */}
                       <span className="font-bold">￥{product.price}</span>
                     </div>
                     <div className="text-xs text-muted-foreground">
