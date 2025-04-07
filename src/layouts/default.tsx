@@ -19,10 +19,10 @@ export default function NavBar() {
             <MainNav />
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon">
+            {/* <Button variant="ghost" size="icon">
               <Search className="h-5 w-5" />
               <span className="sr-only">Search</span>
-            </Button>
+            </Button> */}
             <Button variant="ghost" size="icon" asChild>
               <Link to="/mall/cart">
                 <ShoppingCart className="h-5 w-5" />
@@ -33,6 +33,7 @@ export default function NavBar() {
               variant="ghost"
               size="icon"
               asChild
+              className=" cursor-pointer"
               onClick={() => {
                 if (token) navigate("/profile");
                 else navigate("/auth");

@@ -1,6 +1,5 @@
 import type React from "react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,37 +8,63 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Minus, Plus, Trash2, ArrowLeft, CreditCard } from "lucide-react";
-import { useGetCart } from "@/services/mall/cart";
+import {
+  useDeleteGoods,
+  useGetCart,
+  useUpdateChecked,
+  useUpdateGoods,
+} from "@/services/mall/cart";
 import { Popover, PopoverContent } from "@/components/ui/popover";
 import { Close, PopoverTrigger } from "@radix-ui/react-popover";
+import { useQueryClient } from "@tanstack/react-query";
+import { CartItem } from "@/types/cart";
+import { Checkbox } from "@/components/ui/checkbox";
+import { number } from "zod";
 
 export default function CartPage() {
   const { data: cartItems } = useGetCart();
+  const { deleteGoodsFn } = useDeleteGoods();
+  const navigate = useNavigate();
+  const { updateGoodsFn, updateLoading } = useUpdateGoods();
+  const { updateCheckedFn } = useUpdateChecked();
+  const queryClient = useQueryClient();
 
-  // const updateQuantity = (id: number, newQuantity: number) => {
-  //   if (newQuantity < 1) return;
+  const deleteItem = (id: number) => {
+    deleteGoodsFn(id, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["myCart"] });
+      },
+    });
+  };
+  const updateQuantity = ({ id }: CartItem, newCount: number) => {
+    if (newCount < 1) return;
+    updateGoodsFn(
+      { id: id as number, count: newCount },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["myCart"] });
+        },
+      }
+    );
+  };
 
-  //   setCartItems(
-  //     cartItems.map((item) =>
-  //       item.id === id ? { ...item, quantity: newQuantity } : item
-  //     )
-  //   );
-  // };
-
-  // const removeItem = (id: number) => {
-  //   setCartItems(cartItems.filter((item) => item.id !== id));
-  // };
+  const changCheck = (checked: number, id: number) => {
+    updateCheckedFn(
+      { ids: [id], checked },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["myCart"] });
+        },
+      }
+    );
+  };
 
   const subtotal = cartItems?.list.reduce(
-    (sum, item) => sum + (item.price || 0) * item.count,
+    (sum, item) => (item.checked == 1 ? sum + item.price * item.count : sum),
     0
   );
-  // const shipping = 4.99;
-  // const tax = subtotal * 0.08;
-  // const total = subtotal + shipping + tax;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -78,8 +103,19 @@ export default function CartPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 {cartItems?.list.map((item) => (
-                  <div key={item.id} className="flex gap-4">
-                    <div className="relative h-24 w-20 flex-shrink-0">
+                  <div key={item.id} className="flex gap-4 items-center">
+                    <Checkbox
+                      className=" w-6 h-6 cursor-pointer"
+                      id="check"
+                      onCheckedChange={(e) => {
+                        changCheck(e ? 1 : 0, item.id);
+                      }}
+                      checked={item.checked == 1}
+                    />
+                    <div
+                      className="relative w-20 flex-shrink-0 cursor-pointer"
+                      onClick={() => navigate(`/mall/product/${item.goodsId}`)}
+                    >
                       <img
                         src={item.mainImage || "/placeholder.svg"}
                         alt={item.title}
@@ -102,9 +138,10 @@ export default function CartPage() {
                           <Button
                             variant="ghost"
                             size="icon"
+                            disabled={updateLoading}
                             className="h-8 w-8 rounded-none cursor-pointer"
                             onClick={() => {
-                              // updateQuantity(item.id, item.quantity - 1)
+                              updateQuantity(item, item.count - 1);
                             }}
                           >
                             <Minus className="h-3 w-3" />
@@ -113,9 +150,10 @@ export default function CartPage() {
                           <Button
                             variant="ghost"
                             size="icon"
+                            disabled={updateLoading}
                             className="h-8 w-8 rounded-none cursor-pointer"
                             onClick={() => {
-                              // updateQuantity(item.id, item.quantity + 1)
+                              updateQuantity(item, item.count + 1);
                             }}
                           >
                             <Plus className="h-3 w-3" />
@@ -131,6 +169,9 @@ export default function CartPage() {
                             <Button
                               size="sm"
                               className="h-8 px-2 cursor-pointer mr-4"
+                              onClick={() => {
+                                deleteItem(item.id);
+                              }}
                             >
                               确认
                             </Button>
@@ -166,13 +207,13 @@ export default function CartPage() {
                 </div>
                 <div className="flex justify-between">
                   <span>运费</span>
-                  {subtotal?.toFixed(2) || 0 >= 200 ? (
+                  {(subtotal as number) >= 200 ? (
                     <div>
                       <span className="line-through text-xs mr-2">￥20</span>
                       <span>￥0</span>
                     </div>
                   ) : (
-                    <span>￥{subtotal?.toFixed(2)}</span>
+                    <span>￥20</span>
                   )}
                 </div>
                 <Separator />
@@ -182,7 +223,13 @@ export default function CartPage() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button className="w-full" size="lg">
+                <Button
+                  className="w-full cursor-pointer"
+                  size="lg"
+                  onClick={() => {
+                    navigate("/mall/cart/checkout");
+                  }}
+                >
                   <CreditCard className="h-4 w-4 mr-2" />
                   结账
                 </Button>

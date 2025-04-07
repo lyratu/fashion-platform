@@ -14,8 +14,10 @@ import Mall from "@/pages/mall";
 import Cart from "@/pages/mall/cart";
 import Community from "@/pages/community";
 import Wardrobe from "@/pages/wardrobe";
+import Checkout from "@/pages/mall/checkout";
 import Product from "@/pages/mall/product";
 import Profile from "@/pages/profile";
+import Address from "@/pages/profile/address";
 import ErrorBoundary from "@/pages/error";
 export const routes = createRoutesFromElements(
   <Route element={<Providers />} errorElement={<ErrorBoundary />}>
@@ -27,10 +29,12 @@ export const routes = createRoutesFromElements(
       <Route path="/outfits/:id" element={<OutfitsDetail />} />
       <Route path="/mall" element={<Mall />} />
       <Route path="/mall/cart" element={<Cart />} />
+      <Route path="/mall/cart/checkout" element={<Checkout />} />
       <Route path="/mall/product/:id" element={<Product />} />
       <Route path="/community" element={<Community />} />
       <Route path="/wardrobe" element={<Wardrobe />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/profile/address" element={<Address />} />
     </Route>
   </Route>
 );

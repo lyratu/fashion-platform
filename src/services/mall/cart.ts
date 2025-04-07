@@ -27,6 +27,82 @@ export const useAddCard = () => {
   return { addCardFn, data, error };
 };
 
+export const updateGoods = async (data: {
+  id: number;
+  count?: number;
+  size?: string;
+  color?: string;
+  checked?: number;
+}) => {
+  const response = await axios.post<ApiResponse<goods>>(
+    `/app/cart/cart/updateGoodsInfo`,
+    data
+  );
+  return response.data;
+};
+
+export const useUpdateGoods = () => {
+  const {
+    error,
+    isPending: updateLoading,
+    data,
+    mutateAsync: updateGoodsFn,
+  } = useMutation({
+    mutationFn: updateGoods,
+    onSuccess: () => {},
+    onError: () => {},
+  });
+
+  return { updateGoodsFn, updateLoading, data, error };
+};
+
+export const updateChecked = async (data: {
+  ids: number[];
+  checked: number;
+}) => {
+  const response = await axios.post<ApiResponse<goods>>(
+    `/app/cart/cart/updateChecked`,
+    data
+  );
+  return response.data;
+};
+
+export const useUpdateChecked = () => {
+  const {
+    error,
+    data,
+    mutateAsync: updateCheckedFn,
+  } = useMutation({
+    mutationFn: updateChecked,
+    onSuccess: () => {},
+    onError: () => {},
+  });
+
+  return { updateCheckedFn, data, error };
+};
+
+export const deleteGoods = async (id: number) => {
+  const response = await axios.post<ApiResponse<goods>>(
+    `/app/cart/cart/deleteGoods?id=${id}`,
+    {}
+  );
+  return response.data;
+};
+
+export const useDeleteGoods = () => {
+  const {
+    error,
+    data,
+    mutateAsync: deleteGoodsFn,
+  } = useMutation({
+    mutationFn: deleteGoods,
+    onSuccess: () => {},
+    onError: () => {},
+  });
+
+  return { deleteGoodsFn, data, error };
+};
+
 export const getCart = async () => {
   const response = await axios.post<pageQueryResponse<goods & CartItem>>(
     `/app/cart/cart/page`,
@@ -40,5 +116,17 @@ export const useGetCart = () => {
     queryKey: [`myCart`],
     queryFn: getCart,
     staleTime: 0,
+  });
+};
+
+export const getCartCount = async () => {
+  const response = await axios.get<number>(`/app/cart/cart/getCartCount`, {});
+  return response.data;
+};
+
+export const useGetCartCount = () => {
+  return useQuery({
+    queryKey: [`myCartCount`],
+    queryFn: getCartCount,
   });
 };

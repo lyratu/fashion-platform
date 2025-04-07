@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { Heart, MessageCircle, Share2, Send } from "lucide-react";
+import { Heart, MessageCircle, Share2, Send, Frame } from "lucide-react";
 
 export default function CommunityPage() {
   const [newPostContent, setNewPostContent] = useState("");
@@ -117,10 +117,8 @@ export default function CommunityPage() {
       <div className="flex flex-col md:flex-row gap-6">
         {/* Main content */}
         <div className="flex-1">
-          <h1 className="text-3xl font-bold mb-6">社区</h1>
-
           {/* New post form */}
-          <Card className="mb-8">
+          <Card className="mb-4">
             <CardHeader className="pb-3">
               <h2 className="text-lg font-medium">分享你的想法</h2>
             </CardHeader>
@@ -139,10 +137,23 @@ export default function CommunityPage() {
                       placeholder="您今天对时尚有什么想法？"
                       className="mb-3"
                       value={newPostContent}
+                      maxLength={1000}
                       onChange={(e) => setNewPostContent(e.target.value)}
                     />
-                    <div className="flex justify-end">
-                      <Button type="submit" disabled={!newPostContent.trim()}>
+                    <div className="flex justify-between">
+                      <Button
+                        variant="outline"
+                        size={"sm"}
+                        className=" cursor-pointer"
+                      >
+                        <Frame />
+                        话题
+                      </Button>
+                      <Button
+                        size={"sm"}
+                        type="submit"
+                        disabled={!newPostContent.trim()}
+                      >
                         <Send className="h-4 w-4 mr-2" />
                         发表
                       </Button>
@@ -154,93 +165,64 @@ export default function CommunityPage() {
           </Card>
 
           {/* Posts tabs */}
-          <Tabs defaultValue="All">
-            <TabsList className="mb-6 flex flex-wrap h-auto">
-              {categories.map((category) => (
-                <TabsTrigger key={category} value={category} className="mb-1">
-                  {category}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-
-            {categories.map((category) => (
-              <TabsContent
-                key={category}
-                value={category}
-                className="mt-0 space-y-6"
-              >
-                {posts
-                  .filter(
-                    (post) => category === "All" || post.category === category
-                  )
-                  .map((post) => (
-                    <Card key={post.id}>
-                      <CardHeader className="pb-3">
-                        <div className="flex items-start gap-3">
-                          <Avatar>
-                            <AvatarImage
-                              src={post.user.avatar}
-                              alt={post.user.name}
-                            />
-                            <AvatarFallback>
-                              {post.user.name.charAt(0)}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1">
-                            <div className="flex justify-between">
-                              <div>
-                                <h4 className="font-medium">
-                                  {post.user.name}
-                                </h4>
-                                <p className="text-xs text-muted-foreground">
-                                  {post.user.username}
-                                </p>
-                              </div>
-                              <span className="text-xs text-muted-foreground">
-                                {post.time}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="pb-3">
-                        <p className="mb-4">{post.content}</p>
-                        {post.image && (
-                          <div className="relative h-80 w-full rounded-md overflow-hidden mb-4">
-                            <img
-                              src={post.image || "/placeholder.svg"}
-                              alt="Post image"
-                              className="object-cover object-top"
-                            />
-                          </div>
-                        )}
-                      </CardContent>
-                      <CardFooter className="border-t pt-3 flex justify-between">
-                        <Button variant="ghost" size="sm">
-                          <Heart className="h-4 w-4 mr-1" />
-                          {post.likes}
-                        </Button>
-                        <Button variant="ghost" size="sm">
-                          <MessageCircle className="h-4 w-4 mr-1" />
-                          {post.comments}
-                        </Button>
-                        <Button variant="ghost" size="sm">
-                          <Share2 className="h-4 w-4 mr-1" />
-                          Share
-                        </Button>
-                      </CardFooter>
-                    </Card>
-                  ))}
-              </TabsContent>
-            ))}
-          </Tabs>
+          {posts.map((post) => (
+            <Card key={post.id} className="mb-4">
+              <CardHeader className="pb-3">
+                <div className="flex items-start gap-3">
+                  <Avatar>
+                    <AvatarImage src={post.user.avatar} alt={post.user.name} />
+                    <AvatarFallback>{post.user.name.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <div className="flex justify-between">
+                      <div>
+                        <h4 className="font-medium">{post.user.name}</h4>
+                        <p className="text-xs text-muted-foreground">
+                          {post.user.username}
+                        </p>
+                      </div>
+                      <span className="text-xs text-muted-foreground">
+                        {post.time}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="pb-3">
+                <p className="mb-4">{post.content}</p>
+                {post.image && (
+                  <div className="relative h-80 w-full rounded-md overflow-hidden mb-4">
+                    <img
+                      src={post.image || "/placeholder.svg"}
+                      alt="Post image"
+                      className="object-cover object-top"
+                    />
+                  </div>
+                )}
+              </CardContent>
+              <CardFooter className=" border-t flex justify-between pb-0 py-2">
+                <Button variant="ghost" size="sm" className=" cursor-pointer">
+                  <Heart className="h-4 w-4 mr-1" />
+                  {post.likes}
+                </Button>
+                <Button variant="ghost" size="sm" className=" cursor-pointer">
+                  <MessageCircle className="h-4 w-4 mr-1" />
+                  {post.comments}
+                </Button>
+                <Button variant="ghost" size="sm" className=" cursor-pointer">
+                  <Share2 className="h-4 w-4 mr-1" />
+                  分享
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
         </div>
 
         {/* Sidebar */}
         <div className="w-full md:w-80 space-y-6">
           <Card>
             <CardHeader>
-              <h2 className="text-lg font-medium">流行主题</h2>
+              <h2 className="text-lg font-medium">流行趋势</h2>
             </CardHeader>
             <CardContent className="pb-3">
               <ul className="space-y-2">

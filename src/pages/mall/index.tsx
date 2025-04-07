@@ -7,16 +7,20 @@ import { useGetGoods } from "@/services/mall";
 import { useGetDictInfo } from "@/services/dict";
 import { useCartStore } from "@/stores/cart";
 import { CartItem } from "@/types/cart";
-import { useAddCard } from "@/services/mall/cart";
+import { useAddCard, useGetCartCount } from "@/services/mall/cart";
 import { goods } from "@/types/goods";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function MallPage() {
   const { data: types } = useGetDictInfo(["goodsType"]);
   const { data } = useGetGoods(1, 10, "createTime");
+  const queryClient = useQueryClient();
 
   const { addCardFn } = useAddCard();
   const products = data?.list;
+
+  const { data: count } = useGetCartCount();
 
   const { addItem } = useCartStore();
   // 示例：添加商品到购物车
@@ -30,6 +34,7 @@ export default function MallPage() {
     addCardFn(newItem, {
       onSuccess: () => {
         addItem(newItem);
+        queryClient.invalidateQueries({ queryKey: ["myCartCount"] });
         toast.success("添加购物车成功！", {
           position: "bottom-right",
           duration: 1000,
@@ -52,7 +57,7 @@ export default function MallPage() {
           <Button variant="outline" size="sm" asChild>
             <Link to="/mall/cart">
               <ShoppingCart className="h-4 w-4 mr-2" />
-              购物车 (0)
+              购物车 ({count})
             </Link>
           </Button>
           <Button variant="outline" size="sm" asChild>
