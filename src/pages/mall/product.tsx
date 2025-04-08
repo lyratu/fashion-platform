@@ -229,7 +229,7 @@ export default function ProductDetailPage() {
 
           {/* Action Buttons */}
           <div className="flex gap-4">
-            <Button className="flex-1 cursor-pointer">
+            <Button className=" cursor-pointer w-fit">
               <ShoppingCart className="h-4 w-4 mr-2 " />
               添加到购物车
             </Button>

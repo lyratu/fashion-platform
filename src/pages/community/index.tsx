@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { Heart, MessageCircle, Share2, Send, Frame } from "lucide-react";
+import { Heart, MessageCircle, Share2, Send, Frame, ImagePlus } from "lucide-react";
 
 export default function CommunityPage() {
   const [newPostContent, setNewPostContent] = useState("");
@@ -140,7 +140,7 @@ export default function CommunityPage() {
                       maxLength={1000}
                       onChange={(e) => setNewPostContent(e.target.value)}
                     />
-                    <div className="flex justify-between">
+                    <div className="flex gap-4">
                       <Button
                         variant="outline"
                         size={"sm"}
@@ -150,8 +150,17 @@ export default function CommunityPage() {
                         话题
                       </Button>
                       <Button
+                        variant="outline"
+                        size={"sm"}
+                        className=" cursor-pointer"
+                      >
+                        <ImagePlus />
+                        图片
+                      </Button>
+                      <Button
                         size={"sm"}
                         type="submit"
+                        className=" ml-auto"
                         disabled={!newPostContent.trim()}
                       >
                         <Send className="h-4 w-4 mr-2" />
