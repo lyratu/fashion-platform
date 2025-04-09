@@ -20,8 +20,6 @@ export const useAddCard = () => {
     mutateAsync: addCardFn,
   } = useMutation({
     mutationFn: addCard,
-    onSuccess: () => {},
-    onError: () => {},
   });
 
   return { addCardFn, data, error };
@@ -49,8 +47,6 @@ export const useUpdateGoods = () => {
     mutateAsync: updateGoodsFn,
   } = useMutation({
     mutationFn: updateGoods,
-    onSuccess: () => {},
-    onError: () => {},
   });
 
   return { updateGoodsFn, updateLoading, data, error };
@@ -74,8 +70,6 @@ export const useUpdateChecked = () => {
     mutateAsync: updateCheckedFn,
   } = useMutation({
     mutationFn: updateChecked,
-    onSuccess: () => {},
-    onError: () => {},
   });
 
   return { updateCheckedFn, data, error };
@@ -96,8 +90,6 @@ export const useDeleteGoods = () => {
     mutateAsync: deleteGoodsFn,
   } = useMutation({
     mutationFn: deleteGoods,
-    onSuccess: () => {},
-    onError: () => {},
   });
 
   return { deleteGoodsFn, data, error };

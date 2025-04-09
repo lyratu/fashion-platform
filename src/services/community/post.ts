@@ -19,11 +19,29 @@ export const useAddPost = () => {
     mutateAsync: addPostFn,
   } = useMutation({
     mutationFn: addPost,
-    onSuccess: () => {},
-    onError: () => {},
   });
 
   return { addPostFn, data, error };
+};
+
+/* 删除个人文章 */
+export const delPost = async (ids: number[]) => {
+  const response = await axios.post<pageQueryResponse<topic>>(
+    "/app/community/post/delete",
+    { ids }
+  );
+  return response.data;
+};
+export const useDelPost = () => {
+  const {
+    error,
+    data,
+    mutateAsync: delPostFn,
+  } = useMutation({
+    mutationFn: delPost,
+  });
+
+  return { delPostFn, data, error };
 };
 
 /* 滚动分页请求社区文章 */
@@ -40,7 +58,7 @@ export const getPostList = async (data: pageQuery) => {
 
 export const useGetPostList = (data: pageQuery) => {
   return useInfiniteQuery<pagePost, Error>({
-    queryKey: ["postPage", data],
+    queryKey: ["postPage"],
     queryFn: ({ pageParam }) =>
       getPostList({ ...data, page: pageParam as number }),
     initialPageParam: 1,

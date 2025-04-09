@@ -32,8 +32,6 @@ export const useAddTopic = () => {
     mutateAsync: addTopicFn,
   } = useMutation({
     mutationFn: addTopic,
-    onSuccess: () => {},
-    onError: () => {},
   });
 
   return { addTopicFn, data, error };

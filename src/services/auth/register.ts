@@ -18,8 +18,6 @@ export const useRegister = () => {
     mutateAsync: registerFn,
   } = useMutation({
     mutationFn: register,
-    onSuccess: () => {},
-    onError: () => {},
   });
 
   return { register: registerFn, regLoading, data, error };

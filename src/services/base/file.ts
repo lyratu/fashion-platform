@@ -17,8 +17,6 @@ export const useUpload = () => {
     mutateAsync: uploadFn,
   } = useMutation({
     mutationFn: upload,
-    onSuccess: () => {},
-    onError: () => {},
   });
 
   return { uploadFn, data, error };

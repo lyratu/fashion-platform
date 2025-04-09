@@ -175,15 +175,9 @@ export default function CartPage() {
                             >
                               确认
                             </Button>
-                            <Close>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="h-8 px-2 cursor-pointer"
-                              >
-                                取消
-                              </Button>
-                            </Close>
+                            <Close className="text-sm cursor-pointer border px-2 py-1 rounded-md">
+                取消
+              </Close>
                           </PopoverContent>
                         </Popover>
                       </div>

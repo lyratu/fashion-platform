@@ -68,8 +68,6 @@ export const useSend = () => {
     mutateAsync: sendFn,
   } = useMutation({
     mutationFn: sendComment,
-    onSuccess: () => {},
-    onError: () => {},
   });
   return { sendFn, sendLoading, data, error };
 };
@@ -89,8 +87,6 @@ export const useDel = () => {
     mutateAsync: delFn,
   } = useMutation({
     mutationFn: delComment,
-    onSuccess: () => {},
-    onError: () => {},
   });
   return { delFn, data, error };
 };

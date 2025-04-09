@@ -17,8 +17,6 @@ export const useDoLike = () => {
     mutateAsync: doLikeFn,
   } = useMutation({
     mutationFn: doLike,
-    onSuccess: () => {},
-    onError: () => {},
   });
   return { doLikeFn, data, error };
 };

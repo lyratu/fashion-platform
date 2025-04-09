@@ -19,8 +19,6 @@ export const useDoLike = () => {
     mutateAsync: doLikeFn,
   } = useMutation({
     mutationFn: doLike,
-    onSuccess: () => {},
-    onError: () => {},
   });
 
   return { doLikeFn, likeLoading, data, error };
@@ -42,8 +40,6 @@ export const useDoCollect = () => {
     mutateAsync: doCollectFn,
   } = useMutation({
     mutationFn: doCollect,
-    onSuccess: () => {},
-    onError: () => {},
   });
 
   return { doCollectFn, collectLoading, data, error };
