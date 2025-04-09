@@ -39,16 +39,19 @@ export const PostForm: React.FC<childProps> = ({ user, handleSubmit }) => {
 
   /* 话题输入 */
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
-
+  const [title, SetTitle] = useState("");
   const [topicList, setTopicList] = useState<topic[]>([]);
-  const { data: topic } = useGetTopic("");
+  const { data: topic } = useGetTopic(title);
 
   /* 话题搜索 */
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && value) {
-      // 当用户按下回车键时，执行某些操作
-      // 此处可以添加你需要执行的逻辑，比如提交表单等
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement> &
+      React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (e.key === "Enter") {
+      const newValue = e.target.value;
+      setTopicList([...topicList, { name: newValue }]);
+      setOpen(false);
     }
   };
 
@@ -56,13 +59,13 @@ export const PostForm: React.FC<childProps> = ({ user, handleSubmit }) => {
   const debouncedSearch = useRef(
     debounce((searchTerm) => {
       // 这里可以替换成你的查询数据库或 API 请求的逻辑
-      // setTopic([{ label: searchTerm, value: "1" }]);
+      SetTitle(searchTerm);
     }, 300)
   ).current;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
-    setValue(newValue);
+
     debouncedSearch(newValue);
   };
 
@@ -162,7 +165,7 @@ export const PostForm: React.FC<childProps> = ({ user, handleSubmit }) => {
                         <Trash2 className="text-white" />
                       </Button>
                     </div>
-                    <span className="p-2 text-[#1d9bf0] text-sm ">
+                    <span className="px-1 text-[#1d9bf0] text-sm ">
                       #{item.name}
                     </span>
                   </div>
@@ -195,14 +198,12 @@ export const PostForm: React.FC<childProps> = ({ user, handleSubmit }) => {
                         onKeyDown={handleKeyDown}
                       />
                       <CommandList>
-                        {value ? (
-                          <CommandEmpty className="p-2">
-                            <div className="flex text-md text-blue-500">
-                              <Keyboard className="mr-2" />
-                              按回车添加话题
-                            </div>
-                          </CommandEmpty>
-                        ) : null}
+                        <CommandEmpty className="p-2">
+                          <div className="flex text-md text-blue-500">
+                            <Keyboard className="mr-2" />
+                            按回车添加话题
+                          </div>
+                        </CommandEmpty>
                         <CommandGroup>
                           {topic?.list.map((item) => (
                             <CommandItem
@@ -214,7 +215,6 @@ export const PostForm: React.FC<childProps> = ({ user, handleSubmit }) => {
                                   ...topicList,
                                   { id: item.id, name: currentValue },
                                 ]);
-                                setValue("");
                                 setOpen(false);
                               }}
                             >

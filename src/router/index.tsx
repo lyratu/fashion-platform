@@ -13,6 +13,7 @@ import OutfitsDetail from "@/pages/outfits/detail";
 import Mall from "@/pages/mall";
 import Cart from "@/pages/mall/cart";
 import Community from "@/pages/community";
+import PostDetail from "@/pages/community/detail";
 import Wardrobe from "@/pages/wardrobe";
 import Checkout from "@/pages/mall/checkout";
 import Product from "@/pages/mall/product";
@@ -32,6 +33,7 @@ export const routes = createRoutesFromElements(
       <Route path="/mall/cart/checkout" element={<Checkout />} />
       <Route path="/mall/product/:id" element={<Product />} />
       <Route path="/community" element={<Community />} />
+      <Route path="/community/post/:id" element={<PostDetail />} />
       <Route path="/wardrobe" element={<Wardrobe />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/profile/address" element={<Address />} />

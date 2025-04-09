@@ -43,9 +43,11 @@ import AddressesPage from "./address";
 import { AvatarUpload } from "./components/avatarUpload";
 import { toast } from "sonner";
 import { NotifyPage } from "./notify";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function ProfilePage() {
   const router = useNavigate();
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("overview");
 
   // Mock recently viewed items
@@ -254,6 +256,7 @@ export default function ProfilePage() {
                 label="退出登录"
                 onClick={() => {
                   localStorage.removeItem("token");
+                  queryClient.clear();
                   router("/auth");
                 }}
               />

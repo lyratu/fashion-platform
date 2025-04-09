@@ -8,6 +8,7 @@ import { Sidebar } from "./components/sidebar";
 import { useQueryClient } from "@tanstack/react-query";
 import { post } from "@/types/post";
 import { useDelPost } from "@/services/community/post";
+import { useLikeOrUnlike } from "@/services/community/like";
 
 export default function CommunityPage() {
   const { data: userInfo } = useGetMyInfo();
@@ -21,8 +22,17 @@ export default function CommunityPage() {
 
   const { delPostFn } = useDelPost();
   const { addPostFn } = useAddPost();
+  const { likeOrUnlikeFn } = useLikeOrUnlike();
   const queryClient = useQueryClient();
 
+  /* 文章点赞 */
+  const handlePostLike = (postId: number) => {
+    likeOrUnlikeFn(postId, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["postPage"] });
+      },
+    });
+  };
   /* 文章删除 */
   const handlePostDel = (ids: number[]) => {
     delPostFn(ids, {
@@ -67,6 +77,7 @@ export default function CommunityPage() {
                   user={userInfo}
                   item={item}
                   handleDel={handlePostDel}
+                  handleLike={handlePostLike}
                 />
               ))
             )}

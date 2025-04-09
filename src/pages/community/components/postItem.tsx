@@ -18,15 +18,23 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User } from "@/types/user";
 import { post } from "@/types/post";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router";
 
 interface childProps extends React.HTMLAttributes<HTMLDivElement> {
   user?: User;
   item: post;
   handleDel: (ids: number[]) => void;
+  handleLike: (postId: number) => void;
 }
 
-export const PostItem: React.FC<childProps> = ({ user, item, handleDel }) => {
+export const PostItem: React.FC<childProps> = ({
+  user,
+  item,
+  handleDel,
+  handleLike,
+}) => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
   return (
     <Card key={item.id} className="mb-4">
       <CardHeader className="pb-3">
@@ -64,15 +72,16 @@ export const PostItem: React.FC<childProps> = ({ user, item, handleDel }) => {
         <div>
           {item.topics &&
             item.topics.map((topic, index) => (
-              <span
+              <Link
                 key={index}
-                className="mr-4 py-2 text-[#1d9bf0] text-sm hover:underline cursor-pointer"
+                to={`/community/tag/${topic.name.replace("#", "")}`}
+                className="text-[#1d9bf0] text-sm hover:underline mr-2"
               >
                 #{topic.name}
-              </span>
+              </Link>
             ))}
         </div>
-        <div className=" grid md:grid-cols-2 gap-2 xl:grid-cols-3">
+        <div className=" grid md:grid-cols-2 gap-2 xl:grid-cols-3 mt-2">
           {item.images.map((url, index) => (
             <img
               src={url}
@@ -84,11 +93,27 @@ export const PostItem: React.FC<childProps> = ({ user, item, handleDel }) => {
         </div>
       </CardContent>
       <CardFooter className=" border-t flex justify-between pb-0 py-2">
-        <Button variant="ghost" size="sm" className=" cursor-pointer">
-          <Heart className="h-4 w-4 mr-1" />
+        <Button
+          variant="ghost"
+          size="sm"
+          className=" cursor-pointer"
+          onClick={() => {
+            handleLike(item.id as number);
+          }}
+        >
+          <Heart
+            className={`h-4 w-4 mr-1 ${
+              item?.likeStatus ? "fill-chart-1 text-chart-1" : ""
+            }`}
+          />
           {item.likeCount}
         </Button>
-        <Button variant="ghost" size="sm" className=" cursor-pointer">
+        <Button
+          variant="ghost"
+          size="sm"
+          className=" cursor-pointer"
+          onClick={() => navigate(`/community/post/${item.id}`)}
+        >
           <MessageCircle className="h-4 w-4 mr-1" />
           {item.commentCount}
         </Button>

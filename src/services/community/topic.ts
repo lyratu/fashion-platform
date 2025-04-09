@@ -6,7 +6,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 export const getTopic = async (name: string) => {
   const response = await axios.post<pageQueryResponse<topic>>(
     "/app/community/topic/page",
-    { keyword: name }
+    { keyWord: name, size: 6 }
   );
   return response.data;
 };

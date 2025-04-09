@@ -1,18 +1,17 @@
+import React from "react";
 import { comment, replyStatus } from "@/types/comment";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 import { useAuthStore } from "@/stores/auth";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Close } from "@radix-ui/react-popover";
 import { Button } from "@/components/ui/button";
 import { queryClient } from "@/lib/query-client";
-import { ThumbsUp, Trash2 } from "lucide-react";
+import { ThumbsUp, Trash2, MoreHorizontal } from "lucide-react";
 import { useDel, useDoLike } from "@/services/comment";
-import { Badge } from "@/components/ui/badge";
 
 interface ChildProps extends React.HTMLAttributes<HTMLDivElement> {
   id: string;
@@ -22,8 +21,15 @@ interface ChildProps extends React.HTMLAttributes<HTMLDivElement> {
   setReply: React.Dispatch<React.SetStateAction<replyStatus>>;
 }
 
-export const CommentUser: React.FC<ChildProps> = (params) => {
-  const { comment, id, setReply, className, setCommentText, parentId } = params;
+export const CommentUser: React.FC<ChildProps> = ({
+  comment,
+  id,
+  setReply,
+  className,
+  setCommentText,
+  parentId,
+}) => {
+  // 格式化评论创建时间
   const formattedDate = new Date(
     comment.createTime as string
   ).toLocaleDateString("zh-CN", {
@@ -39,31 +45,61 @@ export const CommentUser: React.FC<ChildProps> = (params) => {
   const user = useAuthStore((state) => state.user);
 
   return (
-    <div key={comment.id} className={`flex gap-4 ${className || ""}`}>
+    <div className={`flex gap-4 ${className || ""}`}>
+      {/* 头像 */}
       <Avatar>
         <AvatarImage src={comment.user.avatarUrl} alt={comment.user.nickName} />
         <AvatarFallback>{comment.user.nickName.charAt(0)}</AvatarFallback>
       </Avatar>
-      <div className="flex-1 space-y-2">
-        <div className="flex items-center justify-between">
-          <div className=" font-medium ">
-            <span>{comment.user.nickName} </span>
-            {user?.id == comment.user.id ? (
-              <Badge
-                variant="secondary"
-                className=" align-text-top text-gray-600"
-              >
-                作者
-              </Badge>
-            ) : null}
 
+      {/* 评论主体 */}
+      <div className="flex-1 space-y-2">
+        {/* 用户名、日期与删除操作 */}
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="font-medium">{comment.user.nickName}</p>
             <p className="text-xs text-muted-foreground">{formattedDate}</p>
           </div>
+          {comment.user.id === user?.id ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 cursor-pointer"
+                >
+                  <MoreHorizontal className="h-4 w-4" />
+                  <span className="sr-only">更多选项</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  className=" cursor-pointer"
+                  onClick={() => {
+                    delFn(comment.id as number, {
+                      onSuccess: () => {
+                        queryClient.invalidateQueries({
+                          queryKey: [`commentPage`, id],
+                        });
+                      },
+                    });
+                  }}
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  删除评论
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : null}
         </div>
+
+        {/* 评论内容 */}
         <p className="text-sm">
-          <span>{comment.replyTo && `回复 ${comment.replyTo}：`}</span>
+          {comment.replyTo && <span>回复 {comment.replyTo}：</span>}
           {comment.content}
         </p>
+
+        {/* 点赞与回复操作 */}
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"
@@ -71,7 +107,7 @@ export const CommentUser: React.FC<ChildProps> = (params) => {
             className="h-8 px-2 cursor-pointer"
             onClick={() => {
               doLikeFn(comment.id as number);
-              if (comment && comment.likeStatus) {
+              if (comment.likeStatus) {
                 comment.likeStatus = 0;
                 comment.likeCount--;
               } else {
@@ -81,18 +117,16 @@ export const CommentUser: React.FC<ChildProps> = (params) => {
             }}
           >
             <ThumbsUp
-              className={`h-4 w-4 ${
+              className={`h-4 w-4 mr-1 ${
                 comment.likeStatus ? "fill-chart-1 text-chart-1" : ""
               }`}
             />
+            <span>{comment.likeCount}</span>
           </Button>
-          <span className="text-sm text-muted-foreground select-none select-none">
-            {comment.likeCount}
-          </span>
           <Button
             variant="ghost"
             size="sm"
-            className=" cursor-pointer h-8 px-2"
+            className="h-8 px-2 cursor-pointer"
             onClick={() => {
               setReply({
                 parentId: parentId ? parentId : comment.id,
@@ -107,36 +141,6 @@ export const CommentUser: React.FC<ChildProps> = (params) => {
             回复
           </Button>
         </div>
-      </div>
-      <div>
-        {comment.user.id == user?.id ? (
-          <Popover>
-            <PopoverTrigger>
-              <Trash2 className="h-4 w-4 cursor-pointer" />
-            </PopoverTrigger>
-            <PopoverContent className=" w-fit space-y-2 ">
-              <div>确认删除此评论？</div>
-              <Button
-                size="sm"
-                className="h-8 px-2 cursor-pointer mr-4"
-                onClick={() => {
-                  delFn(comment.id as number, {
-                    onSuccess: () => {
-                      queryClient.invalidateQueries({
-                        queryKey: [`commentPage`, id],
-                      });
-                    },
-                  });
-                }}
-              >
-                确认
-              </Button>
-              <Close className="text-sm cursor-pointer border px-2 py-1 rounded-md">
-                取消
-              </Close>
-            </PopoverContent>
-          </Popover>
-        ) : null}
       </div>
     </div>
   );

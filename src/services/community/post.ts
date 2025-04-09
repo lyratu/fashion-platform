@@ -2,6 +2,7 @@ import axios from "@/lib/axios";
 import { pageQuery, pageQueryResponse } from "@/types/pageQuery";
 import { post } from "@/types/post";
 import { topic } from "@/types/topic";
+import { User } from "@/types/user";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 
 export const addPost = async (form: post) => {
@@ -42,6 +43,28 @@ export const useDelPost = () => {
   });
 
   return { delPostFn, data, error };
+};
+
+/* 获取社区活跃用户 */
+type activeInfo = {
+  activityCount: string;
+  commentCount: string;
+  postCount: string;
+  user: User;
+  userId: number;
+};
+export const getActiveUser = async () => {
+  const response = await axios.get<Array<activeInfo>>(
+    "/app/community/post/getActiveUser",
+    {}
+  );
+  return response.data;
+};
+export const useGetActiveUser = () => {
+  return useQuery({
+    queryKey: ["activeUser"],
+    queryFn: getActiveUser,
+  });
 };
 
 /* 滚动分页请求社区文章 */
