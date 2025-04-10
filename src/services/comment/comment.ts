@@ -2,6 +2,7 @@ import axios from "@/lib/axios";
 import { comment, commentForm } from "@/types/comment";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 
+/* 获取社区高赞评论 */
 export const getCommentRec = async () => {
   const response = await axios.get<Array<comment>>(
     "/app/comment/info/getCommentRec",
@@ -17,18 +18,21 @@ export const useGetCommentRec = () => {
   });
 };
 
+
+
 type pageComment = {
   list: Array<comment>;
   total: number;
 };
 
+/* 获取穿搭分享评论列表 */
 export const getPageComment = async (
   id: string,
   page: number | unknown,
   limit: number
 ) => {
   const response = await axios.get<pageComment>(
-    `/app/comment/info/getPageComment?id=${id}&page=${page}&limit=${limit}`,
+    `/app/outfits/info/getPageComment?id=${id}&page=${page}&limit=${limit}`,
     {}
   );
   return response.data;
@@ -52,6 +56,8 @@ export const useGetPageComment = (id: string, limit: number) => {
   });
 };
 
+
+/* 穿搭分享发送评论 */
 export const sendComment = async (form: commentForm) => {
   const response = await axios.post<Array<comment>>(
     `/app/comment/info/sendComment`,
@@ -72,6 +78,7 @@ export const useSend = () => {
   return { sendFn, sendLoading, data, error };
 };
 
+/* 穿搭分享删除评论 */
 export const delComment = async (id: number) => {
   const response = await axios.post<Array<comment>>(
     `/app/comment/info/delComment?id=${id}`,

@@ -11,5 +11,6 @@ export const useGetPostDet = (id: string) => {
   return useQuery({
     queryKey: ["postDet", id],
     queryFn: async () => await getPostDet(id),
+    staleTime: 0,
   });
 };

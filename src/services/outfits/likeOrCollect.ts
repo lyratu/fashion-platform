@@ -1,5 +1,5 @@
 import axios from "@/lib/axios";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { collect } from "@/types/collect";
 import { like } from "@/types/like";
 
@@ -43,38 +43,4 @@ export const useDoCollect = () => {
   });
 
   return { doCollectFn, collectLoading, data, error };
-};
-
-export const getLikeRecord = async (id: string) => {
-  const response = await axios.get<like>(
-    `/app/outfits/like/getLikeRecord?outfitsId=${id}`,
-    {}
-  );
-  return response.data || { likeStatus: 0 };
-};
-
-export const useGetLikeRecord = (id: string) => {
-  return useQuery({
-    queryKey: [`likeRec`,id],
-    queryFn: async () => {
-      return await getLikeRecord(id);
-    },
-  });
-};
-
-export const getCollectRecord = async (id: string) => {
-  const response = await axios.get<collect>(
-    `/app/outfits/collect/getCollectRecord?outfitsId=${id}`,
-    {}
-  );
-  return response.data || { collectStatus: 0 };
-};
-
-export const useGetCollectRecord = (id: string) => {
-  return useQuery({
-    queryKey: [`collectRec`,id],
-    queryFn: async () => {
-      return await getCollectRecord(id);
-    },
-  });
 };

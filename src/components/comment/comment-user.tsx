@@ -106,14 +106,12 @@ export const CommentUser: React.FC<ChildProps> = ({
             size="sm"
             className="h-8 px-2 cursor-pointer"
             onClick={() => {
-              doLikeFn(comment.id as number);
-              if (comment.likeStatus) {
-                comment.likeStatus = 0;
-                comment.likeCount--;
-              } else {
-                comment.likeStatus = 1;
-                comment.likeCount++;
-              }
+              doLikeFn(comment.id as number, {
+                onSuccess: ({ likeStatus, likeCount }) => {
+                  comment.likeStatus = likeStatus;
+                  comment.likeCount = likeCount;
+                },
+              });
             }}
           >
             <ThumbsUp

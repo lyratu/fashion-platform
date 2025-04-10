@@ -19,12 +19,13 @@ import { User } from "@/types/user";
 import { post } from "@/types/post";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { like } from "@/types/like";
 
 interface childProps extends React.HTMLAttributes<HTMLDivElement> {
   user?: User;
   item: post;
   handleDel: (ids: number[]) => void;
-  handleLike: (postId: number) => void;
+  handleLike: (postId: number, callback: (res: like) => void) => void;
 }
 
 export const PostItem: React.FC<childProps> = ({
@@ -98,7 +99,10 @@ export const PostItem: React.FC<childProps> = ({
           size="sm"
           className=" cursor-pointer"
           onClick={() => {
-            handleLike(item.id as number);
+            handleLike(item.id as number, (res) => {
+              item.likeCount = res.likeCount;
+              item.likeStatus = res.likeStatus;
+            });
           }}
         >
           <Heart

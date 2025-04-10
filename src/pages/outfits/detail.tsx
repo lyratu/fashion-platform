@@ -7,13 +7,7 @@ import { RelatedArticles } from "./components/related-articles";
 import { CommentSection } from "./components/comment-section";
 // import { AuthorCard } from "./components/author-card";
 import { useParams } from "react-router";
-import {
-  useDoCollect,
-  useDoLike,
-  useGetCollectRecord,
-  useGetLikeRecord,
-  useGetOutfitsDet,
-} from "@/services/outfits";
+import { useDoCollect, useDoLike, useGetOutfitsDet } from "@/services/outfits";
 import { toast } from "sonner";
 import dateTool from "@/utils/dateTool";
 
@@ -21,8 +15,6 @@ export default function ArticlePage() {
   const { id } = useParams();
 
   const { data: info } = useGetOutfitsDet(id as string);
-  const { data: likeRec } = useGetLikeRecord(id as string);
-  const { data: collectRec } = useGetCollectRecord(id as string);
 
   const { doLikeFn } = useDoLike();
   const { doCollectFn } = useDoCollect();
@@ -118,17 +110,17 @@ export default function ArticlePage() {
                     size="icon"
                     className="h-8 w-8 cursor-pointer"
                     onClick={async () => {
-                      const data = await doLikeFn(info.id);
-                      if (likeRec) {
-                        likeRec.likeStatus = data.likeStatus;
-                        if (likeRec.likeStatus) info.likeCount++;
-                        else info.likeCount--;
-                      }
+                      await doLikeFn(info.id, {
+                        onSuccess: (res) => {
+                          info.likeStatus = res.likeStatus;
+                          info.likeCount = res.likeCount;
+                        },
+                      });
                     }}
                   >
                     <ThumbsUp
                       className={`h-4 w-4 ${
-                        likeRec?.likeStatus ? "fill-chart-1 text-chart-1" : ""
+                        info.likeStatus ? "fill-chart-1 text-chart-1" : ""
                       }`}
                     />
                   </Button>
@@ -140,19 +132,17 @@ export default function ArticlePage() {
                     size="icon"
                     className="h-8 w-8 cursor-pointer"
                     onClick={async () => {
-                      const data = await doCollectFn(info.id);
-                      if (collectRec) {
-                        collectRec.collectStatus = data.collectStatus;
-                        if (collectRec.collectStatus) info.collectCount++;
-                        else info.collectCount--;
-                      }
+                      await doCollectFn(info.id, {
+                        onSuccess: (res) => {
+                          info.collectStatus = res.collectStatus;
+                          info.collectCount = res.collectCount;
+                        },
+                      });
                     }}
                   >
                     <Bookmark
                       className={`h-4 w-4 ${
-                        collectRec?.collectStatus
-                          ? "fill-chart-4 text-chart-4"
-                          : ""
+                        info.collectStatus ? "fill-chart-4 text-chart-4" : ""
                       }`}
                     />
                   </Button>

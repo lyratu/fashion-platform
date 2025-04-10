@@ -5,6 +5,6 @@ export interface collect {
   userId: number;
 
   collectStatus: number;
-
+  collectCount: number;
   operateTime: Date;
 }

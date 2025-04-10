@@ -16,27 +16,43 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
-import { useGetPostDet } from "@/services/community";
+import { useGetPostDet, useLikeOrUnlike } from "@/services/community";
 import { CommentSection } from "./components/comment-section";
+import { queryClient } from "@/lib/query-client";
 
 export default function PostDetailPage() {
   const navigate = useNavigate();
   const params = useParams();
   const { data: post } = useGetPostDet(params.id as string);
 
+  // const formatDate = (dateString: string) => {
+  //   return new Date(dateString).toLocaleDateString("en-US", {
+  //     year: "numeric",
+  //     month: "short",
+  //     day: "numeric",
+  //     hour: "2-digit",
+  //     minute: "2-digit",
+  //   });
+  // };
+
+  /* 文章点赞 */
+  const { likeOrUnlikeFn } = useLikeOrUnlike();
+  const handlePostLike = (postId: number) => {
+    likeOrUnlikeFn(postId, {
+      onSuccess: (res) => {
+        if (post) {
+          post.likeCount = res.likeCount;
+          post.likeStatus = res.likeStatus;
+          queryClient.invalidateQueries({ queryKey: ["postPage"] });
+          queryClient.invalidateQueries({ queryKey: ["postDet"] });
+        }
+      },
+    });
+  };
+  /* 文章分享 */
   const handleSharePost = () => {
     // In a real app, this would open a share dialog
     toast("Sharing functionality would open here");
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
   };
 
   return (
@@ -140,11 +156,27 @@ export default function PostDetailPage() {
                 ))}
             </CardContent>
             <CardFooter className="border-t flex justify-end pb-0 py-2">
-              <Button variant="ghost" size="sm">
-                <Heart className={`h-4 w-4 mr-1 `} />
+              <Button
+                variant="ghost"
+                size="sm"
+                className="cursor-pointer"
+                onClick={() => {
+                  handlePostLike(post.id as number);
+                }}
+              >
+                <Heart
+                  className={`h-4 w-4 mr-1  ${
+                    post?.likeStatus ? "fill-chart-1 text-chart-1" : ""
+                  }`}
+                />
                 {post.likeCount}
               </Button>
-              <Button variant="ghost" size="sm" onClick={handleSharePost}>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="cursor-pointer"
+                onClick={handleSharePost}
+              >
                 <Share2 className="h-4 w-4 mr-1" />
                 分享
               </Button>

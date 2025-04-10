@@ -18,6 +18,8 @@ export interface outfits {
     typeId: number;
     value: string;
   };
+  likeStatus: number;
+  collectStatus: number;
   season: number;
   viewNmber: number;
   likeCount: number;

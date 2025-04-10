@@ -8,7 +8,7 @@ export interface post {
   images: string[];
   topics: topic[];
   user?: User;
-  likeStatus?: 0 | 1;
+  likeStatus?: number;
   createTime?: string;
   likeCount?: number;
   commentCount?: number;

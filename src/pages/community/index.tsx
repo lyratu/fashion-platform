@@ -9,6 +9,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { post } from "@/types/post";
 import { useDelPost } from "@/services/community/post";
 import { useLikeOrUnlike } from "@/services/community/like";
+import { like } from "@/types/like";
 
 export default function CommunityPage() {
   const { data: userInfo } = useGetMyInfo();
@@ -26,9 +27,10 @@ export default function CommunityPage() {
   const queryClient = useQueryClient();
 
   /* 文章点赞 */
-  const handlePostLike = (postId: number) => {
+  const handlePostLike = (postId: number, callback: (res: like) => void) => {
     likeOrUnlikeFn(postId, {
-      onSuccess: () => {
+      onSuccess: (res) => {
+        callback(res);
         queryClient.invalidateQueries({ queryKey: ["postPage"] });
       },
     });
