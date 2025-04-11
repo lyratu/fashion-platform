@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { queryClient } from "@/lib/query-client";
 import { ThumbsUp, Trash2, MoreHorizontal } from "lucide-react";
-import { useDel, useDoLike } from "@/services/comment";
+import { useDel, useDoLike } from "@/services/outfits";
 
 interface ChildProps extends React.HTMLAttributes<HTMLDivElement> {
   id: string;

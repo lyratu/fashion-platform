@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader } from "lucide-react";
 import { useParams } from "react-router";
-import { useGetPageComment, useSend } from "@/services/comment";
 import { useQueryClient } from "@tanstack/react-query";
 import UseScrollToBottom from "@/hooks/use-scroll";
 
 import { CommentUser } from "../../../components/comment/comment-user";
 import { replyStatus } from "@/types/comment";
+import { useGetPageComment, useSend } from "@/services/outfits";
 
 export function CommentSection() {
   const { id } = useParams();
