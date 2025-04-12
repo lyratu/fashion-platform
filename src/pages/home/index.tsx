@@ -37,7 +37,7 @@ export default function HomePage() {
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-bold mb-6">社区高赞</h2>
+        <h2 className="text-2xl font-bold mb-6">热门评论</h2>
         <CommunityHighlights />
       </section>
 

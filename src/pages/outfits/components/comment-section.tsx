@@ -81,6 +81,7 @@ export function CommentSection() {
           page.list.map((comment) => (
             <div key={comment.id}>
               <CommentUser
+                type={1}
                 id={id as string}
                 comment={comment}
                 setReply={setReply}
@@ -89,6 +90,7 @@ export function CommentSection() {
               {comment.children.length > 0
                 ? comment.children.map((rComment) => (
                     <CommentUser
+                      type={1}
                       key={rComment.id}
                       className="ml-14 mt-2 border-l-2 border-muted pl-6"
                       id={id as string}

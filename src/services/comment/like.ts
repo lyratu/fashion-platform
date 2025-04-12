@@ -2,6 +2,7 @@ import axios from "@/lib/axios";
 import { like } from "@/types/like";
 import { useMutation } from "@tanstack/react-query";
 
+/* 评论点赞 */
 export const doLike = async (commentId: number) => {
   const response = await axios.post<like>(
     `/app/comment/like/likeOrUnlike?commentId=${commentId}`,

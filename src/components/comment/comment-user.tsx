@@ -11,10 +11,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { queryClient } from "@/lib/query-client";
 import { ThumbsUp, Trash2, MoreHorizontal } from "lucide-react";
-import { useDel, useDoLike } from "@/services/outfits";
+import { useDel, useDoLike } from "@/services/comment";
 
 interface ChildProps extends React.HTMLAttributes<HTMLDivElement> {
   id: string;
+  type: number;
   comment: comment;
   parentId?: number;
   setCommentText: React.Dispatch<React.SetStateAction<string>>;
@@ -24,6 +25,7 @@ interface ChildProps extends React.HTMLAttributes<HTMLDivElement> {
 export const CommentUser: React.FC<ChildProps> = ({
   comment,
   id,
+  type,
   setReply,
   className,
   setCommentText,
@@ -76,13 +78,16 @@ export const CommentUser: React.FC<ChildProps> = ({
                 <DropdownMenuItem
                   className=" cursor-pointer"
                   onClick={() => {
-                    delFn(comment.id as number, {
-                      onSuccess: () => {
-                        queryClient.invalidateQueries({
-                          queryKey: [`commentPage`, id],
-                        });
-                      },
-                    });
+                    delFn(
+                      { id: comment.id as number, type },
+                      {
+                        onSuccess: () => {
+                          queryClient.invalidateQueries({
+                            queryKey: [`commentPage`, id],
+                          });
+                        },
+                      }
+                    );
                   }}
                 >
                   <Trash2 className="h-4 w-4 mr-2" />

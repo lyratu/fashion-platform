@@ -1,5 +1,5 @@
 import axios from "@/lib/axios";
-import { comment, commentForm } from "@/types/comment";
+import { comment, commentForm, pageComment } from "@/types/comment";
 import { outfits } from "@/types/outfits";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 
@@ -37,11 +37,6 @@ export const useGetRelatedArticles = (id: string) => {
   });
 };
 
-type pageComment = {
-  list: Array<comment>;
-  total: number;
-};
-
 /* 获取穿搭分享评论列表 */
 export const getPageComment = async (
   id: string,
@@ -62,11 +57,11 @@ export const useGetPageComment = (id: string, limit: number) => {
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
       const loadedComments = allPages.reduce(
-        (acc, page) => acc + page.list.length,
+        (acc, page) => acc + (page.list?.length || 0),
         0
       );
       if (loadedComments < lastPage.total) {
-        return allPages.length + 1;
+        return (allPages?.length || 0) + 1;
       }
       return undefined;
     },
@@ -92,24 +87,4 @@ export const useSend = () => {
     mutationFn: sendComment,
   });
   return { sendFn, sendLoading, data, error };
-};
-
-/* 穿搭分享删除评论 */
-export const delComment = async (id: number) => {
-  const response = await axios.post<Array<comment>>(
-    `/app/comment/info/delComment?id=${id}`,
-    {}
-  );
-  return response.data;
-};
-
-export const useDel = () => {
-  const {
-    error,
-    data,
-    mutateAsync: delFn,
-  } = useMutation({
-    mutationFn: delComment,
-  });
-  return { delFn, data, error };
 };

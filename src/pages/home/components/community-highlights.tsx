@@ -1,16 +1,27 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { useGetCommentRec } from "@/services/comment";
+import { comment } from "@/types/comment";
 import dateTool from "@/utils/dateTool";
 import { MessageCircle, Heart } from "lucide-react";
+import { useNavigate } from "react-router";
 
 export default function CommunityHighlights() {
   const { data } = useGetCommentRec();
-
+  const navigate = useNavigate();
+  const link = (post: comment) => {
+    const { objectId } = post;
+    navigate(`/community/post/${objectId}`);
+  };
   return (
     <div className="space-y-4">
       {data?.map((post) => (
-        <Card key={post.id}>
+        <Card
+          key={post.id}
+          onClick={() => {
+            link(post);
+          }}
+        >
           <CardContent className="p-4 cursor-pointer">
             <div className="flex items-start gap-3">
               <Avatar>

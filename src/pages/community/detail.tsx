@@ -51,8 +51,10 @@ export default function PostDetailPage() {
   };
   /* 文章分享 */
   const handleSharePost = () => {
-    // In a real app, this would open a share dialog
-    toast("Sharing functionality would open here");
+    navigator.clipboard.writeText(window.location.href);
+    toast.success("已复制分享链接，请分享给好友吧~", {
+      duration: 1500,
+    });
   };
 
   return (

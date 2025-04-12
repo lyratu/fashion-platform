@@ -54,8 +54,8 @@ export const Sidebar = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {data?.map((info) => (
-              <div className="flex items-center gap-3">
+            {data?.map((info, index) => (
+              <div className="flex items-center gap-3" key={index}>
                 <Avatar>
                   <AvatarImage src={info.user.avatarUrl} alt="Jessica T." />
                   <AvatarFallback>

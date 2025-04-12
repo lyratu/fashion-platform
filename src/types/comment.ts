@@ -36,3 +36,8 @@ export interface replyStatus {
   status: boolean;
   nickName: string;
 }
+
+export interface pageComment {
+  list: Array<comment>;
+  total: number;
+}

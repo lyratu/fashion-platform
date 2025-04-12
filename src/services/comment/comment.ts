@@ -1,6 +1,6 @@
 import axios from "@/lib/axios";
 import { comment } from "@/types/comment";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 /* 获取社区高赞评论 */
 export const getCommentRec = async () => {
@@ -16,4 +16,25 @@ export const useGetCommentRec = () => {
     queryKey: ["commentRec"],
     queryFn: getCommentRec,
   });
+};
+
+/* 删除评论 */
+export const delComment = async (params: { id: number; type: number }) => {
+  const { id, type } = params;
+  const response = await axios.post<Array<comment>>(
+    `/app/comment/info/delComment?id=${id}&type=${type}`,
+    {}
+  );
+  return response.data;
+};
+
+export const useDel = () => {
+  const {
+    error,
+    data,
+    mutateAsync: delFn,
+  } = useMutation({
+    mutationFn: delComment,
+  });
+  return { delFn, data, error };
 };

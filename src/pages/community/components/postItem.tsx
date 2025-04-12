@@ -20,6 +20,7 @@ import { post } from "@/types/post";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { like } from "@/types/like";
+import { toast } from "sonner";
 
 interface childProps extends React.HTMLAttributes<HTMLDivElement> {
   user?: User;
@@ -121,7 +122,19 @@ export const PostItem: React.FC<childProps> = ({
           <MessageCircle className="h-4 w-4 mr-1" />
           {item.commentCount}
         </Button>
-        <Button variant="ghost" size="sm" className=" cursor-pointer">
+        <Button
+          variant="ghost"
+          size="sm"
+          className=" cursor-pointer"
+          onClick={() => {
+            navigator.clipboard.writeText(
+              `${window.location.origin}/community/post/${item.id}`
+            );
+            toast.success("已复制分享链接，请分享给好友吧~", {
+              duration: 1500,
+            });
+          }}
+        >
           <Share2 className="h-4 w-4 mr-1" />
         </Button>
         {user?.id == item.user?.id ? (

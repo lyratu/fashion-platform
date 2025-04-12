@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { collect } from "@/types/collect";
 import { like } from "@/types/like";
 
+/* 文章点赞 */
 export const doLike = async (id: number) => {
   const response = await axios.post<like>(
     `/app/outfits/like/likeOrUnlike?outfitsId=${id}`,

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader } from "lucide-react";
 import { useParams } from "react-router";
-import { useGetPageComment, useSend } from "@/services/outfits";
+import { useGetPageComment, useSend } from "@/services/community";
 import { useQueryClient } from "@tanstack/react-query";
 import UseScrollToBottom from "@/hooks/use-scroll";
 
@@ -18,6 +18,11 @@ export function CommentSection() {
   const { data, fetchNextPage, isFetchingNextPage } = useGetPageComment(
     id as string,
     5
+  );
+  console.log(
+    "%c [ data ]-19",
+    "font-size:13px; background:pink; color:#bf2c9f;",
+    data
   );
 
   const [reply, setReply] = useState<replyStatus>({
@@ -62,6 +67,7 @@ export function CommentSection() {
         }
       );
     }
+    queryClient.invalidateQueries({ queryKey: ["postPage"] });
   };
 
   // 触底加载评论
@@ -78,9 +84,10 @@ export function CommentSection() {
       {/* Comments List */}
       <div className="space-y-6">
         {data?.pages.map((page) =>
-          page.list.map((comment) => (
+          page.list?.map((comment) => (
             <div key={comment.id}>
               <CommentUser
+                type={0}
                 id={id as string}
                 comment={comment}
                 setReply={setReply}
@@ -89,6 +96,7 @@ export function CommentSection() {
               {comment.children.length > 0
                 ? comment.children.map((rComment) => (
                     <CommentUser
+                      type={0}
                       key={rComment.id}
                       className="ml-14 mt-2 border-l-2 border-muted pl-6"
                       id={id as string}
