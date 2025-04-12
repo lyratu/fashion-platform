@@ -1,12 +1,12 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Bookmark, Calendar, Share2, ThumbsUp } from "lucide-react";
+import { ArrowLeft, Bookmark, Calendar, Share2, ThumbsUp } from "lucide-react";
 // import { ArticleTableOfContents } from "./components/article-table-of-contents";
 import { RelatedArticles } from "./components/related-articles";
 import { CommentSection } from "./components/comment-section";
 // import { AuthorCard } from "./components/author-card";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useDoCollect, useDoLike, useGetOutfitsDet } from "@/services/outfits";
 import { toast } from "sonner";
 import dateTool from "@/utils/dateTool";
@@ -18,7 +18,7 @@ export default function ArticlePage() {
 
   const { doLikeFn } = useDoLike();
   const { doCollectFn } = useDoCollect();
-
+  const navigate = useNavigate();
   return (
     <>
       <div className="container max-w-screen-xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -28,22 +28,25 @@ export default function ArticlePage() {
             <div className="space-y-8">
               {/* Article Header */}
               <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <Badge
-                    variant="outline"
-                    className="bg-primary/10 hover:bg-primary/20"
-                  >
-                    {info.categoryText.name}
-                  </Badge>
-                  {/* <div className="flex items-center text-sm text-muted-foreground select-none">
-                    <Clock className="mr-1 h-3 w-3" />
-                    <span>{article.readingTime} min read</span>
-                  </div> */}
-                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="mb-4 cursor-pointer"
+                  onClick={() => navigate("/outfits")}
+                >
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  返回
+                </Button>
 
                 <h1 className="text-2xl font-bold tracking-tight lg:text-4xl">
                   {info.title}
                 </h1>
+                <Badge
+                  variant="outline"
+                  className="bg-primary/10 hover:bg-primary/20"
+                >
+                  {info.categoryText.name}
+                </Badge>
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">

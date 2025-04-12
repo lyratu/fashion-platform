@@ -3,7 +3,9 @@ export interface pageQuery {
   page: number;
   size: number;
   sort: string;
+  title?: string;
   category?: string;
+  type?: string;
 }
 
 export interface pageQueryResponse<T> {

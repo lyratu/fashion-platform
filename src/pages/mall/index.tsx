@@ -11,14 +11,25 @@ import { useAddCard, useGetCartCount } from "@/services/mall/cart";
 import { goods } from "@/types/goods";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
 
 export default function MallPage() {
   const { data: types } = useGetDictInfo(["goodsType"]);
-  const { data } = useGetGoods(1, 10, "createTime");
+  const [type, setType] = useState("0");
+  const [searchText, setSearchText] = useState("");
+  const [inputText, setInputText] = useState("");
+  const { data } = useGetGoods({
+    order: "createTime",
+    page: 1,
+    size: 6,
+    type,
+    title: searchText,
+    sort: "desc",
+  });
   const queryClient = useQueryClient();
 
   const { addCardFn } = useAddCard();
-  const products = data?.list;
 
   const { data: count } = useGetCartCount();
 
@@ -70,68 +81,105 @@ export default function MallPage() {
       </div>
 
       {/* Category Tabs */}
-      <Tabs defaultValue="All" className="mb-8">
-        <TabsList className="mb-6 flex flex-wrap h-auto">
-          <TabsTrigger key={0} value={"全部"} className="mb-1">
+      <Tabs defaultValue="0" onValueChange={(i) => setType(i)}>
+        <TabsList className="mb-2 flex flex-wrap h-auto">
+          <TabsTrigger key={0} value={"0"} className="mb-1 cursor-pointer">
             全部
           </TabsTrigger>
           {types?.goodsType.map((category) => (
             <TabsTrigger
               key={category.id}
-              value={category.name}
-              className="mb-1"
+              value={category.value}
+              className="mb-1 cursor-pointer"
             >
               {category.name}
             </TabsTrigger>
           ))}
         </TabsList>
 
-        <TabsContent value="All" className="mt-0">
+        <div className="flex justify-end">
+          <div className="flex w-full max-w-sm items-center space-x-2 mb-6">
+            <Input
+              type="email"
+              value={inputText}
+              placeholder="请输入关键词..."
+              onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setInputText(e.target.value)
+              }
+            />
+            <Button
+              className=" cursor-pointer"
+              onClick={() => {
+                setSearchText(inputText);
+              }}
+            >
+              搜索
+            </Button>
+            {inputText.trim() && (
+              <Button
+                variant="secondary"
+                className="cursor-pointer"
+                onClick={() => {
+                  setSearchText("");
+                  setInputText("");
+                }}
+              >
+                重置
+              </Button>
+            )}
+          </div>
+        </div>
+
+        <TabsContent value={type} className="mt-0">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {products?.map((product) => (
-              <Card key={product.id} className="overflow-hidden">
-                <div className="relative">
-                  <div className="relative h-64 w-full">
-                    <img
-                      src={product.mainImage || "/placeholder.svg"}
-                      alt={product.title}
-                      className="h-full  object-cover object-top w-full"
-                    />
-                  </div>
-                </div>
-                <CardContent className="p-4">
-                  <h3 className="font-medium line-clamp-1">{product.title}</h3>
-                  <div className="flex items-center justify-between mt-1">
-                    <div className="flex items-center">
-                      <span className="font-bold">￥{product.price}</span>
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {product.collectCount} 收藏
+            {data?.pages.map((arr) =>
+              arr?.list.map((product) => (
+                <Card key={product.id} className="overflow-hidden">
+                  <div className="relative">
+                    <div className="relative h-64 w-full">
+                      <img
+                        src={product.mainImage || "/placeholder.svg"}
+                        alt={product.title}
+                        className="h-full  object-cover object-top w-full"
+                      />
                     </div>
                   </div>
-                </CardContent>
-                <CardFooter className="p-4 pt-0 flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1"
-                    asChild
-                  >
-                    <Link to={`/mall/product/${product.id}`}>详情</Link>
-                  </Button>
-                  <Button
-                    size="sm"
-                    className="flex-1 cursor-pointer"
-                    onClick={() => {
-                      handleAddItem(product);
-                    }}
-                  >
-                    <ShoppingCart className="h-4 w-4 mr-2" />
-                    加入
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
+                  <CardContent className="p-4">
+                    <h3 className="font-medium line-clamp-1">
+                      {product.title}
+                    </h3>
+                    <div className="flex items-center justify-between mt-1">
+                      <div className="flex items-center">
+                        <span className="font-bold">￥{product.price}</span>
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {product.collectCount} 收藏
+                      </div>
+                    </div>
+                  </CardContent>
+                  <CardFooter className="p-4 pt-0 flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      asChild
+                    >
+                      <Link to={`/mall/product/${product.id}`}>详情</Link>
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="flex-1 cursor-pointer"
+                      onClick={() => {
+                        handleAddItem(product);
+                      }}
+                    >
+                      <ShoppingCart className="h-4 w-4 mr-2" />
+                      加入
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
           </div>
         </TabsContent>
 

@@ -9,12 +9,12 @@ import {
 } from "@/components/ui/card";
 
 import { ArrowLeft, Heart, Share2, MoreHorizontal, Trash2 } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuItem,
+//   DropdownMenuTrigger,
+// } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { useGetPostDet, useLikeOrUnlike } from "@/services/community";
 import { CommentSection } from "./components/comment-section";
@@ -105,7 +105,7 @@ export default function PostDetailPage() {
                       <span className="text-xs text-muted-foreground">
                         {post.createTime}
                       </span>
-                      <DropdownMenu>
+                      {/* <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button
                             variant="ghost"
@@ -125,7 +125,7 @@ export default function PostDetailPage() {
                             删除文章
                           </DropdownMenuItem>
                         </DropdownMenuContent>
-                      </DropdownMenu>
+                      </DropdownMenu> */}
                     </div>
                   </div>
                 </div>

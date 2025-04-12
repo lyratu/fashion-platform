@@ -36,3 +36,18 @@ export const useAddTopic = () => {
 
   return { addTopicFn, data, error };
 };
+
+export const getTrend = async () => {
+  const response = await axios.get<Array<topic>>(
+    "/app/community/topic/trend",
+    {}
+  );
+  return response.data;
+};
+
+export const useGetTrend = () => {
+  return useQuery({
+    queryKey: ["topicTrend"],
+    queryFn: getTrend,
+  });
+};

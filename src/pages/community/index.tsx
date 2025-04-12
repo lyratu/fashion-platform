@@ -10,14 +10,19 @@ import { post } from "@/types/post";
 import { useDelPost } from "@/services/community/post";
 import { useLikeOrUnlike } from "@/services/community/like";
 import { like } from "@/types/like";
+import { Loader } from "lucide-react";
 
 export default function CommunityPage() {
   const { data: userInfo } = useGetMyInfo();
 
-  const { data: posts, fetchNextPage } = useGetPostList({
+  const {
+    data: posts,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useGetPostList({
     order: "createTime",
     page: 1,
-    size: 20,
+    size: 6,
     sort: "desc",
   });
 
@@ -83,6 +88,12 @@ export default function CommunityPage() {
                 />
               ))
             )}
+            {isFetchingNextPage ? (
+              <div className="flex items-center justify-center text-sm">
+                <Loader className="animate-spin" />
+                <span>加载中...</span>
+              </div>
+            ) : null}
           </div>
         </div>
 

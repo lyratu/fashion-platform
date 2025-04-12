@@ -9,6 +9,7 @@ import { useGetOutfitsPage } from "@/services/outfits";
 import { useGetDictInfo } from "@/services/dict";
 import { useState } from "react";
 import UseScrollToBottom from "@/hooks/use-scroll";
+import { Input } from "@/components/ui/input";
 
 export default function ArticlesPage() {
   const { data: types } = useGetDictInfo(["category"]);
@@ -30,10 +31,6 @@ export default function ArticlesPage() {
     fetchNextPage();
   });
 
-  const tabsChange = (params: string) => {
-    setCategory(params);
-  };
-
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -46,8 +43,12 @@ export default function ArticlesPage() {
       </div>
       <FeaturedArticles />
       {/* Category Tabs */}
-      <Tabs defaultValue="0" className="mb-8" onValueChange={tabsChange}>
-        <TabsList className="mb-6 flex flex-wrap h-auto">
+      <Tabs
+        defaultValue="0"
+        className="mb-8"
+        onValueChange={(i) => setCategory(i)}
+      >
+        <TabsList className="flex flex-wrap h-auto mb-2">
           <TabsTrigger key={0} value={"0"} className="mb-1 cursor-pointer">
             全部
           </TabsTrigger>
@@ -61,6 +62,15 @@ export default function ArticlesPage() {
             </TabsTrigger>
           ))}
         </TabsList>
+
+        <div className="flex justify-end">
+          <div className="flex w-full max-w-sm items-center space-x-2 mb-6">
+            <Input type="email" placeholder="请输入关键词..." />
+            <Button variant="secondary" className=" cursor-pointer">
+              搜索
+            </Button>
+          </div>
+        </div>
 
         <TabsContent value={category} className="mt-0">
           <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">

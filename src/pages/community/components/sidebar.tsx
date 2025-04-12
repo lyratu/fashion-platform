@@ -1,11 +1,12 @@
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Link } from "react-router";
-import { useGetActiveUser } from "@/services/community";
+import { useGetActiveUser, useGetTrend } from "@/services/community";
 import { Ribbon } from "lucide-react";
 
 export const Sidebar = () => {
   const { data } = useGetActiveUser();
+  const { data: trend } = useGetTrend();
   return (
     <div className="w-full md:w-80 space-y-6">
       <Card>
@@ -14,36 +15,16 @@ export const Sidebar = () => {
         </CardHeader>
         <CardContent className="pb-3">
           <ul className="space-y-2">
-            <li>
-              <Link to="#" className="text-primary hover:underline">
-                #可持续时尚
-              </Link>
-              <p className="text-xs text-muted-foreground">1.2k 篇</p>
-            </li>
-            <li>
-              <Link to="#" className="text-primary hover:underline">
-                #春季穿搭
-              </Link>
-              <p className="text-xs text-muted-foreground">856 篇</p>
-            </li>
-            <li>
-              <Link to="#" className="text-primary hover:underline">
-                #简洁风
-              </Link>
-              <p className="text-xs text-muted-foreground">723 篇</p>
-            </li>
-            <li>
-              <Link to="#" className="text-primary hover:underline">
-                #田园风
-              </Link>
-              <p className="text-xs text-muted-foreground">689 篇</p>
-            </li>
-            <li>
-              <Link to="#" className="text-primary hover:underline">
-                #搭配指南
-              </Link>
-              <p className="text-xs text-muted-foreground">542 篇</p>
-            </li>
+            {trend?.map((item) => (
+              <li key={item.id}>
+                <Link to="#" className="text-[#1d9bf0] hover:underline ">
+                  #{item.name}
+                </Link>
+                <p className="text-xs text-muted-foreground">
+                  {item.postCount} 篇
+                </p>
+              </li>
+            ))}
           </ul>
         </CardContent>
       </Card>
