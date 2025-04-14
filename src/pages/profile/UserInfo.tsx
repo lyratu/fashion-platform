@@ -70,7 +70,7 @@ export const UserInfoPage = ({ user, isEdit, setIsEdit }: userInfo) => {
     console.log(values);
     updateUserFn(values as User, {
       onSuccess: () => {
-        toast.success("修改个人资料成功～")
+        toast.success("修改个人资料成功～");
         queryClient.invalidateQueries({ queryKey: ["getMyInfo"] });
         setIsEdit(false);
       },

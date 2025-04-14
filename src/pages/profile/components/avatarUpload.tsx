@@ -1,7 +1,7 @@
 import type React from "react";
 
 import { useState, useRef } from "react";
-import { Camera, Upload, X, Check, Trash2, RefreshCw } from "lucide-react";
+import { Camera, Upload, X, Check, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,10 +12,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
+import { useUpload } from "@/services/base";
+import { useUpdateUser } from "@/services/profile";
+import { getFileFromDiv } from "@/utils/fileFromDiv";
 
 interface AvatarUploadProps {
   currentAvatar?: string;
@@ -38,6 +40,9 @@ export function AvatarUpload({
   const [zoom, setZoom] = useState([1]);
   const [rotation, setRotation] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { uploadFn } = useUpload();
+  const { updateUserFn } = useUpdateUser();
 
   // Size mapping for avatar
   const sizeClasses = {
@@ -102,38 +107,32 @@ export function AvatarUpload({
     setRotation((prev) => (prev + 90) % 360);
   };
 
-  const handleRemoveAvatar = () => {
-    // Reset to default avatar
-    if (onAvatarChange) {
-      onAvatarChange("/placeholder.svg?height=200&width=200");
-    }
-    setIsOpen(false);
-    toast("Your profile picture has been reset to default.");
-  };
-
-  const handleSaveAvatar = () => {
+  const divRef = useRef<HTMLDivElement>(null);
+  const handleSaveAvatar = async () => {
     setIsUploading(true);
 
-    // Simulate API call to upload and process image
-    setTimeout(() => {
-      setIsUploading(false);
-
-      // In a real app, you would upload the image to your server/cloud storage
-      // and get back a URL to the processed image
-      const newAvatarUrl = previewUrl || currentAvatar;
-
-      if (onAvatarChange && newAvatarUrl) {
-        onAvatarChange(newAvatarUrl);
+    if (divRef.current) {
+      try {
+        // const newAvatarUrl = previewUrl || currentAvatar;
+        const file = await getFileFromDiv(divRef.current);
+        const form = new FormData();
+        form.append("file", file);
+        const data = await uploadFn(form, {
+          onSuccess: (url: string) => {
+            if (onAvatarChange) onAvatarChange(url);
+          },
+        });
+        await updateUserFn({ avatarUrl: data });
+      } catch (e) {
+        toast.error(e as string);
       }
-
+      setIsUploading(false);
       setIsOpen(false);
       setSelectedFile(null);
       setPreviewUrl(null);
       setZoom([1]);
       setRotation(0);
-
-      toast("Your profile picture has been updated successfully.");
-    }, 1500);
+    }
   };
 
   const resetEditor = () => {
@@ -144,7 +143,11 @@ export function AvatarUpload({
   return (
     <div className="relative inline-block">
       <Avatar className={sizeClasses[size]}>
-        <AvatarImage src={currentAvatar} alt={username} />
+        <AvatarImage
+          className=" object-cover object-center"
+          src={currentAvatar}
+          alt={username}
+        />
         <AvatarFallback>{username.charAt(0)}</AvatarFallback>
       </Avatar>
 
@@ -224,22 +227,26 @@ export function AvatarUpload({
                 <div className="space-y-4">
                   <div className="relative mx-auto w-48 h-48 overflow-hidden rounded-full border">
                     <div
+                      ref={divRef}
                       className="w-full h-full"
                       style={{
-                        transform: `scale(${zoom[0]}) rotate(${rotation}deg)`,
+                        transform: `rotate(${rotation}deg)`,
                         transition: "transform 0.2s ease-in-out",
                       }}
                     >
-                      <img
-                        src={previewUrl || "/placeholder.svg"}
-                        alt="Preview"
-                        className="object-cover"
-                      />
+                      <Avatar className="w-full h-full">
+                        <AvatarImage
+                          src={previewUrl || "/placeholder.svg"}
+                          alt="Preview"
+                          className="object-cover object-center"
+                        />
+                        <AvatarFallback>{username.charAt(0)}</AvatarFallback>
+                      </Avatar>
                     </div>
                   </div>
 
                   <div className="space-y-4">
-                    <div className="space-y-2">
+                    {/* <div className="space-y-2">
                       <div className="flex justify-between">
                         <span className="text-sm font-medium">缩放</span>
                         <span className="text-sm text-muted-foreground">
@@ -253,7 +260,7 @@ export function AvatarUpload({
                         step={0.01}
                         onValueChange={setZoom}
                       />
-                    </div>
+                    </div> */}
 
                     <div className="flex justify-center space-x-2">
                       <Button

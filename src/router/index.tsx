@@ -6,7 +6,7 @@ import {
 import Home from "@/pages/home";
 import DefaultLayout from "@/layouts/default";
 import Login from "@/pages/auth";
-import Test from "@/test/reactQuery_Test";
+import { Test } from "@/test/reactQuery_Test";
 import { Providers } from "@/providers";
 import Outfits from "@/pages/outfits";
 import OutfitsDetail from "@/pages/outfits/detail";

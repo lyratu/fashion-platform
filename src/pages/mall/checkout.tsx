@@ -10,7 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
@@ -28,39 +27,12 @@ import {
   CheckCircle2,
   MapPin,
   Clock,
-  AlertCircle,
 } from "lucide-react";
 import { useGetCart } from "@/services/mall/cart";
-
-// Mock saved addresses
-const savedAddresses = [
-  {
-    id: 1,
-    type: "home",
-    isDefault: true,
-    name: "Jessica Thompson",
-    street: "123 Park Avenue",
-    apt: "Apt 4B",
-    city: "New York",
-    state: "NY",
-    zip: "10001",
-    country: "United States",
-    phone: "+1 (555) 123-4567",
-  },
-  {
-    id: 2,
-    type: "work",
-    isDefault: false,
-    name: "Jessica Thompson",
-    street: "456 Fashion Street",
-    apt: "Suite 200",
-    city: "New York",
-    state: "NY",
-    zip: "10002",
-    country: "United States",
-    phone: "+1 (555) 987-6543",
-  },
-];
+import { useGetMyAddress } from "@/services/profile";
+import { getMyAddress } from "./../../services/profile/address";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { AddressForm } from "../profile/components/addressForm";
 
 // Mock payment methods
 const paymentMethods = [
@@ -84,49 +56,24 @@ const paymentMethods = [
   },
 ];
 
-// Mock shipping methods
-const shippingMethods = [
-  {
-    id: "standard",
-    name: "Standard Shipping",
-    description: "3-5 business days",
-    price: 4.99,
-  },
-  {
-    id: "express",
-    name: "Express Shipping",
-    description: "1-2 business days",
-    price: 9.99,
-  },
-  {
-    id: "overnight",
-    name: "Overnight Shipping",
-    description: "Next business day",
-    price: 19.99,
-  },
-];
-
 export default function CheckoutPage() {
   const { data: cartItems } = useGetCart();
-
+  const [isAddingAddress, setIsAddingAddress] = useState(false);
   const [currentStep, setCurrentStep] = useState("shipping");
   const [selectedAddress, setSelectedAddress] = useState<number>(1);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<number>(1);
-  const [selectedShippingMethod, setSelectedShippingMethod] =
-    useState("standard");
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
+
+  // api
+  const { data: address } = useGetMyAddress();
 
   // Calculate order summary
   const subtotal = cartItems?.list.reduce(
     (sum, item) => (item.checked == 1 ? sum + item.price * item.count : sum),
     0
   );
-
-  const shipping =
-    shippingMethods.find((method) => method.id === selectedShippingMethod)
-      ?.price || 4.99;
 
   const handleContinueToPayment = () => {
     setCurrentStep("payment");
@@ -145,16 +92,11 @@ export default function CheckoutPage() {
       setOrderComplete(true);
       setOrderNumber(`ORD-${Math.floor(100000 + Math.random() * 900000)}`);
 
-      toast({
-        title: "Order placed successfully!",
-        description:
-          "Your order has been placed and will be processed shortly.",
-      });
+      toast("Your order has been placed and will be processed shortly.");
     }, 2000);
   };
 
   // Get selected address and payment method
-  const address = savedAddresses.find((addr) => addr.id === selectedAddress);
   const paymentMethod = paymentMethods.find(
     (method) => method.id === selectedPaymentMethod
   );
@@ -200,45 +142,47 @@ export default function CheckoutPage() {
             </div>
 
             <div>
-              <h3 className="font-medium mb-2">Order Details</h3>
+              <h3 className="font-medium mb-2">订单详情</h3>
               <div className="space-y-3">
-                {cartItems?.list.map((item) => (
-                  <div key={item.id} className="flex gap-3">
-                    <div className="relative h-16 w-16 flex-shrink-0">
-                      <img
-                        src={item.mainImage || "/placeholder.svg"}
-                        alt={item.title}
-                        className="object-cover rounded-md"
-                      />
+                {cartItems?.list
+                  .filter((e) => e.checked)
+                  .map((item) => (
+                    <div key={item.id} className="flex gap-3">
+                      <div className="relative h-16 w-16 flex-shrink-0">
+                        <img
+                          src={item.mainImage || "/placeholder.svg"}
+                          alt={item.title}
+                          className="object-cover rounded-md"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium">{item.title}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {item.size && `Size: ${item.size} | `}
+                          {item.color && `Color: ${item.color} | `}
+                          Qty: {item.count}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-medium">
+                          ${(item.price * item.count).toFixed(2)}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <p className="font-medium">{item.title}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {item.size && `Size: ${item.size} | `}
-                        {item.color && `Color: ${item.color} | `}
-                        Qty: {item.count}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-medium">
-                        ${(item.price * item.count).toFixed(2)}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </div>
 
             <div className="border-t pt-4">
               <h3 className="font-medium mb-2">Shipping Information</h3>
-              <p>{address?.name}</p>
+              {/* <p>{address?.name}</p>
               <p>{address?.street}</p>
               {address?.apt && <p>{address.apt}</p>}
               <p>
                 {address?.city}, {address?.state} {address?.zip}
               </p>
               <p>{address?.country}</p>
-              <p>{address?.phone}</p>
+              <p>{address?.phone}</p> */}
             </div>
 
             <div className="flex items-center gap-2 bg-muted/50 p-4 rounded-lg">
@@ -299,7 +243,7 @@ export default function CheckoutPage() {
                         setSelectedAddress(Number(value))
                       }
                     >
-                      {savedAddresses.map((address) => (
+                      {address?.map((address) => (
                         <div
                           key={address.id}
                           className="flex items-start space-x-3"
@@ -310,94 +254,51 @@ export default function CheckoutPage() {
                             className="mt-1"
                           />
                           <div className="grid gap-1.5 leading-none">
-                            <Label
-                              htmlFor={`address-${address.id}`}
-                              className="flex items-center gap-2"
-                            >
-                              {address.type === "home" ? (
-                                <Home className="h-4 w-4" />
-                              ) : (
-                                <Building className="h-4 w-4" />
-                              )}
-                              <span className="font-medium capitalize">
-                                {address.type}
-                              </span>
-                              {address.isDefault && (
-                                <Badge variant="outline" className="ml-2">
-                                  Default
-                                </Badge>
-                              )}
+                            {address.isDefault && (
+                              <div className="flex items-center gap-2">
+                                <Badge variant="outline">默认</Badge>
+                              </div>
+                            )}
+                            <Label htmlFor={`address-${address.id}`}>
+                              <div className="text-sm text-muted-foreground mt-1">
+                                <p>{address.contact}</p>
+                                <p>{address.phone}</p>
+                                <p>
+                                  {address.province}, {address.city}{" "}
+                                  {address.district}
+                                </p>
+                                <p>{address.address}</p>
+                              </div>
                             </Label>
-                            <div className="text-sm text-muted-foreground mt-1">
-                              <p>{address.name}</p>
-                              <p>{address.street}</p>
-                              {address.apt && <p>{address.apt}</p>}
-                              <p>
-                                {address.city}, {address.state} {address.zip}
-                              </p>
-                              <p>{address.country}</p>
-                              <p>{address.phone}</p>
-                            </div>
                           </div>
                         </div>
                       ))}
                     </RadioGroup>
-
-                    <Button variant="outline" className="w-full mt-4">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add New Address
-                    </Button>
                   </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Shipping Method</CardTitle>
-                    <CardDescription>
-                      Select your preferred shipping method
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <RadioGroup
-                      value={selectedShippingMethod}
-                      onValueChange={setSelectedShippingMethod}
+                  <CardFooter className=" justify-between">
+                    <Dialog
+                      open={isAddingAddress}
+                      onOpenChange={setIsAddingAddress}
                     >
-                      {shippingMethods.map((method) => (
-                        <div
-                          key={method.id}
-                          className="flex items-start space-x-3"
-                        >
-                          <RadioGroupItem
-                            value={method.id}
-                            id={`shipping-${method.id}`}
-                            className="mt-1"
-                          />
-                          <div className="grid gap-1.5 leading-none w-full">
-                            <div className="flex justify-between">
-                              <Label
-                                htmlFor={`shipping-${method.id}`}
-                                className="font-medium"
-                              >
-                                {method.name}
-                              </Label>
-                              <span className="font-medium">
-                                ${method.price.toFixed(2)}
-                              </span>
-                            </div>
-                            <p className="text-sm text-muted-foreground">
-                              {method.description}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </RadioGroup>
-                  </CardContent>
-                  <CardFooter>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" className=" cursor-pointer">
+                          <Plus className="h-4 w-4 mr-2" />
+                          添加新地址
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[500px]">
+                        <AddressForm
+                          isAddingAddress={isAddingAddress}
+                          setIsAddingAddress={setIsAddingAddress}
+                        />
+                      </DialogContent>
+                    </Dialog>
+
                     <Button
-                      className="w-full"
+                      className=" cursor-pointer"
                       onClick={handleContinueToPayment}
                     >
-                      Continue to Payment
+                      下一步
                     </Button>
                   </CardFooter>
                 </Card>
@@ -444,7 +345,7 @@ export default function CheckoutPage() {
                                 </span>
                                 {method.isDefault && (
                                   <Badge variant="outline" className="ml-2">
-                                    Default
+                                    默认
                                   </Badge>
                                 )}
                               </Label>
@@ -506,7 +407,7 @@ export default function CheckoutPage() {
                           Edit
                         </Button>
                       </div>
-                      <div className="bg-muted/50 p-3 rounded-lg">
+                      {/* <div className="bg-muted/50 p-3 rounded-lg">
                         <p className="font-medium capitalize">
                           {address?.type}
                         </p>
@@ -518,7 +419,7 @@ export default function CheckoutPage() {
                         </p>
                         <p>{address?.country}</p>
                         <p>{address?.phone}</p>
-                      </div>
+                      </div> */}
                     </div>
 
                     {/* Shipping Method */}
@@ -534,7 +435,7 @@ export default function CheckoutPage() {
                           Edit
                         </Button>
                       </div>
-                      <div className="bg-muted/50 p-3 rounded-lg">
+                      {/* <div className="bg-muted/50 p-3 rounded-lg">
                         <p className="font-medium">
                           {
                             shippingMethods.find(
@@ -549,7 +450,7 @@ export default function CheckoutPage() {
                             )?.description
                           }
                         </p>
-                      </div>
+                      </div> */}
                     </div>
 
                     {/* Payment Method */}
@@ -639,67 +540,55 @@ export default function CheckoutPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  {cartItems?.list.map((item) => (
-                    <div key={item.id} className="flex justify-between text-sm">
-                      <span>
-                        {item.title} × {item.count}
-                      </span>
-                      <span>￥{(item.price * item.count).toFixed(2)}</span>
+                  {cartItems?.list
+                    .filter((e) => e.checked)
+                    .map((item) => (
+                      <div
+                        key={item.id}
+                        className="flex justify-between text-sm"
+                      >
+                        <span>
+                          {item.title} × {item.count}
+                        </span>
+                        <span>￥{(item.price * item.count).toFixed(2)}</span>
+                      </div>
+                    ))}
+                </div>
+
+                <Separator />
+
+                {subtotal && (
+                  <div className="space-y-1">
+                    <div className="flex justify-between">
+                      <span>总计</span>
+                      <span>￥{subtotal?.toFixed(2)}</span>
                     </div>
-                  ))}
-                </div>
+                    <div className="flex justify-between">
+                      <span>运费</span>
+                      <span>
+                        ￥{parseFloat(subtotal?.toFixed(2)) >= 200 ? "0" : "20"}
+                      </span>
+                    </div>
+                  </div>
+                )}
 
                 <Separator />
-
-                <div className="space-y-1">
-                  <div className="flex justify-between">
-                    <span>总计</span>
-                    <span>￥{subtotal?.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>运费</span>
-                    <span>${shipping.toFixed(2)}</span>
-                  </div>
-                </div>
-
-                <Separator />
-
-                <div className="flex justify-between font-bold">
-                  <span>Total</span>
-                  {/* <span>${total.toFixed(2)}</span> */}
-                </div>
 
                 <div className="pt-4 space-y-2">
                   <div className="flex items-center gap-2">
                     <Truck className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm text-muted-foreground">
-                      Free shipping on orders over $100
+                      订单满200免运费
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm text-muted-foreground">
-                      Shipping to United States
+                      由湖北武汉发货
                     </span>
                   </div>
                 </div>
-
-                <div className="bg-muted/50 p-3 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4 text-muted-foreground" />
-                    <p className="text-xs text-muted-foreground">
-                      By placing your order, you agree to our Terms of Service
-                      and Privacy Policy
-                    </p>
-                  </div>
-                </div>
               </CardContent>
-              <CardFooter className="flex flex-col gap-2">
-                <div className="flex items-center gap-2 w-full">
-                  <Input placeholder="Promo code" className="flex-1" />
-                  <Button variant="outline">Apply</Button>
-                </div>
-              </CardFooter>
             </Card>
           </div>
         </div>

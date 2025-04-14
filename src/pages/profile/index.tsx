@@ -1,37 +1,22 @@
 import type React from "react";
 
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
 import {
   User,
   Settings,
   ShoppingBag,
   Heart,
-  Clock,
   LogOut,
   Edit,
-  Camera,
   Trash2,
-  Package,
   Shirt,
   Bell,
   CreditCard,
-  MessageCircle,
 } from "lucide-react";
 import { UserInfoPage } from "./userInfo";
 import { OrderPage } from "./order";
@@ -50,27 +35,6 @@ export default function ProfilePage() {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("overview");
 
-  // Mock recently viewed items
-  const recentlyViewed = [
-    {
-      id: 9,
-      name: "Silk Blouse",
-      price: 89.99,
-      image: "/placeholder.svg?height=120&width=100",
-    },
-    {
-      id: 10,
-      name: "Leather Belt",
-      price: 49.99,
-      image: "/placeholder.svg?height=120&width=100",
-    },
-    {
-      id: 11,
-      name: "Pleated Skirt",
-      price: 69.99,
-      image: "/placeholder.svg?height=120&width=100",
-    },
-  ];
   // Mock wishlist data
   const wishlist = [
     {
@@ -103,53 +67,22 @@ export default function ProfilePage() {
     },
   ];
 
-  // Mock activity data
-  const activities = [
-    {
-      id: 1,
-      type: "post",
-      content: "Shared a new outfit in the community",
-      date: "2 days ago",
-      link: "/community/post/123",
-    },
-    {
-      id: 2,
-      type: "like",
-      content: "Liked @marcstyle's outfit post",
-      date: "3 days ago",
-      link: "/community/post/456",
-    },
-    {
-      id: 3,
-      type: "comment",
-      content: "Commented on a discussion about sustainable fashion",
-      date: "5 days ago",
-      link: "/community/post/789",
-    },
-    {
-      id: 4,
-      type: "wardrobe",
-      content: "Added 3 new items to your virtual wardrobe",
-      date: "1 week ago",
-      link: "/wardrobe",
-    },
-  ];
   const { data: user } = useGetMyInfo();
   const [isEdit, setIsEdit] = useState(false);
 
-  const [userAvatar, setUserAvatar] = useState(
-    "/placeholder.svg?height=200&width=200"
-  );
+  const [userAvatar, setUserAvatar] = useState("");
+
+  useEffect(() => {
+    if (user) setUserAvatar(user?.avatarUrl);
+  }, [user]);
 
   const editInfo = () => {
     setIsEdit(!isEdit);
   };
 
-  const handleAvatarChange = (newAvatarUrl: string) => {
-    console.log('[ newAvatarUrl ] >', newAvatarUrl)
+  const handleAvatarChange = async (newAvatarUrl: string) => {
     setUserAvatar(newAvatarUrl);
-    // In a real app, you would make an API call to update the user's avatar in the database
-    toast("Your profile picture has been updated successfully.");
+    toast("个人头像更新成功！");
   };
 
   return (
@@ -163,7 +96,7 @@ export default function ProfilePage() {
                 <div className="relative mb-4">
                   {user ? (
                     <AvatarUpload
-                      currentAvatar={user?.avatarUrl}
+                      currentAvatar={userAvatar}
                       username={user?.nickName}
                       size="lg"
                       onAvatarChange={handleAvatarChange}
@@ -189,21 +122,6 @@ export default function ProfilePage() {
               </div>
 
               <Separator className="my-4" />
-
-              {/* <div className="grid grid-cols-3 gap-4 text-center">
-                <div>
-                  <p className="font-bold">{user.posts}</p>
-                  <p className="text-xs text-muted-foreground">文章</p>
-                </div>
-                <div>
-                  <p className="font-bold">{user.followers}</p>
-                  <p className="text-xs text-muted-foreground">收藏</p>
-                </div>
-                <div>
-                  <p className="font-bold">{user.following}</p>
-                  <p className="text-xs text-muted-foreground">购买</p>
-                </div>
-              </div> */}
             </CardContent>
           </Card>
 

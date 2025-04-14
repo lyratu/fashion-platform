@@ -14,7 +14,7 @@ export const useGetMyInfo = () => {
   });
 };
 
-export const updateUser = async (params: User) => {
+export const updateUser = async (params: Partial<User>) => {
   const response = await axios.post<User>(
     `/app/user/info/updatePerson`,
     params
