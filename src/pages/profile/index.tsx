@@ -146,6 +146,7 @@ export default function ProfilePage() {
   };
 
   const handleAvatarChange = (newAvatarUrl: string) => {
+    console.log('[ newAvatarUrl ] >', newAvatarUrl)
     setUserAvatar(newAvatarUrl);
     // In a real app, you would make an API call to update the user's avatar in the database
     toast("Your profile picture has been updated successfully.");

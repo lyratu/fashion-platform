@@ -3,7 +3,7 @@ export interface User {
   avatarUrl: string;
   nickName: string;
   phone: string;
-  sex: string;
+  gender: string;
   type: number;
   description: string;
   position: string;

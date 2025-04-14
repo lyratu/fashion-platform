@@ -1,6 +1,6 @@
 import axios from "@/lib/axios";
 import { User } from "@/types/user";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const getMyInfo = async () => {
   const response = await axios.get<User>(`/app/user/info/person`, {});
@@ -12,4 +12,23 @@ export const useGetMyInfo = () => {
     queryKey: [`getMyInfo`],
     queryFn: getMyInfo,
   });
+};
+
+export const updateUser = async (params: User) => {
+  const response = await axios.post<User>(
+    `/app/user/info/updatePerson`,
+    params
+  );
+  return response.data;
+};
+
+export const useUpdateUser = () => {
+  const {
+    error,
+    data,
+    mutateAsync: updateUserFn,
+  } = useMutation({
+    mutationFn: updateUser,
+  });
+  return { updateUserFn, data, error };
 };

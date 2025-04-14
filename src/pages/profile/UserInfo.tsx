@@ -23,6 +23,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
+import { useUpdateUser } from "@/services/profile";
+import { User } from "@/types/user";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 interface userInfo {
   user?: {
@@ -37,6 +41,8 @@ interface userInfo {
 }
 
 export const UserInfoPage = ({ user, isEdit, setIsEdit }: userInfo) => {
+  const { updateUserFn } = useUpdateUser();
+  const queryClient = useQueryClient();
   const formSchema = z.object({
     nickName: z
       .string({ message: "用户名不能为空" })
@@ -62,13 +68,20 @@ export const UserInfoPage = ({ user, isEdit, setIsEdit }: userInfo) => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+    updateUserFn(values as User, {
+      onSuccess: () => {
+        toast.success("修改个人资料成功～")
+        queryClient.invalidateQueries({ queryKey: ["getMyInfo"] });
+        setIsEdit(false);
+      },
+    });
   }
 
   return (
     <Card>
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)} 
+          onSubmit={form.handleSubmit(onSubmit)}
           onReset={() => {
             setIsEdit(!isEdit);
           }}
