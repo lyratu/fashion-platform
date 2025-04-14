@@ -40,7 +40,7 @@ export default function MyWardrobe() {
   };
   const saveOutfit = () => {};
   return (
-    <Card className="h-[350px]">
+    <Card className=" aspect-[1/1]">
       {" "}
       {/* Reduced height to make room for AI assistant */}
       <CardContent className="p-4 h-full flex flex-col">

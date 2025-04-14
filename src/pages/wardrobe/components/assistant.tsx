@@ -74,7 +74,7 @@ export default function Assistant() {
   };
 
   return (
-    <Card className="h-[300px]">
+    <Card className=" aspect-[1/1]">
       <CardContent className="p-4 h-full flex flex-col">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold">AI时尚助手</h2>

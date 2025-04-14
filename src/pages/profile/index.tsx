@@ -33,7 +33,7 @@ import {
   CreditCard,
   MessageCircle,
 } from "lucide-react";
-import { UserInfoPage } from "./UserInfo";
+import { UserInfoPage } from "./userInfo";
 import { OrderPage } from "./order";
 import { CollectPage } from "./collect";
 import { useGetMyInfo } from "@/services/profile";
@@ -280,7 +280,13 @@ export default function ProfilePage() {
           {/* 预览 Tab */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
             <TabsContent value="overview" className="mt-0 space-y-6">
-              <UserInfoPage user={user} isEdit={isEdit} setIsEdit={setIsEdit} />
+              {user && (
+                <UserInfoPage
+                  user={user}
+                  isEdit={isEdit}
+                  setIsEdit={setIsEdit}
+                />
+              )}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* 最近订单 */}
                 <RecentOrder setActiveTab={setActiveTab} />

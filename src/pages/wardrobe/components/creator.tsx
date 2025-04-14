@@ -96,7 +96,7 @@ export default function Creator() {
   };
 
   return (
-    <div className="md:col-span-2">
+    <div className="md:col-span-2 aspect-[1/1]">
       <Card className="h-full">
         {" "}
         {/* Match the combined height of right side components */}
