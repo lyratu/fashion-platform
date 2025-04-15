@@ -33,28 +33,8 @@ import { useGetMyAddress } from "@/services/profile";
 import { getMyAddress } from "./../../services/profile/address";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { AddressForm } from "../profile/components/addressForm";
-
-// Mock payment methods
-const paymentMethods = [
-  {
-    id: 1,
-    type: "credit_card",
-    isDefault: true,
-    cardType: "visa",
-    lastFour: "4242",
-    expiryDate: "12/25",
-    cardholderName: "Jessica Thompson",
-  },
-  {
-    id: 2,
-    type: "credit_card",
-    isDefault: false,
-    cardType: "mastercard",
-    lastFour: "8888",
-    expiryDate: "09/26",
-    cardholderName: "Jessica Thompson",
-  },
-];
+import zfb from "@/assets/resource/zhifubaoPay.png";
+import wx from "@/assets/resource/wechatPay.png";
 
 export default function CheckoutPage() {
   const { data: cartItems } = useGetCart();
@@ -92,14 +72,9 @@ export default function CheckoutPage() {
       setOrderComplete(true);
       setOrderNumber(`ORD-${Math.floor(100000 + Math.random() * 900000)}`);
 
-      toast("Your order has been placed and will be processed shortly.");
+      toast.success("您的订单已被下达，并将很快处理.");
     }, 2000);
   };
-
-  // Get selected address and payment method
-  const paymentMethod = paymentMethods.find(
-    (method) => method.id === selectedPaymentMethod
-  );
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -119,24 +94,23 @@ export default function CheckoutPage() {
             <div className="mx-auto mb-4 bg-primary/10 p-3 rounded-full w-16 h-16 flex items-center justify-center">
               <CheckCircle2 className="h-8 w-8 text-primary" />
             </div>
-            <CardTitle className="text-2xl">Order Confirmed!</CardTitle>
+            <CardTitle className="text-2xl">下单成功！</CardTitle>
             <CardDescription>
-              Thank you for your purchase. Your order has been placed and will
-              be processed shortly.
+              谢谢您的购买。您的订单已下达，将很快进行处理。
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="border rounded-lg p-4">
               <div className="flex justify-between mb-2">
-                <span className="font-medium">Order Number:</span>
+                <span className="font-medium">订单号:</span>
                 <span>{orderNumber}</span>
               </div>
               <div className="flex justify-between mb-2">
-                <span className="font-medium">Order Date:</span>
+                <span className="font-medium">下单时间:</span>
                 <span>{new Date().toLocaleDateString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="font-medium">Order Total:</span>
+                <span className="font-medium">商品总数:</span>
                 {/* <span>${total.toFixed(2)}</span> */}
               </div>
             </div>
@@ -173,32 +147,31 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            <div className="border-t pt-4">
-              <h3 className="font-medium mb-2">Shipping Information</h3>
-              {/* <p>{address?.name}</p>
+            {/* <div className="border-t pt-4">
+              <h3 className="font-medium mb-2">快递信息</h3>
+              <p>{address?.name}</p>
               <p>{address?.street}</p>
               {address?.apt && <p>{address.apt}</p>}
               <p>
                 {address?.city}, {address?.state} {address?.zip}
               </p>
               <p>{address?.country}</p>
-              <p>{address?.phone}</p> */}
-            </div>
+              <p>{address?.phone}</p>
+            </div> */}
 
             <div className="flex items-center gap-2 bg-muted/50 p-4 rounded-lg">
               <Clock className="h-5 w-5 text-muted-foreground" />
               <p className="text-sm">
-                You will receive an email confirmation with order details and
-                tracking information once your order ships.
+                您将在订单发货后收到带有订单详细信息和跟踪信息的电子邮件确认。
               </p>
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
             <Button className="w-full" asChild>
-              <Link to="/profile/orders">View Order History</Link>
+              <Link to="/profile?tab=orders">查看历史订单</Link>
             </Button>
             <Button variant="outline" className="w-full" asChild>
-              <Link to="/mall">Continue Shopping</Link>
+              <Link to="/mall">继续购物</Link>
             </Button>
           </CardFooter>
         </Card>
@@ -225,7 +198,7 @@ export default function CheckoutPage() {
                   支付
                 </TabsTrigger>
                 <TabsTrigger value="review" disabled={currentStep !== "review"}>
-                  预览
+                  详情
                 </TabsTrigger>
               </TabsList>
 
@@ -295,7 +268,7 @@ export default function CheckoutPage() {
                     </Dialog>
 
                     <Button
-                      className=" cursor-pointer"
+                      className=" cursor-pointer px-10"
                       onClick={handleContinueToPayment}
                     >
                       下一步
@@ -308,10 +281,8 @@ export default function CheckoutPage() {
               <TabsContent value="payment" className="space-y-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Payment Method</CardTitle>
-                    <CardDescription>
-                      Select a payment method or add a new one
-                    </CardDescription>
+                    <CardTitle>支付方式</CardTitle>
+                    <CardDescription>请选择一种支付方式</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <RadioGroup
@@ -320,65 +291,60 @@ export default function CheckoutPage() {
                         setSelectedPaymentMethod(Number(value))
                       }
                     >
-                      {paymentMethods.map((method) => (
-                        <div
-                          key={method.id}
-                          className="flex items-start space-x-3"
-                        >
-                          <RadioGroupItem
-                            value={String(method.id)}
-                            id={`payment-${method.id}`}
-                            className="mt-1"
-                          />
-                          <div className="grid gap-1.5 leading-none w-full">
-                            <div className="flex justify-between">
-                              <Label
-                                htmlFor={`payment-${method.id}`}
-                                className="flex items-center gap-2"
-                              >
-                                <CreditCardIcon className="h-4 w-4" />
-                                <span className="font-medium capitalize">
-                                  {method.cardType === "visa"
-                                    ? "Visa"
-                                    : "Mastercard"}{" "}
-                                  •••• {method.lastFour}
-                                </span>
-                                {method.isDefault && (
-                                  <Badge variant="outline" className="ml-2">
-                                    默认
-                                  </Badge>
-                                )}
-                              </Label>
-                              <span className="text-sm text-muted-foreground">
-                                Expires {method.expiryDate}
+                      <div className="flex items-start space-x-3">
+                        <RadioGroupItem
+                          value={"0"}
+                          id={`payment-`}
+                          className="mt-1"
+                        />
+                        <div className="grid gap-1.5 leading-none w-full">
+                          <div className="flex justify-between items-center">
+                            <Label
+                              htmlFor={`payment-`}
+                              className="flex items-center gap-2 ml-4"
+                            >
+                              <img
+                                src={zfb}
+                                alt="支付宝"
+                                className="w-8 h-auto"
+                              />
+                              <span className="font-medium capitalize">
+                                支付宝
                               </span>
-                            </div>
-                            <p className="text-sm text-muted-foreground">
-                              {method.cardholderName}
-                            </p>
+                            </Label>
                           </div>
+                          <p className="text-sm text-muted-foreground"></p>
                         </div>
-                      ))}
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <RadioGroupItem
+                          value={"0"}
+                          id={`payment-`}
+                          className="mt-1"
+                        />
+                        <div className="grid gap-1.5 leading-none w-full">
+                          <div className="flex justify-between items-center">
+                            <Label
+                              htmlFor={`payment-`}
+                              className="flex items-center gap-2 ml-4"
+                            >
+                              <img src={wx} alt="微信" className="w-8 h-auto" />
+                              <span className="font-medium capitalize">
+                                微信
+                              </span>
+                            </Label>
+                          </div>
+                          <p className="text-sm text-muted-foreground"></p>
+                        </div>
+                      </div>
                     </RadioGroup>
-
-                    <Button variant="outline" className="w-full mt-4">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add New Payment Method
-                    </Button>
-
-                    <div className="flex items-center space-x-2 mt-4">
-                      <Checkbox id="billing-same" defaultChecked />
-                      <label
-                        htmlFor="billing-same"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        Billing address same as shipping address
-                      </label>
-                    </div>
                   </CardContent>
                   <CardFooter>
-                    <Button className="w-full" onClick={handleContinueToReview}>
-                      Continue to Review
+                    <Button
+                      className="w-fit ml-auto px-10"
+                      onClick={handleContinueToReview}
+                    >
+                      下一步
                     </Button>
                   </CardFooter>
                 </Card>
@@ -388,100 +354,15 @@ export default function CheckoutPage() {
               <TabsContent value="review" className="space-y-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Review Your Order</CardTitle>
+                    <CardTitle>订单详情</CardTitle>
                     <CardDescription>
-                      Please review your order details before placing your order
+                      请在下订单之前查看您的订单详细信息
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
-                    {/* Shipping Information */}
-                    <div>
-                      <div className="flex justify-between items-center mb-2">
-                        <h3 className="font-medium">Shipping Information</h3>
-                        <Button
-                          variant="link"
-                          size="sm"
-                          className="h-auto p-0"
-                          onClick={() => setCurrentStep("shipping")}
-                        >
-                          Edit
-                        </Button>
-                      </div>
-                      {/* <div className="bg-muted/50 p-3 rounded-lg">
-                        <p className="font-medium capitalize">
-                          {address?.type}
-                        </p>
-                        <p>{address?.name}</p>
-                        <p>{address?.street}</p>
-                        {address?.apt && <p>{address.apt}</p>}
-                        <p>
-                          {address?.city}, {address?.state} {address?.zip}
-                        </p>
-                        <p>{address?.country}</p>
-                        <p>{address?.phone}</p>
-                      </div> */}
-                    </div>
-
-                    {/* Shipping Method */}
-                    <div>
-                      <div className="flex justify-between items-center mb-2">
-                        <h3 className="font-medium">Shipping Method</h3>
-                        <Button
-                          variant="link"
-                          size="sm"
-                          className="h-auto p-0"
-                          onClick={() => setCurrentStep("shipping")}
-                        >
-                          Edit
-                        </Button>
-                      </div>
-                      {/* <div className="bg-muted/50 p-3 rounded-lg">
-                        <p className="font-medium">
-                          {
-                            shippingMethods.find(
-                              (method) => method.id === selectedShippingMethod
-                            )?.name
-                          }
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {
-                            shippingMethods.find(
-                              (method) => method.id === selectedShippingMethod
-                            )?.description
-                          }
-                        </p>
-                      </div> */}
-                    </div>
-
-                    {/* Payment Method */}
-                    <div>
-                      <div className="flex justify-between items-center mb-2">
-                        <h3 className="font-medium">Payment Method</h3>
-                        <Button
-                          variant="link"
-                          size="sm"
-                          className="h-auto p-0"
-                          onClick={() => setCurrentStep("payment")}
-                        >
-                          Edit
-                        </Button>
-                      </div>
-                      <div className="bg-muted/50 p-3 rounded-lg">
-                        <p className="font-medium">
-                          {paymentMethod?.cardType === "visa"
-                            ? "Visa"
-                            : "Mastercard"}{" "}
-                          •••• {paymentMethod?.lastFour}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          Expires {paymentMethod?.expiryDate}
-                        </p>
-                      </div>
-                    </div>
-
                     {/* Order Items */}
                     <div>
-                      <h3 className="font-medium mb-2">Order Items</h3>
+                      <h3 className="font-medium mb-2">商品项</h3>
                       <div className="space-y-3">
                         {cartItems?.list.map((item) => (
                           <div key={item.id} className="flex gap-3">
@@ -509,22 +390,14 @@ export default function CheckoutPage() {
                         ))}
                       </div>
                     </div>
-
-                    <div className="flex items-center gap-2 bg-primary/10 p-4 rounded-lg">
-                      <Shield className="h-5 w-5 text-primary" />
-                      <p className="text-sm">
-                        Your payment information is encrypted and secure. We
-                        never store your full credit card details.
-                      </p>
-                    </div>
                   </CardContent>
                   <CardFooter>
                     <Button
-                      className="w-full"
+                      className="w-fit px-10 ml-auto"
                       onClick={handlePlaceOrder}
                       disabled={isProcessing}
                     >
-                      {isProcessing ? "Processing..." : "Place Order"}
+                      {isProcessing ? "下单中..." : "下单"}
                     </Button>
                   </CardFooter>
                 </Card>

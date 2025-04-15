@@ -1,7 +1,7 @@
 import type React from "react";
 
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -33,7 +33,9 @@ import { useQueryClient } from "@tanstack/react-query";
 export default function ProfilePage() {
   const router = useNavigate();
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState("overview");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const defaultTab = searchParams.get("tab") || "overview";
+  const [activeTab, setActiveTab] = useState(defaultTab);
 
   // Mock wishlist data
   const wishlist = [
@@ -71,13 +73,14 @@ export default function ProfilePage() {
   const [isEdit, setIsEdit] = useState(false);
 
   const [userAvatar, setUserAvatar] = useState("");
-
   useEffect(() => {
     if (user) setUserAvatar(user?.avatarUrl);
-  }, [user]);
+    setSearchParams({ tab: activeTab });
+  }, [user, activeTab, setSearchParams]);
 
   const editInfo = () => {
     setIsEdit(!isEdit);
+    setActiveTab("overview");
   };
 
   const handleAvatarChange = async (newAvatarUrl: string) => {

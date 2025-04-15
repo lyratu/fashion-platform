@@ -53,10 +53,9 @@ export function OrderConfirmation({
         <div className="mx-auto mb-4 bg-primary/10 p-3 rounded-full w-16 h-16 flex items-center justify-center">
           <CheckCircle2 className="h-8 w-8 text-primary" />
         </div>
-        <CardTitle className="text-2xl">Order Confirmed!</CardTitle>
+        <CardTitle className="text-2xl">下单成功!</CardTitle>
         <CardDescription>
-          Thank you for your purchase. Your order has been placed and will be
-          processed shortly.
+          谢谢您的购买。您的订单已下达，将很快进行处理。
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">

@@ -117,11 +117,8 @@ export function AvatarUpload({
         const file = await getFileFromDiv(divRef.current);
         const form = new FormData();
         form.append("file", file);
-        const data = await uploadFn(form, {
-          onSuccess: (url: string) => {
-            if (onAvatarChange) onAvatarChange(url);
-          },
-        });
+        const data = await uploadFn(form);
+        if (onAvatarChange) onAvatarChange(data);
         await updateUserFn({ avatarUrl: data });
       } catch (e) {
         toast.error(e as string);
