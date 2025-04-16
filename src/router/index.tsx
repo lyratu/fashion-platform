@@ -19,6 +19,7 @@ import Checkout from "@/pages/mall/checkout";
 import Product from "@/pages/mall/product";
 import Profile from "@/pages/profile";
 import ErrorBoundary from "@/pages/error";
+import Payment from "@/pages/mall/payment";
 export const routes = createRoutesFromElements(
   <Route element={<Providers />} errorElement={<ErrorBoundary />}>
     <Route path="/test" element={<Test />} />
@@ -34,10 +35,9 @@ export const routes = createRoutesFromElements(
       <Route path="/community" element={<Community />} />
       <Route path="/community/post/:id" element={<PostDetail />} />
       <Route path="/wardrobe" element={<Wardrobe />} />
-      <Route path="/profile" element={<Profile />}>
-        {/* <Route path="overView" element={<OverView />} /> */}
-      </Route>
+      <Route path="/profile" element={<Profile />} />
     </Route>
+    <Route path="/payment" element={<Payment />} />
   </Route>
 );
 

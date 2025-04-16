@@ -1,3 +1,32 @@
+### current progress
+- [x] home
+- [ ] outfits
+  - [x] outfits index page
+  - [x] outfits detail
+  - [ ] connecting cart
+  - [x] comment
+  - [x] reply
+- [ ] mall
+  - [x] index page
+  - [ ] detail page add cart
+  - [ ] comment
+  - [ ] reply
+- [x] community module 
+  - [x] comment
+  - [x] publish
+- [ ] wardrobe
+- [ ] profile
+  - [ ] other user information page
+  - [ ] index page
+  - [ ] notification page
+  - [x] person information
+  - [ ] order history
+  - [x] address manage
+  - [ ] collect
+  - [ ] my wardrobe
+  - [ ] account password update
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
@@ -52,3 +81,4 @@ export default tseslint.config({
   },
 })
 ```
+
