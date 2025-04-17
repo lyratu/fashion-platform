@@ -21,6 +21,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { AddressForm } from "../profile/components/addressForm";
 import zfb from "@/assets/resource/zhifubaoPay.png";
 import wx from "@/assets/resource/wechatPay.png";
+import { useCreateOrder } from "@/services/mall";
 
 export default function CheckoutPage() {
   const { data: cartItems } = useGetCart();
@@ -31,6 +32,7 @@ export default function CheckoutPage() {
 
   // api
   const { data: address } = useGetMyAddress();
+  const { createOrderFn } = useCreateOrder();
 
   // nav
   const navigate = useNavigate();
@@ -49,25 +51,31 @@ export default function CheckoutPage() {
   // shipping
   const shipping = subtotal && subtotal >= 200 ? 0 : 20;
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     // setIsProcessing(true);
-    if (subtotal)
+    const addr = address?.filter((e) => e.id == selectedAddress)[0];
+    const res = await createOrderFn({
+      totalAmount: Number(((subtotal as number) + shipping).toFixed(2)),
+      address:
+        addr?.province +
+        "" +
+        addr?.city +
+        "" +
+        addr?.district +
+        "" +
+        addr?.address,
+      contactNumber: addr?.contact + ":" + addr?.phone,
+      paymentType: selectedPaymentMethod,
+    });
+    if (res)
       navigate("/payment", {
         state: {
           secretData: {
             type: selectedPaymentMethod,
-            price: subtotal + shipping,
+            orderNumber: res.orderNumber,
           },
         },
       });
-    // Simulate API call to place order
-    // setTimeout(() => {
-    //   setIsProcessing(false);
-    //   setOrderComplete(true);
-    //   setOrderNumber(`ORD-${Math.floor(100000 + Math.random() * 900000)}`);
-
-    //   toast.success("您的订单已被下达，并将很快处理.");
-    // }, 2000);
   };
 
   return (
@@ -291,7 +299,10 @@ export default function CheckoutPage() {
                       {address
                         ?.filter((e) => e.id == selectedAddress)
                         .map((item) => (
-                          <div key={item.id} className="text-sm text-muted-foreground mt-1 space-y-1">
+                          <div
+                            key={item.id}
+                            className="text-sm text-muted-foreground mt-1 space-y-1"
+                          >
                             <p>{item.contact}</p>
                             <p>{item.phone}</p>
                             <p>

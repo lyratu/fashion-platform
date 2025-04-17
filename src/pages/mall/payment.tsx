@@ -17,18 +17,27 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Clock } from "lucide-react";
+import { useConfirmPayment, useGetOrderInfo } from "@/services/mall";
 
 const Payment = () => {
   const location = useLocation();
   const secretData = location.state?.secretData;
   const type = secretData?.type || 0;
-  const price = secretData?.price || 0;
+  const orderNumber = secretData?.orderNumber;
   const [isComplete, setIsComplete] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
-  const orderNumber = 0;
+  // api
+  const { data } = useGetOrderInfo(orderNumber || "1744885638125");
+  const { confirmPaymentFn } = useConfirmPayment();
   setTimeout(() => {
     setIsComplete(true);
   }, 5000);
+
+  // 确认支付
+  const handleConfirm = async () => {
+    await confirmPaymentFn(orderNumber);
+    setOrderComplete(true);
+  };
   return (
     <div>
       {orderComplete ? (
@@ -39,73 +48,61 @@ const Payment = () => {
             </div>
             <CardTitle className="text-2xl">下单成功！</CardTitle>
             <CardDescription>
-              谢谢您的购买。您的订单已下达，将很快进行处理。
+              感谢您的购买。您的订单已下达，快递预计24小时发货。
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="border rounded-lg p-4">
               <div className="flex justify-between mb-2">
                 <span className="font-medium">订单号:</span>
-                <span>{orderNumber}</span>
+                <span>{data?.orderNumber}</span>
               </div>
               <div className="flex justify-between mb-2">
                 <span className="font-medium">下单时间:</span>
-                <span>{new Date().toLocaleDateString()}</span>
+                <span>{data?.createTime}</span>
               </div>
               <div className="flex justify-between">
-                <span className="font-medium">商品总数:</span>
-                {/* <span>${total.toFixed(2)}</span> */}
+                <span className="font-medium">商品总价:</span>
+                <span>￥{data?.totalAmount}</span>
+              </div>
+            </div>
+            <div>
+              <h3 className="font-medium mb-2">订单详情</h3>
+              <div className="space-y-3">
+                {data?.orderItems.map((item) => (
+                  <div key={item.id} className="flex gap-3">
+                    <div className="relative h-16 w-16 flex-shrink-0">
+                      <img
+                        src={item?.mainImage || "/placeholder.svg"}
+                        alt={item?.title}
+                        className="object-cover rounded-md"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-medium">{item?.title}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {item.goodsSpecification}
+                        数量: {item.count}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-medium">￥{item?.price}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
-            <div>
-              <h3 className="font-medium mb-2">订单详情</h3>
-              {/* <div className="space-y-3">
-                {cartItems?.list
-                  .filter((e) => e.checked)
-                  .map((item) => (
-                    <div key={item.id} className="flex gap-3">
-                      <div className="relative h-16 w-16 flex-shrink-0">
-                        <img
-                          src={item.mainImage || "/placeholder.svg"}
-                          alt={item.title}
-                          className="object-cover rounded-md"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <p className="font-medium">{item.title}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {item.size && `尺码: ${item.size} | `}
-                          {item.color && `颜色: ${item.color} | `}
-                          Qty: {item.count}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium">
-                          ${(item.price * item.count).toFixed(2)}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-              </div> */}
+            <div className="border-t pt-4">
+              <h3 className="font-medium mb-2">快递信息</h3>
+              <p>{data?.contactNumber}</p>
+              <p>{data?.address}</p>
             </div>
-
-            {/* <div className="border-t pt-4">
-        <h3 className="font-medium mb-2">快递信息</h3>
-        <p>{address?.name}</p>
-        <p>{address?.street}</p>
-        {address?.apt && <p>{address.apt}</p>}
-        <p>
-          {address?.city}, {address?.state} {address?.zip}
-        </p>
-        <p>{address?.country}</p>
-        <p>{address?.phone}</p>
-      </div> */}
 
             <div className="flex items-center gap-2 bg-muted/50 p-4 rounded-lg">
               <Clock className="h-5 w-5 text-muted-foreground" />
               <p className="text-sm">
-                您将在订单发货后收到带有订单详细信息和跟踪信息的电子邮件确认。
+                您将在订单发货后收到带有订单详细信息的订单记录。
               </p>
             </div>
           </CardContent>
@@ -142,7 +139,7 @@ const Payment = () => {
             <div className=" relative p-32 flex flex-col  justify-center items-center border-2 border-t-[#b3b3b3] border-b-[#b3b3b3]">
               <div>扫一扫付款（元）</div>
               <div className=" text-3xl font-bold text-[#ff6600]">
-                {price.toFixed(2)}
+                {data?.totalAmount}
               </div>
               <div className="mt-4 p-2 relative shadow shadow-[#ccc] border border-[#d3d3d3]">
                 {type == 2 ? (
@@ -167,7 +164,7 @@ const Payment = () => {
               {isComplete ? (
                 <div className="mt-4">
                   <span className=" text-sm">付款成功？</span>
-                  <Button variant="link" onClick={() => setOrderComplete(true)}>
+                  <Button variant="link" onClick={handleConfirm}>
                     点击确认已支付完成
                   </Button>
                 </div>

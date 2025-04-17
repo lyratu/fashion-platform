@@ -15,13 +15,13 @@ import {
   useGetCart,
   useUpdateChecked,
   useUpdateGoods,
-} from "@/services/mall/cart";
+} from "@/services/mall";
 import { Popover, PopoverContent } from "@/components/ui/popover";
 import { Close, PopoverTrigger } from "@radix-ui/react-popover";
 import { useQueryClient } from "@tanstack/react-query";
 import { CartItem } from "@/types/cart";
 import { Checkbox } from "@/components/ui/checkbox";
-import { number } from "zod";
+import { toast } from "sonner";
 
 export default function CartPage() {
   const { data: cartItems } = useGetCart();
@@ -59,6 +59,13 @@ export default function CartPage() {
         },
       }
     );
+  };
+
+  const handleSubmit = () => {
+    const isNull = cartItems?.list.findIndex((e) => e.checked);
+    if(isNull==-1) return toast.error("购物车中没有选中商品！");
+    
+    navigate("/mall/cart/checkout");
   };
 
   const subtotal = cartItems?.list.reduce(
@@ -220,9 +227,7 @@ export default function CartPage() {
                 <Button
                   className="w-full cursor-pointer"
                   size="lg"
-                  onClick={() => {
-                    navigate("/mall/cart/checkout");
-                  }}
+                  onClick={handleSubmit}
                 >
                   <CreditCard className="h-4 w-4 mr-2" />
                   结账
