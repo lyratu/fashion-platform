@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useGetGoodsDet } from "@/services/mall/detail";
 import { toast } from "sonner";
+import { useDoCollect } from "@/services/mall";
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -28,6 +29,9 @@ export default function ProductDetailPage() {
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(1);
 
+  // api
+  const { doCollectFn } = useDoCollect();
+
   useEffect(() => {
     if (isSuccess) {
       setSelectedColor(data.color[0].value);
@@ -37,6 +41,13 @@ export default function ProductDetailPage() {
         data.subPics = [data.mainImage, ...data.subPics];
     }
   }, [isSuccess, data]);
+
+  const handleCollect = async () => {
+    if (data) {
+      const res = await doCollectFn(data.id);
+      data.collectStatus = res.collectStatus;
+    }
+  };
 
   // const handleAddToCart = () => {
   //   console.log("Added to cart:", {
@@ -233,8 +244,17 @@ export default function ProductDetailPage() {
               <ShoppingCart className="h-4 w-4 mr-2 " />
               添加到购物车
             </Button>
-            <Button variant="outline" size="icon" className="cursor-pointer">
-              <Heart className="h-5 w-5" />
+            <Button
+              variant="outline"
+              size="icon"
+              className="cursor-pointer"
+              onClick={handleCollect}
+            >
+              <Heart
+                className={`h-4 w-4 ${
+                  data?.collectStatus ? "fill-chart-1 text-chart-1" : ""
+                }`}
+              />
             </Button>
             <Button
               variant="outline"

@@ -47,6 +47,7 @@ export const useGetOrderList = (params: pageQuery) => {
   return useQuery({
     queryKey: [`getOrderList`],
     queryFn: () => getOrderList(params),
+    staleTime: 0,
   });
 };
 

@@ -23,4 +23,5 @@ export interface goods {
 
   size: Array<{ label: string; value: string }>;
   color: Array<{ label: string; value: string }>;
+  collectStatus: number;
 }

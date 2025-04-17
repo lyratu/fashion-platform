@@ -34,7 +34,7 @@ export const OrderPage = () => {
               <div className="bg-muted p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="font-medium">订单 {order.id}</h3>
+                    <h3 className="font-medium">订单 {order.orderNumber}</h3>
                     <Badge
                     // variant={
                     //   order.status === "Delivered" ? "outline" : "default"
@@ -123,7 +123,7 @@ export const OrderPage = () => {
                 <div className="flex justify-between">
                   <div>
                     <p className="text-sm text-muted-foreground select-none">
-                      总数
+                      合计
                     </p>
                     <p className="font-medium">￥{order.totalAmount}</p>
                   </div>

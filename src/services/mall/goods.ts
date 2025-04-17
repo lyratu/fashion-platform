@@ -1,7 +1,7 @@
 import axios from "@/lib/axios";
 import { goods } from "@/types/goods";
 import { pageQuery, pageQueryResponse } from "@/types/pageQuery";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 
 export const getGoodsRec = async () => {
   const response = await axios.get<Array<goods>>(
@@ -44,4 +44,25 @@ export const useGetGoods = (data: pageQuery) => {
       return undefined;
     },
   });
+};
+
+/* 收藏 */
+export const doCollect = async (id: number) => {
+  const response = await axios.post<goods>(
+    `/app/goods/collect/collectOrUncollect?goodsId=${id}`,
+    {}
+  );
+  return response.data;
+};
+
+export const useDoCollect = () => {
+  const {
+    error,
+    data,
+    mutateAsync: doCollectFn,
+  } = useMutation({
+    mutationFn: doCollect,
+  });
+
+  return { doCollectFn, data, error };
 };
