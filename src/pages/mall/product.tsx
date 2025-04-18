@@ -15,12 +15,14 @@ import {
 } from "lucide-react";
 import { useGetGoodsDet } from "@/services/mall/detail";
 import { toast } from "sonner";
+import { useAuthStore } from "@/stores/auth";
 import { useDoCollect } from "@/services/mall";
 
 export default function ProductDetailPage() {
   const params = useParams();
   const productId = params.id as string;
-  const { data, isSuccess } = useGetGoodsDet(productId);
+  const user = useAuthStore((state) => state.user);
+  const { data, isSuccess } = useGetGoodsDet(productId, user?.id as number);
 
   // Find the product by ID
   const [selectedImage, setSelectedImage] = useState(0);

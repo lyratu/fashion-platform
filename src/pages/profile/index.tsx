@@ -21,7 +21,7 @@ import {
 import { UserInfoPage } from "./userInfo";
 import { OrderPage } from "./order";
 import { CollectPage } from "./collect";
-import { useGetMyInfo } from "@/services/profile";
+import { useGetMyGoodsCollect, useGetMyInfo } from "@/services/profile";
 import { RecentOrder } from "./components/recent-order";
 import { AccountSetPage } from "./accountSet";
 import AddressesPage from "./address";
@@ -29,6 +29,7 @@ import { AvatarUpload } from "./components/avatarUpload";
 import { toast } from "sonner";
 import { NotifyPage } from "./notify";
 import { useQueryClient } from "@tanstack/react-query";
+import { goods } from "./../../types/goods";
 
 export default function ProfilePage() {
   const router = useNavigate();
@@ -36,38 +37,7 @@ export default function ProfilePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const defaultTab = searchParams.get("tab") || "overview";
   const [activeTab, setActiveTab] = useState(defaultTab);
-
-  // Mock wishlist data
-  const wishlist = [
-    {
-      id: 4,
-      name: "Leather Crossbody Bag",
-      price: 129.99,
-      image: "/placeholder.svg?height=120&width=100",
-      inStock: true,
-    },
-    {
-      id: 6,
-      name: "Chunky Ankle Boots",
-      price: 119.99,
-      image: "/placeholder.svg?height=120&width=100",
-      inStock: true,
-    },
-    {
-      id: 7,
-      name: "Gold Hoop Earrings",
-      price: 39.99,
-      image: "/placeholder.svg?height=120&width=100",
-      inStock: false,
-    },
-    {
-      id: 8,
-      name: "Cashmere Sweater",
-      price: 149.99,
-      image: "/placeholder.svg?height=120&width=100",
-      inStock: true,
-    },
-  ];
+  const { data: wishlist } = useGetMyGoodsCollect();
 
   const { data: user } = useGetMyInfo();
   const [isEdit, setIsEdit] = useState(false);
@@ -229,28 +199,28 @@ export default function ProfilePage() {
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-2 gap-3">
-                      {wishlist.slice(0, 4).map((item) => (
+                      {wishlist?.map((item) => (
                         <div key={item.id} className="relative group">
                           <div className="relative h-32 w-full overflow-hidden rounded-md border">
                             <img
-                              src={item.image || "/placeholder.svg"}
-                              alt={item.name}
+                              src={item.goods.mainImage || "/placeholder.svg"}
+                              alt={item.goods.title}
                               className="object-cover object-top"
                             />
-                            {!item.inStock && (
+                            {/* {!item.inStock && (
                               <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
                                 <span className="text-xs font-medium text-muted-foreground">
                                   缺货
                                 </span>
                               </div>
-                            )}
+                            )} */}
                           </div>
                           <div className="mt-1">
                             <p className="text-sm font-medium truncate">
-                              {item.name}
+                              {item.goods.title}
                             </p>
                             <p className="text-sm text-muted-foreground select-none">
-                              ${item.price}
+                              ￥{item.goods.price}
                             </p>
                           </div>
                           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-background/60 rounded-md">

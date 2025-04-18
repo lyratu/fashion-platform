@@ -32,3 +32,25 @@ export const useUpdateUser = () => {
   });
   return { updateUserFn, data, error };
 };
+
+export const updatePassword = async (form: {
+  currentPwd: string;
+  newPwd: string;
+}) => {
+  const response = await axios.post<User>(
+    `/app/user/info/updatePassword`,
+    form
+  );
+  return response.data;
+};
+
+export const useUpdatePassword = () => {
+  const {
+    error,
+    data,
+    mutateAsync: updatePasswordFn,
+  } = useMutation({
+    mutationFn: updatePassword,
+  });
+  return { updatePasswordFn, data, error };
+};
