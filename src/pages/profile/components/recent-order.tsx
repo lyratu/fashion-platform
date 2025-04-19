@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useGetOrderList } from "@/services/mall";
+import { SquareRoundCorner } from "lucide-react";
 
 interface order extends React.HTMLAttributes<HTMLDivElement> {
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
@@ -68,6 +69,17 @@ export const RecentOrder: React.FC<order> = ({ setActiveTab }) => {
               </div>
             </div>
           ))}
+          {(orders?.list && orders.list.length > 0) || (
+            <div className=" flex flex-col items-center">
+              <div className="mb-4 p-4">
+                <SquareRoundCorner className="h-16 w-16 mx-auto text-muted-foreground" />
+              </div>
+              <h2 className="text-xl font-medium mb-2">暂无购物订单</h2>
+              <p className="text-muted-foreground mb-6">
+                看起来您还没有购买任何东西。
+              </p>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

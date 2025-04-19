@@ -1,26 +1,41 @@
-import { useEffect } from "react";
-const useScrollToBottom = (
-  callback: (scrollTop: number, scrollHeight: number) => void
-) => {
+import { useEffect, RefObject } from "react";
+
+interface IntersectionObserverOptions {
+  root?: Element | null;
+  rootMargin?: string;
+  threshold?: number | number[];
+}
+
+/**
+ * 当 targetRef 对应的元素进入视口时，调用 callback
+ */
+function useIntersectionObserver(
+  targetRef: RefObject<Element>,
+  callback: () => void,
+  options?: IntersectionObserverOptions
+) {
   useEffect(() => {
-    const handleScroll = () => {
-      // 获取页面滚动的高度、可视区高度、整个文档的高度
-      const scrollTop =
-        document.documentElement.scrollTop || document.body.scrollTop;
-      const windowHeight = window.innerHeight;
-      const scrollHeight =
-        document.documentElement.scrollHeight || document.body.scrollHeight;
-      // 当滚动高度 + 可视区高度 大于等于 文档总高度时，表示已触底
-      if (windowHeight + scrollTop >= scrollHeight) {
-        if (callback) callback(scrollTop, scrollHeight);
-      }
-    };
-    // 添加滚动事件监听器
-    window.addEventListener("scroll", handleScroll);
-    // 清除事件监听器
+    const target = targetRef.current;
+    if (!target) return;
+
+    // 创建 IntersectionObserver 实例
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        // 当目标进入视口时触发回调函数
+        if (entry.isIntersecting) {
+          callback();
+        }
+      });
+    }, options);
+
+    observer.observe(target);
+
+    // 清理函数，卸载监听器
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      observer.unobserve(target);
+      observer.disconnect();
     };
-  }, [callback]);
-};
-export default useScrollToBottom;
+  }, [targetRef, callback, options]);
+}
+
+export default useIntersectionObserver;

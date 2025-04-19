@@ -17,6 +17,7 @@ import {
   Shirt,
   Bell,
   CreditCard,
+  SquareRoundCorner,
 } from "lucide-react";
 import { UserInfoPage } from "./userInfo";
 import { OrderPage } from "./order";
@@ -29,7 +30,6 @@ import { AvatarUpload } from "./components/avatarUpload";
 import { toast } from "sonner";
 import { NotifyPage } from "./notify";
 import { useQueryClient } from "@tanstack/react-query";
-import { goods } from "./../../types/goods";
 
 export default function ProfilePage() {
   const router = useNavigate();
@@ -228,16 +228,32 @@ export default function ProfilePage() {
                               size="sm"
                               variant="secondary"
                               className="mr-1"
+                              onClick={() =>
+                                router(`/mall/product/${item.goodsId}`)
+                              }
                             >
                               <ShoppingBag className="h-4 w-4" />
                             </Button>
                             <Button size="sm" variant="destructive">
-                              <Trash2 className="h-4 w-4" />
+                              <Trash2 className="h-4 w-4 text-white" />
                             </Button>
                           </div>
                         </div>
                       ))}
                     </div>
+                    {(wishlist && wishlist.length > 0) || (
+                      <div className=" flex flex-col items-center">
+                        <div className="mb-4 p-4">
+                          <SquareRoundCorner className="h-16 w-16 mx-auto text-muted-foreground" />
+                        </div>
+                        <h2 className="text-xl font-medium mb-2">
+                          暂无商品收藏
+                        </h2>
+                        <p className="text-muted-foreground mb-6">
+                          看起来您还没有收藏任何商品。
+                        </p>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </div>
