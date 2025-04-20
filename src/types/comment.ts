@@ -17,6 +17,7 @@ export interface comment {
   type?: number;
   createTime?: string;
   replyTo?: string;
+  replyToId?: number;
   isLike?: boolean;
   children: Array<comment>;
   user: { id?: number; nickName: string; avatarUrl: string };
@@ -27,11 +28,13 @@ export interface commentForm {
   content: string;
   parentId?: number;
   replyTo?: string;
+  replyToId?: number;
 }
 
 export interface replyStatus {
   parentId?: number;
   replyTo?: string;
+  replyToId?: number;
   content: string;
   status: boolean;
   nickName: string;

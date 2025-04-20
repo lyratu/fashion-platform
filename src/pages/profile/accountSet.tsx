@@ -7,45 +7,118 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useUpdatePassword } from "@/services/profile";
-import { Label } from "@radix-ui/react-label";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 export const AccountSetPage = () => {
   const { updatePasswordFn } = useUpdatePassword();
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const formdata = new FormData(form);
-    const currentPwd = formdata.get("currentPwd") as string;
-    const newPwd = formdata.get("newPwd") as string;
+
+  const formSchema = z.object({
+    currentPwd: z
+      .string()
+      .min(6, {
+        message: "密码不能少于6个字符",
+      })
+      .max(18, {
+        message: "密码不能超过18个字符",
+      }),
+    newPwd: z
+      .string()
+      .min(6, {
+        message: "密码不能少于6个字符",
+      })
+      .max(18, {
+        message: "密码不能超过18个字符",
+      }),
+    rePwd: z.string(),
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      currentPwd: "",
+      newPwd: "",
+      rePwd: "",
+    },
+  });
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    const { currentPwd, newPwd, rePwd } = values;
+    if (newPwd !== rePwd)
+      return form.setError("rePwd", {
+        type: "manual",
+        message: "两次密码输入不一致",
+      });
     updatePasswordFn({ currentPwd, newPwd });
   };
   return (
     <Card>
-      <form onSubmit={handleSubmit}>
-        <CardHeader>
-          <CardTitle>账号设置</CardTitle>
-          <CardDescription>管理你的账号信息</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4 w-1/2">
-          <div className="space-y-2">
-            <Label htmlFor="current-password">当前密码</Label>
-            <Input id="current-password" type="password" name="currentPwd" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="new-password">新密码</Label>
-            <Input id="new-password" type="password" name="newPwd" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="confirm-password">确认密码</Label>
-            <Input id="confirm-password" type="password" name="rePwd" />
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Button type="submit">更新</Button>
-        </CardFooter>
-      </form>
+      {/* <form onSubmit={handleSubmit}> */}
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <CardHeader>
+            <CardTitle>账号设置</CardTitle>
+            <CardDescription>管理你的账号信息</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4 w-1/2">
+            <FormField
+              control={form.control}
+              name="currentPwd"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>当前密码</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="newPwd"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>新密码</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="rePwd"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>确认密码</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+          <CardFooter>
+            <Button type="submit">更新</Button>
+          </CardFooter>
+        </form>
+      </Form>
     </Card>
   );
 };

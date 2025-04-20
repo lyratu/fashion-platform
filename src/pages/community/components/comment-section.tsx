@@ -12,7 +12,11 @@ import UseScrollToBottom from "@/hooks/use-scroll";
 import { CommentUser } from "../../../components/comment/comment-user";
 import { replyStatus } from "@/types/comment";
 
-export function CommentSection() {
+interface props extends React.HTMLAttributes<HTMLDivElement> {
+  userId: number;
+}
+
+export const CommentSection: React.FC<props> = ({ userId }) => {
   const { id } = useParams();
   const queryClient = useQueryClient();
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
@@ -26,6 +30,7 @@ export function CommentSection() {
   const [reply, setReply] = useState<replyStatus>({
     parentId: undefined,
     replyTo: undefined,
+    replyToId: undefined,
     status: false,
     nickName: "",
     content: "",
@@ -53,6 +58,7 @@ export function CommentSection() {
           parentId,
           objectId: parseInt(id as string),
           replyTo: reply.replyTo,
+          replyToId: reply.replyToId,
         },
         {
           onSuccess: sendBreak,
@@ -60,7 +66,11 @@ export function CommentSection() {
       );
     } else {
       sendFn(
-        { objectId: parseInt(id as string), content: commentText },
+        {
+          objectId: parseInt(id as string),
+          content: commentText,
+          replyToId: userId,
+        },
         {
           onSuccess: sendBreak,
         }
@@ -154,6 +164,7 @@ export function CommentSection() {
                 setReply({
                   parentId: undefined,
                   replyTo: undefined,
+                  replyToId: undefined,
                   status: false,
                   nickName: "",
                   content: "",
@@ -176,4 +187,4 @@ export function CommentSection() {
       </form>
     </div>
   );
-}
+};

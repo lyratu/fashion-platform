@@ -5,9 +5,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heart, ShoppingCart } from "lucide-react";
 import { useGetGoods } from "@/services/mall";
 import { useGetDictInfo } from "@/services/dict";
-import { useCartStore } from "@/stores/cart";
+import { useCartQuantityStore } from "@/stores/cart";
 import { CartItem } from "@/types/cart";
-import { useAddCard, useGetCartCount } from "@/services/mall/cart";
+import { useAddCard } from "@/services/mall/cart";
 import { goods } from "@/types/goods";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
@@ -31,9 +31,8 @@ export default function MallPage() {
 
   const { addCardFn } = useAddCard();
 
-  const { data: count } = useGetCartCount();
-
-  const { addItem } = useCartStore();
+  const { incrementQuantity, getTotalQuantity } = useCartQuantityStore();
+  const totalQuantity = getTotalQuantity();
   // 示例：添加商品到购物车
   const handleAddItem = (goods: goods) => {
     const newItem: CartItem = {
@@ -44,10 +43,11 @@ export default function MallPage() {
     };
     addCardFn(newItem, {
       onSuccess: () => {
-        addItem(newItem);
+        console.log("[ add ] >", goods.id);
+        incrementQuantity(goods.id);
         queryClient.invalidateQueries({ queryKey: ["myCartCount"] });
         toast.success("添加购物车成功！", {
-          position: "bottom-right",
+          position: "top-center",
           duration: 1000,
           closeButton: true,
         });
@@ -68,7 +68,7 @@ export default function MallPage() {
           <Button variant="outline" size="sm" asChild>
             <Link to="/mall/cart">
               <ShoppingCart className="h-4 w-4 mr-2" />
-              购物车 ({count})
+              购物车 ({totalQuantity})
             </Link>
           </Button>
           <Button variant="outline" size="sm" asChild>

@@ -22,6 +22,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { CartItem } from "@/types/cart";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
+import { useCartQuantityStore } from "@/stores/cart";
 
 export default function CartPage() {
   const { data: cartItems } = useGetCart();
@@ -30,10 +31,12 @@ export default function CartPage() {
   const { updateGoodsFn, updateLoading } = useUpdateGoods();
   const { updateCheckedFn } = useUpdateChecked();
   const queryClient = useQueryClient();
+  const { decrementQuantity } = useCartQuantityStore();
 
-  const deleteItem = (id: number) => {
+  const deleteItem = (id: number, goodsId: number) => {
     deleteGoodsFn(id, {
       onSuccess: () => {
+        decrementQuantity(goodsId);
         queryClient.invalidateQueries({ queryKey: ["myCart"] });
       },
     });
@@ -63,8 +66,8 @@ export default function CartPage() {
 
   const handleSubmit = () => {
     const isNull = cartItems?.list.findIndex((e) => e.checked);
-    if(isNull==-1) return toast.error("购物车中没有选中商品！");
-    
+    if (isNull == -1) return toast.error("购物车中没有选中商品！");
+
     navigate("/mall/cart/checkout");
   };
 
@@ -177,7 +180,7 @@ export default function CartPage() {
                               size="sm"
                               className="h-8 px-2 cursor-pointer mr-4"
                               onClick={() => {
-                                deleteItem(item.id);
+                                deleteItem(item.id, item.goodsId);
                               }}
                             >
                               确认

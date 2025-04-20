@@ -17,7 +17,7 @@ import { useGetGoodsDet } from "@/services/mall/detail";
 import { toast } from "sonner";
 import { useAuthStore } from "@/stores/auth";
 import { useAddCard, useDoCollect } from "@/services/mall";
-import { useCartStore } from "@/stores/cart";
+import { useCartQuantityStore } from "@/stores/cart";
 import { queryClient } from "@/lib/query-client";
 import { CartItem } from "@/types/cart";
 
@@ -39,7 +39,7 @@ export default function ProductDetailPage() {
   const { doCollectFn } = useDoCollect();
 
   // store
-  const { addItem } = useCartStore();
+  const { incrementQuantity } = useCartQuantityStore();
 
   const navigate = useNavigate();
 
@@ -70,10 +70,10 @@ export default function ProductDetailPage() {
       };
       addCardFn(newItem, {
         onSuccess: () => {
-          addItem(newItem);
+          incrementQuantity(data.id);
           queryClient.invalidateQueries({ queryKey: ["myCartCount"] });
           toast.success("添加购物车成功！", {
-            position: "bottom-right",
+            position: "top-center",
             duration: 1000,
             closeButton: true,
           });

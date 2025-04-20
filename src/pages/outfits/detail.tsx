@@ -32,7 +32,7 @@ export default function ArticlePage() {
                   variant="ghost"
                   size="sm"
                   className="mb-4 cursor-pointer"
-                  onClick={() => navigate("/outfits")}
+                  onClick={() => navigate(-1)}
                 >
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   返回

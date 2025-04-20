@@ -34,42 +34,44 @@ export const RecentOrder: React.FC<order> = ({ setActiveTab }) => {
       </CardHeader>
       <CardContent className="pb-3">
         <div className="space-y-4">
-          {orders?.list.map((order) => (
-            <div key={order.id} className="flex justify-between items-center">
-              <div className="flex items-center gap-3">
-                <div className="relative h-12 w-12 overflow-hidden rounded-md border">
-                  <img
-                    src={order.orderItems[0].mainImage || "/placeholder.svg"}
-                    alt={order.orderItems[0].title}
-                    className="object-cover object-top"
-                  />
-                  {order.orderItems.length > 1 && (
-                    <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
-                      <span className="text-xs font-medium">
-                        +{order.orderItems.length}
-                      </span>
-                    </div>
-                  )}
+          {orders?.pages.map((list) =>
+            list.list.map((order) => (
+              <div key={order.id} className="flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <div className="relative h-12 w-12 overflow-hidden rounded-md border">
+                    <img
+                      src={order.orderItems[0].mainImage || "/placeholder.svg"}
+                      alt={order.orderItems[0].title}
+                      className="object-cover object-top"
+                    />
+                    {order.orderItems.length > 1 && (
+                      <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
+                        <span className="text-xs font-medium">
+                          +{order.orderItems.length}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-medium">{order.orderNumber}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {order.createTime}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-medium">{order.orderNumber}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {order.createTime}
-                  </p>
+                <div className="text-right">
+                  <p className="font-medium">￥{order.totalAmount}</p>
+                  <Badge
+                    // variant={order.status === "Delivered" ? "outline" : "default"}
+                    className="text-xs"
+                  >
+                    {status[order.payStatus]}
+                  </Badge>
                 </div>
               </div>
-              <div className="text-right">
-                <p className="font-medium">￥{order.totalAmount}</p>
-                <Badge
-                  // variant={order.status === "Delivered" ? "outline" : "default"}
-                  className="text-xs"
-                >
-                  {status[order.payStatus]}
-                </Badge>
-              </div>
-            </div>
-          ))}
-          {(orders?.list && orders.list.length > 0) || (
+            ))
+          )}
+          {(orders && orders?.pages[0].list.length > 0) || (
             <div className=" flex flex-col items-center">
               <div className="mb-4 p-4">
                 <SquareRoundCorner className="h-16 w-16 mx-auto text-muted-foreground" />

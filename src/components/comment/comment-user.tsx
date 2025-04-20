@@ -137,6 +137,7 @@ export const CommentUser: React.FC<ChildProps> = ({
                 nickName: comment.user.nickName,
                 content: comment.content,
                 replyTo: parentId ? comment.user.nickName : undefined,
+                replyToId: comment.user.id,
               });
               setCommentText("");
             }}

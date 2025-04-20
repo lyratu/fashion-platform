@@ -186,7 +186,7 @@ export default function PostDetailPage() {
           </Card>
 
           {/* 评论列表 */}
-          <CommentSection />
+          <CommentSection userId={post.userId as number} />
         </>
       )}
     </div>

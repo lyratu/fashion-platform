@@ -1,78 +1,53 @@
-import { CartItem } from "@/types/cart";
 import { create } from "zustand";
 
-// 定义购物车 store 接口
-interface CartStore {
-  cartItems: CartItem[];
-  // 添加购物车项，如果已存在相同的商品（根据 goodsId, color, size 判断），则更新数量
-  addItem: (item: CartItem) => void;
-  // 根据 goodsId、color、size 删除购物车项
-  removeItem: (goodsId: number, color?: string, size?: string) => void;
-  // 更新指定购物车项的属性，例如数量或选中状态
-  updateItem: (
-    goodsId: number,
-    updates: Partial<CartItem>,
-    color?: string,
-    size?: string
-  ) => void;
-  // 清空购物车
-  clearCart: () => void;
+interface CartQuantityStore {
+  // 购物车商品数量列表
+  items: number[];
+  // 新增初始化方法
+  initializeCart: (items: number[]) => void;
+  // 增加指定商品的数量（仅当ID不存在时添加）
+  incrementQuantity: (id: number) => void;
+
+  // 减少指定商品的数量（直接减1）
+  decrementQuantity: (id: number) => void;
+
+  // 获取购物车总数量
+  getTotalQuantity: () => number;
 }
 
-export const useCartStore = create<CartStore>((set) => ({
-  cartItems: [],
+export const useCartQuantityStore = create<CartQuantityStore>((set, get) => ({
+  // 初始化为空数组
+  items: [],
 
-  addItem: (item) =>
+  // 新增初始化方法
+  initializeCart: (items) =>
+    set(() => ({
+      items: items,
+    })),
+
+  // 增加指定商品的数量（仅当ID不存在时添加）
+  incrementQuantity: (id) =>
     set((state) => {
-      // 根据 goodsId, color, size 进行唯一标识
-      const exists = state.cartItems.find(
-        (cartItem) =>
-          cartItem.goodsId === item.goodsId &&
-          cartItem.color === item.color &&
-          cartItem.size === item.size
-      );
-      if (exists) {
-        // 如果已存在，则更新数量
+      // 检查是否已存在该商品
+      if (!state.items.includes(id)) {
+        // 如果不存在，添加新的商品ID
         return {
-          cartItems: state.cartItems.map((cartItem) =>
-            cartItem.goodsId === item.goodsId &&
-            cartItem.color === item.color &&
-            cartItem.size === item.size
-              ? { ...cartItem, count: cartItem.count + item.count }
-              : cartItem
-          ),
+          items: [...state.items, id],
         };
-      } else {
-        // 不存在则直接添加新的购物车项
-        return { cartItems: [...state.cartItems, item] };
       }
+
+      // 如果已存在，直接返回原状态
+      return state;
     }),
 
-  removeItem: (goodsId, color, size) =>
+  // 减少指定商品的数量（直接减1）
+  decrementQuantity: (id) =>
     set((state) => ({
-      cartItems: state.cartItems.filter(
-        (item) =>
-          !(
-            item.goodsId === goodsId &&
-            (color ? item.color === color : true) &&
-            (size ? item.size === size : true)
-          )
-      ),
+      items: state.items.filter((itemId) => itemId !== id),
     })),
 
-  updateItem: (goodsId, updates, color, size) =>
-    set((state) => ({
-      cartItems: state.cartItems.map((item) => {
-        if (
-          item.goodsId === goodsId &&
-          (color ? item.color === color : true) &&
-          (size ? item.size === size : true)
-        ) {
-          return { ...item, ...updates };
-        }
-        return item;
-      }),
-    })),
-
-  clearCart: () => set({ cartItems: [] }),
+  // 获取购物车总数量
+  getTotalQuantity: () => {
+    return get().items.length;
+  },
 }));

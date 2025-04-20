@@ -22,6 +22,7 @@ export function CommentSection() {
   const [reply, setReply] = useState<replyStatus>({
     parentId: undefined,
     replyTo: undefined,
+    replyToId: undefined,
     status: false,
     nickName: "",
     content: "",
@@ -48,6 +49,7 @@ export function CommentSection() {
           parentId,
           objectId: parseInt(id as string),
           replyTo: reply.replyTo,
+          replyToId: reply.replyToId,
         },
         {
           onSuccess: sendBreak,
@@ -148,6 +150,7 @@ export function CommentSection() {
                 setReply({
                   parentId: undefined,
                   replyTo: undefined,
+                  replyToId: undefined,
                   status: false,
                   nickName: "",
                   content: "",

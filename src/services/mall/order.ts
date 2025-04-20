@@ -1,7 +1,7 @@
 import axios from "@/lib/axios";
 import { order } from "@/types/order";
 import { pageQuery, pageQueryResponse } from "@/types/pageQuery";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 type response = {
   orderNumber: number;
 };
@@ -35,7 +35,7 @@ export const useGetOrderInfo = (id: string) => {
     queryFn: () => getOrderInfo(id),
   });
 };
-
+/* 获取历史订单 */
 export const getOrderList = async (params: pageQuery) => {
   const response = await axios.post<pageQueryResponse<order>>(
     `/app/order/order/page`,
@@ -43,11 +43,22 @@ export const getOrderList = async (params: pageQuery) => {
   );
   return response.data;
 };
-export const useGetOrderList = (params: pageQuery) => {
-  return useQuery({
-    queryKey: [`getOrderList`],
-    queryFn: () => getOrderList(params),
-    staleTime: 0,
+export const useGetOrderList = (data: pageQuery) => {
+  return useInfiniteQuery<pageQueryResponse<order>, Error>({
+    queryKey: ["getOrderList", data],
+    queryFn: ({ pageParam }) =>
+      getOrderList({ ...data, page: pageParam as number }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      const loadedArticles = allPages.reduce(
+        (acc, page) => acc + page.list.length,
+        0
+      );
+      if (loadedArticles < lastPage.pagination.total) {
+        return allPages.length + 1;
+      }
+      return undefined;
+    },
   });
 };
 

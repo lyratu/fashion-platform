@@ -4,6 +4,7 @@ import { CartItem } from "@/types/cart";
 import { goods } from "@/types/goods";
 import { pageQueryResponse } from "@/types/pageQuery";
 import { useMutation, useQuery } from "@tanstack/react-query";
+const token = localStorage.getItem("token");
 
 export const addCard = async (data: CartItem) => {
   const response = await axios.post<ApiResponse<goods>>(
@@ -112,7 +113,7 @@ export const useGetCart = () => {
 };
 
 export const getCartCount = async () => {
-  const response = await axios.get<number>(`/app/cart/cart/getCartCount`, {});
+  const response = await axios.get<number[]>(`/app/cart/cart/getCartCount`, {});
   return response.data;
 };
 
@@ -120,5 +121,6 @@ export const useGetCartCount = () => {
   return useQuery({
     queryKey: [`myCartCount`],
     queryFn: getCartCount,
+    enabled: !!token,
   });
 };

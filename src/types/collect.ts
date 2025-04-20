@@ -7,4 +7,8 @@ export interface collect {
   collectStatus: number;
   collectCount: number;
   operateTime: Date;
+
+  coverImage: string;
+  nickName: string;
+  title: string;
 }
