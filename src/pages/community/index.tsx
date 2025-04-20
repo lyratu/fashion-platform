@@ -11,6 +11,7 @@ import { useDelPost } from "@/services/community/post";
 import { useLikeOrUnlike } from "@/services/community/like";
 import { like } from "@/types/like";
 import { Loader } from "lucide-react";
+import { useRef } from "react";
 
 export default function CommunityPage() {
   const { data: userInfo } = useGetMyInfo();
@@ -18,6 +19,7 @@ export default function CommunityPage() {
   const {
     data: posts,
     fetchNextPage,
+    hasNextPage,
     isFetchingNextPage,
   } = useGetPostList({
     order: "createTime",
@@ -26,6 +28,7 @@ export default function CommunityPage() {
     sort: "desc",
   });
 
+  const loadRef = useRef(null);
   const { delPostFn } = useDelPost();
   const { addPostFn } = useAddPost();
   const { likeOrUnlikeFn } = useLikeOrUnlike();
@@ -64,8 +67,8 @@ export default function CommunityPage() {
   };
 
   /* 触底刷新list */
-  UseScrollToBottom(() => {
-    fetchNextPage();
+  UseScrollToBottom(loadRef, () => {
+    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
   });
 
   return (
@@ -88,12 +91,17 @@ export default function CommunityPage() {
                 />
               ))
             )}
-            {isFetchingNextPage ? (
-              <div className="flex items-center justify-center text-sm">
-                <Loader className="animate-spin" />
-                <span>加载中...</span>
-              </div>
-            ) : null}
+            <div ref={loadRef}>
+              {isFetchingNextPage ? (
+                <div className="flex items-center justify-center text-sm">
+                  <Loader className="animate-spin" />
+                  <span>加载中...</span>
+                </div>
+              ) : !hasNextPage ? (
+                <div className="text-center text-gray-500">没有更多数据了</div>
+              ) : null}
+            </div>
+            
           </div>
         </div>
 

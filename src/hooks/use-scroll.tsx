@@ -10,7 +10,7 @@ interface IntersectionObserverOptions {
  * 当 targetRef 对应的元素进入视口时，调用 callback
  */
 function useIntersectionObserver(
-  targetRef: RefObject<Element>,
+  targetRef: RefObject<Element | null>,
   callback: () => void,
   options?: IntersectionObserverOptions
 ) {

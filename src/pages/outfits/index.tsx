@@ -7,28 +7,31 @@ import FeaturedArticles from "./components/featured-articles";
 import dateTool from "@/utils/dateTool";
 import { useGetOutfitsPage } from "@/services/outfits";
 import { useGetDictInfo } from "@/services/dict";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import UseScrollToBottom from "@/hooks/use-scroll";
 import { Input } from "@/components/ui/input";
+import { Loader } from "lucide-react";
 
 export default function ArticlesPage() {
+  const loadRef = useRef(null);
   const { data: types } = useGetDictInfo(["category"]);
   const [category, setCategory] = useState("0");
-  const { data, fetchNextPage } = useGetOutfitsPage({
-    order: "createTime",
-    page: 1,
-    size: 20,
-    sort: "desc",
-    category,
-  });
+  const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
+    useGetOutfitsPage({
+      order: "createTime",
+      page: 1,
+      size: 20,
+      sort: "desc",
+      category,
+    });
   console.log(
     "%c [ data ]-18",
     "font-size:13px; background:pink; color:#bf2c9f;",
     data
   );
 
-  UseScrollToBottom(() => {
-    fetchNextPage();
+  UseScrollToBottom(loadRef, () => {
+    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
   });
 
   return (
@@ -106,6 +109,16 @@ export default function ArticlesPage() {
                 </Card>
               ))
             )}
+            <div ref={loadRef}>
+              {isFetchingNextPage ? (
+                <div className="flex items-center justify-center text-sm">
+                  <Loader className="animate-spin" />
+                  <span>加载中...</span>
+                </div>
+              ) : !hasNextPage ? (
+                <div className="text-center text-gray-500">没有更多数据了</div>
+              ) : null}
+            </div>
           </div>
         </TabsContent>
       </Tabs>

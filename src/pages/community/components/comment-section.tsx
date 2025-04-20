@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader } from "lucide-react";
@@ -15,10 +15,8 @@ import { replyStatus } from "@/types/comment";
 export function CommentSection() {
   const { id } = useParams();
   const queryClient = useQueryClient();
-  const { data, fetchNextPage, isFetchingNextPage } = useGetPageComment(
-    id as string,
-    5
-  );
+  const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
+    useGetPageComment(id as string, 5);
   console.log(
     "%c [ data ]-19",
     "font-size:13px; background:pink; color:#bf2c9f;",
@@ -34,6 +32,7 @@ export function CommentSection() {
   });
   const { sendFn } = useSend();
 
+  const loadRef = useRef(null);
   const [commentText, setCommentText] = useState("");
 
   const sendBreak = () => {
@@ -71,8 +70,8 @@ export function CommentSection() {
   };
 
   // 触底加载评论
-  UseScrollToBottom(() => {
-    fetchNextPage();
+  UseScrollToBottom(loadRef, () => {
+    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
   });
 
   return (
@@ -110,12 +109,16 @@ export function CommentSection() {
             </div>
           ))
         )}
-        {isFetchingNextPage ? (
-          <div className="flex items-center justify-center text-sm">
-            <Loader className="animate-spin" />
-            <span>加载中...</span>
-          </div>
-        ) : null}
+        <div ref={loadRef}>
+          {isFetchingNextPage ? (
+            <div className="flex items-center justify-center text-sm">
+              <Loader className="animate-spin" />
+              <span>加载中...</span>
+            </div>
+          ) : !hasNextPage ? (
+            <div className="text-center text-gray-500">没有更多数据了</div>
+          ) : null}
+        </div>
       </div>
 
       {/* Comment Form */}
