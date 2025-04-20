@@ -57,19 +57,19 @@ export default function MyWardrobe() {
           className="flex-1 flex flex-col"
         >
           <TabsList className="grid grid-cols-5">
-            <TabsTrigger value="tops">
-              <Tshirt className="h-4 w-4" />
+            <TabsTrigger value="tops" className="cursor-pointer">
+              <Tshirt className="h-4 w-4 " />
             </TabsTrigger>
-            <TabsTrigger value="bottoms">
+            <TabsTrigger value="bottoms" className="cursor-pointer">
               <Pants className="h-4 w-4" />
             </TabsTrigger>
-            <TabsTrigger value="outerwear">
+            <TabsTrigger value="outerwear" className="cursor-pointer">
               <ShoppingBag className="h-4 w-4" />
             </TabsTrigger>
-            <TabsTrigger value="accessories">
+            <TabsTrigger value="accessories" className="cursor-pointer">
               <Plus className="h-4 w-4" />
             </TabsTrigger>
-            <TabsTrigger value="shoes">
+            <TabsTrigger value="shoes" className="cursor-pointer">
               <Shoe className="h-4 w-4" />
             </TabsTrigger>
           </TabsList>
