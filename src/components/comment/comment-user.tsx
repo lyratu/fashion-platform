@@ -85,6 +85,9 @@ export const CommentUser: React.FC<ChildProps> = ({
                           queryClient.invalidateQueries({
                             queryKey: [`commentPage`, id],
                           });
+                          queryClient.invalidateQueries({
+                            queryKey: [`postPage`],
+                          });
                         },
                       }
                     );

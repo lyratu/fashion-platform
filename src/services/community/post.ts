@@ -79,7 +79,7 @@ export const getPostList = async (data: pageQuery) => {
 
 export const useGetPostList = (data: pageQuery) => {
   return useInfiniteQuery<pageQueryResponse<post>, Error>({
-    queryKey: ["postPage"],
+    queryKey: ["postPage", data],
     queryFn: ({ pageParam }) =>
       getPostList({ ...data, page: pageParam as number }),
     initialPageParam: 1,

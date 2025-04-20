@@ -173,7 +173,7 @@ export default function ArticlePage() {
               {/* <AuthorCard author={article.author} /> */}
 
               {/* Comments Section */}
-              <CommentSection />
+              <CommentSection userId={info.authorId} />
             </div>
           </div>
         ) : (

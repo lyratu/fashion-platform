@@ -8,11 +8,15 @@ import {
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { useDoCollect as oCollect } from "@/services/outfits";
+import { useDoCollect as gCollect } from "@/services/mall";
 import { useGetGoodsCollect, useGetOutfitsCollect } from "@/services/profile";
-import { ShoppingBag, SquareRoundCorner, Trash2, View } from "lucide-react";
+import { PackageOpen, ShoppingBag, SquareRoundCorner, Trash2, View } from "lucide-react";
 import { useNavigate } from "react-router";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const CollectPage = () => {
+  const queryClient = useQueryClient();
   const { data: wishlist } = useGetGoodsCollect({
     order: "createTime",
     page: 1,
@@ -26,7 +30,18 @@ export const CollectPage = () => {
     size: 6,
     sort: "desc",
   });
+  const { doCollectFn: oFn } = oCollect();
+  const { doCollectFn: gFn } = gCollect();
   const navigate = useNavigate();
+  const handleCancel = async (id: number, type: 0 | 1) => {
+    if (type) {
+      await oFn(id);
+      queryClient.invalidateQueries({ queryKey: ["outfitsCollect"] });
+    } else {
+      await gFn(id);
+      queryClient.invalidateQueries({ queryKey: ["goodsCollect"] });
+    }
+  };
   return (
     <Card>
       <CardHeader>
@@ -73,7 +88,11 @@ export const CollectPage = () => {
                       >
                         <ShoppingBag className="h-4 w-4" />
                       </Button>
-                      <Button variant="destructive" size="icon">
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        onClick={() => handleCancel(item.goodsId, 0)}
+                      >
                         <Trash2 className="h-4 w-4 text-white" />
                       </Button>
                     </div>
@@ -85,7 +104,7 @@ export const CollectPage = () => {
           {(wishlist && wishlist?.pages[0].list.length > 0) || (
             <div className=" flex flex-col items-center">
               <div className="mb-4 p-4">
-                <SquareRoundCorner className="h-16 w-16 mx-auto text-muted-foreground" />
+                <PackageOpen  className="h-16 w-16 mx-auto text-muted-foreground opacity-40"/>
               </div>
               <h2 className="text-xl font-medium mb-2">暂无商品收藏</h2>
               <p className="text-muted-foreground mb-6">
@@ -134,7 +153,11 @@ export const CollectPage = () => {
                       >
                         <View className="h-4 w-4" />
                       </Button>
-                      <Button variant="destructive" size="icon">
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        onClick={() => handleCancel(item.outfitsId, 1)}
+                      >
                         <Trash2 className="h-4 w-4 text-white" />
                       </Button>
                     </div>
@@ -143,10 +166,10 @@ export const CollectPage = () => {
               )}
             </div>
           </ScrollArea>
-          {(wishlist && wishlist?.pages[0].list.length > 0) || (
+          {(outfits && outfits?.pages[0].list.length > 0) || (
             <div className=" flex flex-col items-center">
               <div className="mb-4 p-4">
-                <SquareRoundCorner className="h-16 w-16 mx-auto text-muted-foreground" />
+                <PackageOpen  className="h-16 w-16 mx-auto text-muted-foreground opacity-40"/>
               </div>
               <h2 className="text-xl font-medium mb-2">暂无文章收藏</h2>
               <p className="text-muted-foreground mb-6">

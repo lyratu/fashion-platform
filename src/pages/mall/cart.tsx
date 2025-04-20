@@ -92,7 +92,7 @@ export default function CartPage() {
         <Card className="text-center py-12">
           <CardContent>
             <div className="mb-4">
-              <ShoppingBagIcon className="h-16 w-16 mx-auto text-muted-foreground" />
+              <ShoppingBagIcon className="h-16 w-16 mx-auto text-muted-foreground opacity-40" />
             </div>
             <h2 className="text-xl font-medium mb-2">你的购物车是空的</h2>
             <p className="text-muted-foreground mb-6">

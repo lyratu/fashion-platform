@@ -6,6 +6,7 @@ export interface pageQuery {
   title?: string;
   category?: string;
   type?: string;
+  name?: string;
 }
 
 export interface pageQueryResponse<T> {

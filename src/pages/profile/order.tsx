@@ -14,6 +14,7 @@ import { Separator } from "@radix-ui/react-separator";
 import { Loader } from "lucide-react";
 import { useRef } from "react";
 import { useNavigate } from "react-router";
+// import { Input } from "@/components/ui/input";
 
 export const OrderPage = () => {
   const loadRef = useRef(null);
@@ -39,7 +40,13 @@ export const OrderPage = () => {
     <Card>
       <CardHeader>
         <CardTitle>订单历史</CardTitle>
-        <CardDescription>查看和跟踪您的订单</CardDescription>
+        <CardDescription className="flex justify-between items-end">
+          <div>查看和跟踪您的订单</div>
+          {/* <div className="flex w-full max-w-sm items-center space-x-2">
+            <Input type="email" placeholder="请输入关键字..." />
+            <Button type="submit">搜索</Button>
+          </div> */}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-210">
@@ -166,7 +173,7 @@ export const OrderPage = () => {
                   <span>加载中...</span>
                 </div>
               ) : !hasNextPage ? (
-                <div className="text-center text-gray-500">没有更多数据了</div>
+                <div className="text-center text-gray-500"></div>
               ) : null}
             </div>
           </div>

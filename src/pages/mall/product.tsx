@@ -323,22 +323,22 @@ export default function ProductDetailPage() {
           <TabsList className="w-full justify-start border-b rounded-none h-auto p-0">
             <TabsTrigger
               value="description"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary"
+              className=" cursor-pointer rounded-none border-b-2 border-transparent data-[state=active]:border-primary"
             >
               描述
             </TabsTrigger>
             <TabsTrigger
               value="details"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary"
+              className=" cursor-pointer rounded-none border-b-2 border-transparent data-[state=active]:border-primary"
             >
               详情
             </TabsTrigger>
-            <TabsTrigger
+            {/* <TabsTrigger
               value="reviews"
               className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary"
             >
               评论 ({data?.collectCount})
-            </TabsTrigger>
+            </TabsTrigger> */}
           </TabsList>
           <TabsContent value="description" className="pt-4">
             <p className="text-muted-foreground">{data?.description}</p>

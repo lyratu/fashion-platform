@@ -10,12 +10,13 @@ import { post } from "@/types/post";
 import { useDelPost } from "@/services/community/post";
 import { useLikeOrUnlike } from "@/services/community/like";
 import { like } from "@/types/like";
-import { Loader } from "lucide-react";
-import { useRef } from "react";
+import { ChevronLeft, ChevronRight, Loader } from "lucide-react";
+import { useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export default function CommunityPage() {
   const { data: userInfo } = useGetMyInfo();
-
+  const [topicName, setTopicName] = useState("");
   const {
     data: posts,
     fetchNextPage,
@@ -23,6 +24,7 @@ export default function CommunityPage() {
     isFetchingNextPage,
   } = useGetPostList({
     order: "createTime",
+    name: topicName,
     page: 1,
     size: 6,
     sort: "desc",
@@ -78,6 +80,19 @@ export default function CommunityPage() {
         <div className="flex-1">
           {/* 文章发布 */}
           <PostForm user={userInfo} handleSubmit={handlePostSubmit} />
+          {topicName ? (
+            <Button
+              variant="outline"
+              size="icon"
+              className="my-2"
+              onClick={() => setTopicName("")}
+            >
+              <ChevronLeft />
+            </Button>
+          ) : (
+            <div className="my-4"></div>
+          )}
+
           {/* 文章列表 */}
           <div>
             {posts?.pages.map((arr) =>
@@ -98,15 +113,14 @@ export default function CommunityPage() {
                   <span>加载中...</span>
                 </div>
               ) : !hasNextPage ? (
-                <div className="text-center text-gray-500">没有更多数据了</div>
+                <div className="text-center text-gray-500"></div>
               ) : null}
             </div>
-            
           </div>
         </div>
 
         {/* 侧边功能区 */}
-        <Sidebar />
+        <Sidebar setTopic={setTopicName} />
       </div>
     </div>
   );

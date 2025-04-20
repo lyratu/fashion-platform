@@ -12,7 +12,10 @@ import { CommentUser } from "../../../components/comment/comment-user";
 import { replyStatus } from "@/types/comment";
 import { useGetPageComment, useSend } from "@/services/outfits";
 
-export function CommentSection() {
+interface ChildProps extends React.HTMLAttributes<HTMLDivElement> {
+  userId: number;
+}
+export const CommentSection: React.FC<ChildProps> = ({ userId }) => {
   const loadRef = useRef(null);
   const { id } = useParams();
   const queryClient = useQueryClient();
@@ -57,7 +60,11 @@ export function CommentSection() {
       );
     } else {
       sendFn(
-        { objectId: parseInt(id as string), content: commentText },
+        {
+          objectId: parseInt(id as string),
+          content: commentText,
+          replyToId: userId,
+        },
         {
           onSuccess: sendBreak,
         }
@@ -112,7 +119,7 @@ export function CommentSection() {
               <span>加载中...</span>
             </div>
           ) : !hasNextPage ? (
-            <div className="text-center text-gray-500">没有更多数据了</div>
+            <div className="text-center text-gray-500"></div>
           ) : null}
         </div>
       </div>
@@ -173,4 +180,4 @@ export function CommentSection() {
       </form>
     </div>
   );
-}
+};

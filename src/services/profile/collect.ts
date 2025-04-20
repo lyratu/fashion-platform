@@ -1,7 +1,6 @@
 import axios from "@/lib/axios";
 import { collect } from "@/types/collect";
 import { goodsCollect } from "@/types/goodsCollect";
-import { outfits } from "@/types/outfits";
 import { pageQuery, pageQueryResponse } from "@/types/pageQuery";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
@@ -31,7 +30,8 @@ export const getGoodsCollect = async (data: pageQuery) => {
 
 export const useGetGoodsCollect = (data: pageQuery) => {
   return useInfiniteQuery<pageQueryResponse<goodsCollect>, Error>({
-    queryKey: ["goodsPage", data],
+    queryKey: ["goodsCollect", data],
+    staleTime: 0,
     queryFn: ({ pageParam }) =>
       getGoodsCollect({ ...data, page: pageParam as number }),
     initialPageParam: 1,
@@ -64,7 +64,8 @@ export const getOutfitsCollect = async (data: pageQuery) => {
 
 export const useGetOutfitsCollect = (data: pageQuery) => {
   return useInfiniteQuery<pageOutfits, Error>({
-    queryKey: ["outfitsPage", data],
+    queryKey: ["outfitsCollect", data],
+    staleTime: 0,
     queryFn: ({ pageParam }) =>
       getOutfitsCollect({ ...data, page: pageParam as number }),
     initialPageParam: 1,

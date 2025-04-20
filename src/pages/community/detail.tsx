@@ -146,16 +146,16 @@ export default function PostDetailPage() {
                   ))}
                 </div>
               )}
-              {post.images &&
-                post.images.map((url) => (
-                  <div className="relative w-full rounded-md overflow-hidden mb-4">
+              <div className="relative rounded-md  grid md:grid-cols-2 gap-2 mt-2">
+                {post.images &&
+                  post.images.map((url) => (
                     <img
                       src={url || "/placeholder.svg"}
                       alt="Post image"
-                      className="object-cover"
+                      className=" cursor-pointer object-cover rounded-md border w-full object-top aspect-[1/1]"
                     />
-                  </div>
-                ))}
+                  ))}
+              </div>
             </CardContent>
             <CardFooter className="border-t flex justify-end pb-0 py-2">
               <Button

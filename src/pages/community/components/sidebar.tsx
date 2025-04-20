@@ -4,7 +4,10 @@ import { Link } from "react-router";
 import { useGetActiveUser, useGetTrend } from "@/services/community";
 import { Ribbon } from "lucide-react";
 
-export const Sidebar = () => {
+interface props extends React.HTMLAttributes<HTMLDivElement> {
+  setTopic: React.Dispatch<React.SetStateAction<string>>;
+}
+export const Sidebar: React.FC<props> = ({ setTopic }) => {
   const { data } = useGetActiveUser();
   const { data: trend } = useGetTrend();
   return (
@@ -17,7 +20,11 @@ export const Sidebar = () => {
           <ul className="space-y-2">
             {trend?.map((item) => (
               <li key={item.id}>
-                <Link to="#" className="text-[#1d9bf0] hover:underline ">
+                <Link
+                  to="#"
+                  onClick={() => setTopic(item.name)}
+                  className="text-[#1d9bf0] hover:underline "
+                >
                   #{item.name}
                 </Link>
                 <p className="text-xs text-muted-foreground">

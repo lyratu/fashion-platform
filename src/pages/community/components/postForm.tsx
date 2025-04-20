@@ -103,7 +103,7 @@ export const PostForm: React.FC<childProps> = ({ user, handleSubmit }) => {
   };
 
   return (
-    <Card className="mb-4">
+    <Card>
       <CardHeader className="pb-3">
         <h2 className="text-lg font-medium">分享你的想法</h2>
       </CardHeader>

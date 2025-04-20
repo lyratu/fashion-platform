@@ -147,7 +147,7 @@ export const UserInfoPage = ({ user, isEdit, setIsEdit }: userInfo) => {
                       <span>手机号</span>
                       {isEdit ? (
                         <span className=" ml-4 text-red-600">
-                          *暂不支持修改手机号
+                          *手机号不可修改
                         </span>
                       ) : null}
                     </FormLabel>

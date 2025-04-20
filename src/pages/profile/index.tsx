@@ -18,6 +18,7 @@ import {
   Bell,
   CreditCard,
   SquareRoundCorner,
+  PackageOpen,
 } from "lucide-react";
 import { UserInfoPage } from "./userInfo";
 import { OrderPage } from "./order";
@@ -30,6 +31,7 @@ import { AvatarUpload } from "./components/avatarUpload";
 import { toast } from "sonner";
 import { NotifyPage } from "./notify";
 import { useQueryClient } from "@tanstack/react-query";
+import { useDoCollect } from "@/services/mall";
 
 export default function ProfilePage() {
   const router = useNavigate();
@@ -38,6 +40,9 @@ export default function ProfilePage() {
   const defaultTab = searchParams.get("tab") || "overview";
   const [activeTab, setActiveTab] = useState(defaultTab);
   const { data: wishlist } = useGetMyGoodsCollect();
+
+  // api
+  const { doCollectFn } = useDoCollect();
 
   const { data: user } = useGetMyInfo();
   const [isEdit, setIsEdit] = useState(false);
@@ -57,7 +62,10 @@ export default function ProfilePage() {
     setUserAvatar(newAvatarUrl);
     toast("个人头像更新成功！");
   };
-
+  const handleCancel = async (id: number) => {
+    await doCollectFn(id);
+    queryClient.invalidateQueries({ queryKey: ["getMyGoodsCollect"] });
+  };
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] gap-8">
@@ -119,12 +127,12 @@ export default function ProfilePage() {
                 onClick={() => setActiveTab("wishlist")}
               />
 
-              <NavItem
+              {/* <NavItem
                 icon={<Bell className="h-4 w-4" />}
                 label="通知"
                 active={activeTab === "notifications"}
                 onClick={() => setActiveTab("notifications")}
-              />
+              /> */}
               <NavItem
                 icon={<CreditCard className="h-4 w-4" />}
                 label="收货地址"
@@ -234,7 +242,11 @@ export default function ProfilePage() {
                             >
                               <ShoppingBag className="h-4 w-4" />
                             </Button>
-                            <Button size="sm" variant="destructive">
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={() => handleCancel(item.goodsId)}
+                            >
                               <Trash2 className="h-4 w-4 text-white" />
                             </Button>
                           </div>
@@ -244,7 +256,7 @@ export default function ProfilePage() {
                     {(wishlist && wishlist.length > 0) || (
                       <div className=" flex flex-col items-center">
                         <div className="mb-4 p-4">
-                          <SquareRoundCorner className="h-16 w-16 mx-auto text-muted-foreground" />
+                          <PackageOpen className="h-16 w-16 mx-auto text-muted-foreground opacity-40 opacity-40" />
                         </div>
                         <h2 className="text-xl font-medium mb-2">
                           暂无商品收藏

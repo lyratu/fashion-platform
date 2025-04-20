@@ -116,7 +116,7 @@ export default function ArticlesPage() {
                   <span>加载中...</span>
                 </div>
               ) : !hasNextPage ? (
-                <div className="text-center text-gray-500">没有更多数据了</div>
+                <div className="text-center text-gray-500"></div>
               ) : null}
             </div>
           </div>
