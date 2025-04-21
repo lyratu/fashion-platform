@@ -128,6 +128,9 @@ export const OrderPage = () => {
                                 variant="link"
                                 size="sm"
                                 className="h-auto p-0 text-sm"
+                                onClick={() =>
+                                  navigate(`/mall/product/${item.goodsId}`)
+                                }
                               >
                                 再次购买
                               </Button>
@@ -135,13 +138,13 @@ export const OrderPage = () => {
                                 orientation="vertical"
                                 className="h-4 my-auto"
                               />
-                              <Button
+                              {/* <Button
                                 variant="link"
                                 size="sm"
                                 className="h-auto p-0 text-sm"
                               >
                                 写评论
-                              </Button>
+                              </Button> */}
                             </div>
                           </div>
                         </div>
