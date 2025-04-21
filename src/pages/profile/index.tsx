@@ -141,7 +141,7 @@ export default function ProfilePage() {
               />
               <NavItem
                 icon={<Shirt className="h-4 w-4" />}
-                label="我的衣柜"
+                label="我的穿搭"
                 active={activeTab === "wardrobe"}
                 onClick={() => router("/wardrobe")}
               />

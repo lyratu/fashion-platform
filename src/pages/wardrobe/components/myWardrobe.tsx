@@ -7,6 +7,7 @@ import {
   ShoppingBag,
   FootprintsIcon as Shoe,
   Upload,
+  BriefcaseBusiness,
 } from "lucide-react";
 import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -25,6 +26,13 @@ export default function MyWardrobe() {
     height?: number;
     dragging?: boolean;
   };
+  const types = [
+    { name: "上衣" },
+    { name: "下装" },
+    { name: "鞋子" },
+    { name: "包包" },
+    { name: "帽子" },
+  ];
 
   const [activeTab, setActiveTab] = useState("tops");
   const [myItems, setMyItems] = useState<ClothingItem[]>([]);
@@ -64,7 +72,7 @@ export default function MyWardrobe() {
               <Pants className="h-4 w-4" />
             </TabsTrigger>
             <TabsTrigger value="outerwear" className="cursor-pointer">
-              <ShoppingBag className="h-4 w-4" />
+              <BriefcaseBusiness className="h-4 w-4" />
             </TabsTrigger>
             <TabsTrigger value="accessories" className="cursor-pointer">
               <Plus className="h-4 w-4" />
