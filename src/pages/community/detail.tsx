@@ -8,7 +8,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 
-import { ArrowLeft, Heart, Share2, MoreHorizontal, Trash2 } from "lucide-react";
+import { ArrowLeft, Heart, Share2, MoreHorizontal, X } from "lucide-react";
 // import {
 //   DropdownMenu,
 //   DropdownMenuContent,
@@ -19,10 +19,13 @@ import { toast } from "sonner";
 import { useGetPostDet, useLikeOrUnlike } from "@/services/community";
 import { CommentSection } from "./components/comment-section";
 import { queryClient } from "@/lib/query-client";
+import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
+import { useState } from "react";
 
 export default function PostDetailPage() {
   const navigate = useNavigate();
   const params = useParams();
+  const [currentImg, setCurrentImg] = useState("");
   const { data: post } = useGetPostDet(params.id as string);
 
   // const formatDate = (dateString: string) => {
@@ -152,6 +155,7 @@ export default function PostDetailPage() {
                     <img
                       src={url || "/placeholder.svg"}
                       alt="Post image"
+                      onClick={() => setCurrentImg(url)}
                       className=" cursor-pointer object-cover rounded-md border w-full object-top aspect-[1/1]"
                     />
                   ))}
@@ -184,11 +188,17 @@ export default function PostDetailPage() {
               </Button>
             </CardFooter>
           </Card>
-
           {/* 评论列表 */}
           <CommentSection userId={post.userId as number} />
         </>
       )}
+      <Dialog open={!!currentImg} onOpenChange={() => setCurrentImg("")}>
+        <DialogContent className=" !max-w-5xl">
+          <div className="p-4">
+            <img src={currentImg} className="w-full h-auto" />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

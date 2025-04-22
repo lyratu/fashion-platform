@@ -178,7 +178,7 @@ export default function WardrobePage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 gap-6">
         {/* DIY Area - Left Side */}
-        <Creator />
+        <Creator/>
         {/* Right Side Column - Wardrobe + AI Assistant */}
         <div className="flex flex-col gap-6">
           {/* My Wardrobe - Top Right */}

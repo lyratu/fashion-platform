@@ -14,10 +14,11 @@ export const useUpload = () => {
   const {
     error,
     data,
+    isPending,
     mutateAsync: uploadFn,
   } = useMutation({
     mutationFn: upload,
   });
 
-  return { uploadFn, data, error };
+  return { uploadFn, isLoading: isPending, data, error };
 };
