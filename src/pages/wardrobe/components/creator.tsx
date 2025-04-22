@@ -1,9 +1,10 @@
-import { Save, Download, Share2, Trash2, Plus } from "lucide-react";
+import { Save, Download, Share2, Trash2, Plus, Layers2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import React, { useState, useRef, useEffect } from "react"; // 导入 React
 import * as fabric from "fabric"; // v6 版本 Fabric.js 导入方式
 import { useDragStore, DraggableItemData } from "@/stores/dragStore"; // 导入你的 Zustand store 和类型
+import { toast } from "sonner";
 
 // 注意: 原始代码中的 ClothingItem 类型现在本质上就是 DraggableItemData
 // 当一个物品被添加到画布上时，它的状态由 Fabric.js 对象管理。
@@ -48,8 +49,9 @@ export default function Creator() {
 
       // --- Fabric 事件监听器 ---
       // 监听对象选择事件，更新 selectedObject 状态
-      canvas.on("selection:created", (e) => setSelectedObject(e.target));
-      canvas.on("selection:updated", (e) => setSelectedObject(e.target));
+      canvas.on("object:added", (e) => setSelectedObject(e.target));
+      // canvas.on("selection:created", (e) => setSelectedObject(e.target));
+      // canvas.on("selection:updated", (e) => setSelectedObject(e.target));
       canvas.on("selection:cleared", () => setSelectedObject(null));
 
       // 监听对象添加/移除事件，更新对象数量状态
@@ -150,7 +152,7 @@ export default function Creator() {
           // 可选: 如果需要，在这里指定图片选项，例如滤镜
         }
       );
-
+      img.on("selected", (e) => setSelectedObject(e.target));
       img.scale(canvas.width / 3 / img.width);
 
       img.set({
@@ -267,10 +269,20 @@ export default function Creator() {
   };
 
   // 分享功能 (占位符)
-  const shareOutfit = () => {
-    console.log("分享穿搭 (占位符)");
-    // 在此实现分享逻辑 (例如，使用 Web Share API 或分享服务)
-    alert("分享功能待实现");
+  // const shareOutfit = () => {
+  //   console.log("分享穿搭 (占位符)");
+  //   // 在此实现分享逻辑 (例如，使用 Web Share API 或分享服务)
+  //   alert("分享功能待实现");
+  // };
+  // 置顶选中
+  const handleBringToFront = () => {
+    const canvas = canvasRef.current;
+    if (canvas && selectedObject) {
+      canvas.bringObjectToFront(selectedObject);
+      canvas.discardActiveObject();
+      canvas.renderAll();
+      toast.success("选中衣物已被置顶~");
+    }
   };
 
   return (
@@ -290,9 +302,14 @@ export default function Creator() {
                 <Download className="h-4 w-4" />
                 导出
               </Button>
-              <Button variant="outline" size="sm" onClick={shareOutfit}>
-                <Share2 className="h-4 w-4" />
-                分享
+              <Button
+                disabled={!selectedObject}
+                variant="outline"
+                size="sm"
+                onClick={handleBringToFront}
+              >
+                <Layers2 className="h-4 w-4" />
+                置顶
               </Button>
               {/* 移除选中物品的按钮 */}
               <Button
