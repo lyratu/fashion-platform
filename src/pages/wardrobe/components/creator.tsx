@@ -5,11 +5,13 @@ import React, { useState, useRef, useEffect } from "react"; // 导入 React
 import * as fabric from "fabric"; // v6 版本 Fabric.js 导入方式
 import { useDragStore, DraggableItemData } from "@/stores/dragStore"; // 导入你的 Zustand store 和类型
 import { toast } from "sonner";
-
+import { UseCanvasStore, FabricObjectSerialized } from "@/stores/canvasStore";
 // 注意: 原始代码中的 ClothingItem 类型现在本质上就是 DraggableItemData
 // 当一个物品被添加到画布上时，它的状态由 Fabric.js 对象管理。
-
-export default function Creator() {
+interface AssistantProps extends React.HTMLAttributes<HTMLDivElement> {
+  className?: string;
+}
+export default function Creator({ className }: AssistantProps) {
   const diyAreaRef = useRef<HTMLDivElement>(null); // 用于引用 DIY 区域的 DOM 元素的 Ref
   const canvasRef = useRef<fabric.Canvas | null>(null); // 用于存储 Fabric canvas 实例的 Ref
   const [objectCount, setObjectCount] = useState(0); // 用于跟踪对象数量的状态，以便显示空状态消息
@@ -22,7 +24,7 @@ export default function Creator() {
   // draggedItem 存储被拖拽物品的数据
   // endDrag 用于在拖拽结束时重置 store 状态
   const { isDragging, draggedItem, endDrag } = useDragStore();
-
+  const updateCanvasImage = UseCanvasStore((state) => state.updateCanvasImage);
   // --- Fabric.js 画布初始化和尺寸处理 ---
   useEffect(() => {
     const container = diyAreaRef.current; // 获取 DIY 区域容器的 DOM 元素
@@ -37,7 +39,6 @@ export default function Creator() {
       // 初始化 Fabric.js 画布
       // 根据容器当前尺寸设置初始大小
       canvas = new fabric.Canvas(canvasElement, {
-        backgroundColor: "#f0f0f0", // 示例背景颜色
         width: container.clientWidth, // 设置初始宽度
         height: container.clientHeight, // 设置初始高度
         selection: true, // 默认启用选择
@@ -46,20 +47,32 @@ export default function Creator() {
       });
 
       canvasRef.current = canvas; // 将画布实例存储到 ref 中
-
+      const handleCanvasChange = () => {
+        if (canvas) {
+          const base64 = canvas.toDataURL({
+            format: "png",
+            multiplier: 1, // 根据需要调整倍数
+          });
+          updateCanvasImage(base64); // 调用 store action 更新状态
+        }
+      };
       // --- Fabric 事件监听器 ---
       // 监听对象选择事件，更新 selectedObject 状态
-      canvas.on("object:added", (e) => setSelectedObject(e.target));
-      // canvas.on("selection:created", (e) => setSelectedObject(e.target));
-      // canvas.on("selection:updated", (e) => setSelectedObject(e.target));
-      canvas.on("selection:cleared", () => setSelectedObject(null));
-
-      // 监听对象添加/移除事件，更新对象数量状态
-      canvas.on("object:added", () => {
+      canvas.on("object:added", (e) => {
+        setSelectedObject(e.target);
+        handleCanvasChange();
         setObjectCount(canvasRef.current?.getObjects().length || 0);
       });
       canvas.on("object:removed", () => {
+        handleCanvasChange();
         setObjectCount(canvasRef.current?.getObjects().length || 0);
+      });
+      canvas.on("object:modified", () => {
+        handleCanvasChange();
+      }); // 修改对象
+      canvas.on("selection:cleared", () => {
+        handleCanvasChange();
+        setSelectedObject(null);
       });
 
       // 初次检查对象数量
@@ -255,7 +268,7 @@ export default function Creator() {
       const dataUrl = canvas.toDataURL({
         format: "png", // 'png' 或 'jpeg'
         quality: 1.0, // jpeg 格式的质量，0 到 1.0
-        // multiplier: 2, // 以当前画布尺寸的 2 倍导出
+        multiplier: 2, // 以当前画布尺寸的 2 倍导出
       });
 
       // 创建一个临时链接元素来触发下载
@@ -288,7 +301,7 @@ export default function Creator() {
   return (
     // 确保容器尺寸根据你的网格布局正确设置
     // lg:col-span-2 (假设根据你的布局描述，在大屏幕上应跨越 2 列)
-    <div className="lg:col-span-2 md:col-span-2 aspect-[1/1]">
+    <div className={`lg:col-span-2 md:col-span-2 ${className}`}>
       <Card className="h-full">
         <CardContent className="p-6 h-full flex flex-col">
           <div className="flex justify-between items-center mb-4">

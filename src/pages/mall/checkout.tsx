@@ -22,6 +22,7 @@ import { AddressForm } from "../profile/components/addressForm";
 import zfb from "@/assets/resource/zhifubaoPay.png";
 import wx from "@/assets/resource/wechatPay.png";
 import { useCreateOrder } from "@/services/mall";
+import { toast } from "sonner";
 
 export default function CheckoutPage() {
   const { data: cartItems } = useGetCart();
@@ -39,7 +40,7 @@ export default function CheckoutPage() {
 
   // effect
   useEffect(() => {
-    if (address) setSelectedAddress(address[0].id);
+    if (address && address.length > 0) setSelectedAddress(address[0].id);
   }, [address]);
 
   // Calculate order summary
@@ -181,7 +182,11 @@ export default function CheckoutPage() {
 
                   <Button
                     className=" cursor-pointer px-10"
-                    onClick={() => setCurrentStep("payment")}
+                    onClick={() => {
+                      if (!selectedAddress || (address && address.length < 1))
+                        return toast.error("未选择收货地址");
+                      setCurrentStep("payment");
+                    }}
                   >
                     下一步
                   </Button>

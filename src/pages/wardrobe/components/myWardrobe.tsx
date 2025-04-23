@@ -56,8 +56,10 @@ const formSchema = z.object({
   img: z.string().min(1, { message: "图片不能为空" }),
   type: z.string().min(1, { message: "请选择分类" }),
 });
-
-export default function MyWardrobe() {
+interface AssistantProps extends React.HTMLAttributes<HTMLDivElement> {
+  className?: string;
+}
+export default function MyWardrobe({ className }: AssistantProps) {
   type ClothingItem = {
     id: number;
     category: string;
@@ -169,7 +171,7 @@ export default function MyWardrobe() {
     }
   };
   return (
-    <Card className=" aspect-[1/1]">
+    <Card className={`aspect-[1/1] ${className}`}>
       {/* Reduced height to make room for AI assistant */}
       <CardContent className="p-4 h-full flex flex-col">
         <div className="flex items-center  mb-4">
@@ -306,7 +308,7 @@ export default function MyWardrobe() {
           </TabsList>
 
           <TabsContent value={activeTab} className="flex-1 mt-0">
-            <ScrollArea className="h-[230px]">
+            <ScrollArea className="aspect-square">
               {/* Reduced height */}
               <div className="columns-2 md:columns-2 gap-3 p-1 ">
                 {clothes?.pages.map((e) =>

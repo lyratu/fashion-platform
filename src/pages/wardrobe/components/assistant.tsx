@@ -4,28 +4,39 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Send, Sparkles } from "lucide-react";
-import { useState, useRef } from "react";
-
-export default function Assistant() {
-  // Define chat message type
-  type ChatMessage = {
-    id: string;
-    content: string;
-    sender: "user" | "assistant";
-    timestamp: Date;
-  };
+import { useState, useRef, useEffect } from "react";
+import { message, useSend } from "@/lib/visonModel";
+import Markdown from "markdown-to-jsx";
+import { UseCanvasStore } from "@/stores/canvasStore";
+import { toast } from "sonner";
+interface AssistantProps extends React.HTMLAttributes<HTMLDivElement> {
+  className?: string;
+}
+export default function Assistant({ className }: AssistantProps) {
+  const canvasBase64Image = UseCanvasStore((state) => state.canvasBase64Image);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
+  const { sendFn } = useSend();
   const [inputMessage, setInputMessage] = useState("");
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
+  const [chatMessages, setChatMessages] = useState<message[]>([
     {
-      id: "welcome",
-      content:
-        "你好！我是你的时装助手。请让我根据您的衣柜物品询问造型技巧或服装建议。",
-      sender: "assistant",
-      timestamp: new Date(),
+      role: "assistant",
+      content: [
+        {
+          type: "text",
+          text: `你好！我是你的时装助手。
+根据你衣柜里的物品，我可以为你提供造型技巧和穿搭建议。
+请告诉我你有什么，或者你有什么想解决的穿搭问题。`,
+        },
+      ],
     },
   ]);
+  useEffect(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+  }, [chatMessages]);
+
   // Handle Enter key press in input
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -34,65 +45,69 @@ export default function Assistant() {
   };
 
   // Handle sending a message to the AI assistant
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
+    console.log("[ canvasObjects ] >", canvasBase64Image);
     if (!inputMessage.trim()) return;
-
-    // Add user message
-    const userMessage: ChatMessage = {
-      id: `user-${Date.now()}`,
-      content: inputMessage,
-      sender: "user",
-      timestamp: new Date(),
+    const msgList = [];
+    const userMessage: message = {
+      role: "user",
+      content: [{ type: "text", text: inputMessage }],
     };
-    setChatMessages([...chatMessages, userMessage]);
+    if (canvasBase64Image)
+      userMessage.content.unshift({
+        type: "image_url",
+        image_url: { url: canvasBase64Image as string },
+      });
+    msgList.push(userMessage);
+    setChatMessages([...chatMessages, ...msgList]);
     setInputMessage("");
-
-    // Simulate AI response (in a real app, this would call an AI API)
-    setTimeout(() => {
-      const aiResponses = [
-        "这个问题很棒！根据你的衣橱，我建议用白T恤搭配蓝色牛仔裤，打造经典休闲造型。",
-        "如果是正式场合，可以尝试用黑色长裤搭配蓝色纽扣衬衫和西装外套。",
-        "牛仔外套搭配黑色长裤和白色运动鞋会很适合休闲出行。",
-        "你的衣橱里有很多百搭单品！用现有的衣服至少可以搭配出10种不同造型。",
-        "夏季推荐用白T恤搭配短裤和凉鞋。",
-        "金色项链能很好地衬托你的黑色毛衣，营造更优雅的造型。",
-        "有没有考虑过在衣橱里增加些彩色配饰？它们能让整体穿搭焕然一新。",
-        "你现在的穿搭很棒！颜色搭配非常协调。",
-      ];
-
-      const randomResponse =
-        aiResponses[Math.floor(Math.random() * aiResponses.length)];
-
-      const assistantMessage: ChatMessage = {
-        id: `assistant-${Date.now()}`,
-        content: randomResponse,
-        sender: "assistant",
-        timestamp: new Date(),
-      };
-      setChatMessages((prevMessages) => [...prevMessages, assistantMessage]);
-    }, 1000);
+    const res = await sendFn(
+      [
+        ...msgList,
+        // {
+        //   role: "assistant",
+        //   content: [
+        //     {
+        //       type: "text",
+        //       text: "一个时装助手，不是图片检测，根据用户对话的内容，以下一条内容为重点,如果存在图片，以内容中的图片作为参考，注意你应该回复给user",
+        //     },
+        //   ],
+        // },
+      ],
+      {
+        onError: (e) => toast.error(e.message),
+      }
+    );
+    const data: { role: "user" | "assistant"; content: string } =
+      res.choices[0].message;
+    const assistantMessage: message = {
+      role: data.role,
+      content: [{ type: "text", text: data.content }],
+    };
+    msgList.push(assistantMessage);
+    setChatMessages([...chatMessages, ...msgList]);
   };
 
   return (
-    <Card className=" aspect-[1/1]">
-      <CardContent className="p-4 h-full flex flex-col">
+    <Card className={`aspect-square ${className}`}>
+      <CardContent className="p-4 flex flex-col">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold">AI时尚助手</h2>
           <Sparkles className="h-5 w-5 text-primary" />
         </div>
 
         {/* Chat Messages */}
-        <ScrollArea className="flex-1 pr-4 mb-4">
+        <ScrollArea className="flex-1 pr-4 mb-4 aspect-square">
           <div className="space-y-4">
-            {chatMessages.map((message) => (
+            {chatMessages.map((message, index) => (
               <div
-                key={message.id}
+                key={index}
                 className={`flex ${
-                  message.sender === "user" ? "justify-end" : "justify-start"
+                  message.role === "user" ? "justify-end" : "justify-start"
                 }`}
               >
                 <div className="flex items-start gap-2 max-w-[80%]">
-                  {message.sender === "assistant" && (
+                  {message.role === "assistant" && (
                     <Avatar className="h-8 w-8">
                       <AvatarImage
                         src="/placeholder.svg?height=32&width=32"
@@ -103,14 +118,28 @@ export default function Assistant() {
                   )}
                   <div
                     className={`rounded-lg px-3 py-2 text-sm ${
-                      message.sender === "user"
+                      message.role === "user"
                         ? "bg-primary text-primary-foreground"
                         : "bg-muted"
                     }`}
                   >
-                    {message.content}
+                    {message.content.map((item, index) =>
+                      item.type == "text" ? (
+                        <Markdown
+                          key={index}
+                          // Markdown 文本作为 children 或 markdown prop 传入
+                          children={item.text}
+                          // 或者 markdown={markdownText}
+                          // 配置选项
+                          options={{
+                            forceBlock: false, // 根据需要设置是否强制所有内容为块级元素
+                            // 其他选项...
+                          }}
+                        />
+                      ) : null
+                    )}
                   </div>
-                  {message.sender === "user" && (
+                  {message.role === "user" && (
                     <Avatar className="h-8 w-8">
                       <AvatarImage
                         src="/placeholder.svg?height=32&width=32"

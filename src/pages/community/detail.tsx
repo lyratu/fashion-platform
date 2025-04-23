@@ -80,7 +80,15 @@ export default function PostDetailPage() {
           <Card className="mb-8">
             <CardHeader className="pb-3">
               <div className="flex items-start gap-3">
-                <Link to={`/profile/${post.user?.nickName}`}>
+                <span
+                  onClick={() => {
+                    navigate(`/profile/${post.user?.nickName}`, {
+                      state: {
+                        userId: post.userId,
+                      },
+                    });
+                  }}
+                >
                   <Avatar className="h-10 w-10 cursor-pointer">
                     <AvatarImage
                       src={post.user?.avatarUrl}
@@ -90,16 +98,23 @@ export default function PostDetailPage() {
                       {post.user?.nickName.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
-                </Link>
+                </span>
                 <div className="flex-1">
                   <div className="flex justify-between">
                     <div>
-                      <Link
-                        to={`/profile/${post.user?.nickName}`}
-                        className="hover:underline"
+                      <span
+                        onClick={() => {
+                          console.log("[ post.userId ] >", post.userId);
+                          navigate(`/profile/${post.user?.nickName}`, {
+                            state: {
+                              userId: post.userId,
+                            },
+                          });
+                        }}
+                        className="hover:underline cursor-pointer"
                       >
                         <h4 className="font-medium">{post.user?.nickName}</h4>
-                      </Link>
+                      </span>
                       <p className="text-xs text-muted-foreground">
                         {post.user?.nickName}
                       </p>
@@ -156,7 +171,7 @@ export default function PostDetailPage() {
                       src={url || "/placeholder.svg"}
                       alt="Post image"
                       onClick={() => setCurrentImg(url)}
-                      className=" cursor-pointer object-cover rounded-md border w-full object-top aspect-[1/1]"
+                      className=" cursor-pointer object-contain rounded-md border w-full object-top"
                     />
                   ))}
               </div>
