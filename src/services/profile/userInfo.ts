@@ -54,3 +54,19 @@ export const useUpdatePassword = () => {
   });
   return { updatePasswordFn, data, error };
 };
+
+export const getOtherInfo = async (id: number) => {
+  const response = await axios.get<User>(
+    `/app/user/info/otherPerson?id=${id}`,
+    {}
+  );
+  return response.data;
+};
+
+export const useGetOtherInfo = (id: number) => {
+  return useQuery({
+    queryKey: [`getOtherInfo`],
+    queryFn: () => getOtherInfo(id),
+    staleTime: 0,
+  });
+};

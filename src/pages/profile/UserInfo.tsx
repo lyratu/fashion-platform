@@ -9,7 +9,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,7 +20,6 @@ import { Label } from "@radix-ui/react-label";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { useUpdateUser } from "@/services/profile";
 import { User } from "@/types/user";
@@ -122,6 +120,7 @@ export const UserInfoPage = ({ user, isEdit, setIsEdit }: userInfo) => {
                         orientation="horizontal"
                         disabled={!isEdit}
                         defaultValue={field.value}
+                        onChange={field.onChange}
                       >
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem value="0" id="r1" />

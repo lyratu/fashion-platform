@@ -6,6 +6,9 @@ import * as fabric from "fabric"; // v6 版本 Fabric.js 导入方式
 import { useDragStore, DraggableItemData } from "@/stores/dragStore"; // 导入你的 Zustand store 和类型
 import { toast } from "sonner";
 import { UseCanvasStore, FabricObjectSerialized } from "@/stores/canvasStore";
+import { cloth } from "@/types/cloth";
+import { useSaveSuit } from "@/services/clothes";
+import { upload } from "@/services/base";
 // 注意: 原始代码中的 ClothingItem 类型现在本质上就是 DraggableItemData
 // 当一个物品被添加到画布上时，它的状态由 Fabric.js 对象管理。
 interface AssistantProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -19,12 +22,16 @@ export default function Creator({ className }: AssistantProps) {
     null
   ); // 用于跟踪选中的对象的状态，以便启用删除按钮
 
+  /* api */
+  const { saveSuitFn } = useSaveSuit();
   // 从 Zustand store 获取状态和 action
   // isDragging 状态指示一个物品是否正在从*外部*被拖拽到这个区域
   // draggedItem 存储被拖拽物品的数据
   // endDrag 用于在拖拽结束时重置 store 状态
   const { isDragging, draggedItem, endDrag } = useDragStore();
   const updateCanvasImage = UseCanvasStore((state) => state.updateCanvasImage);
+  // 编辑器上元素
+  const [clothes, setClothes] = useState<cloth[]>([]);
   // --- Fabric.js 画布初始化和尺寸处理 ---
   useEffect(() => {
     const container = diyAreaRef.current; // 获取 DIY 区域容器的 DOM 元素
@@ -147,7 +154,7 @@ export default function Creator({ className }: AssistantProps) {
       // 从 Zustand store 获取物品数据
       const droppedItem: DraggableItemData = draggedItem;
       console.log("从 store 放置的物品:", droppedItem);
-
+      setClothes([...clothes, droppedItem]);
       // 计算相对于画布的放置位置
       // 注意: e.clientX/Y 是相对于视口的
       // rect.left/top 是 canvas 元素相对于视口的位置
@@ -156,18 +163,16 @@ export default function Creator({ className }: AssistantProps) {
       const y = e.clientY - rect.top;
       // 使用 droppedItem.picture 作为图片 URL
       // 使用 Fabric.js 加载图片
-      const img = await fabric.FabricImage.fromURL(
-        `http://localhost:3000${droppedItem.picture}`,
-        {
-          // 可选: 用于跨域图片的 crossOrigin 设置
-          // 如果后续需要导出画布，则需要此设置
-          crossOrigin: "anonymous",
-          // 可选: 如果需要，在这里指定图片选项，例如滤镜
-        }
-      );
+      const relativePath = droppedItem.picture;
+      const origin = window.location.origin;
+      const img = await fabric.FabricImage.fromURL(`${origin}${relativePath}`, {
+        // 可选: 用于跨域图片的 crossOrigin 设置
+        // 如果后续需要导出画布，则需要此设置
+        crossOrigin: "anonymous",
+        // 可选: 如果需要，在这里指定图片选项，例如滤镜
+      });
       img.on("selected", (e) => setSelectedObject(e.target));
       img.scale(canvas.width / 3 / img.width);
-
       img.set({
         left: x - img.getScaledWidth() / 2,
         top: y - img.getScaledHeight() / 2,
@@ -176,6 +181,7 @@ export default function Creator({ className }: AssistantProps) {
         // originY: 'center',
         // left: x,
         // top: y,
+        cacheKey: droppedItem.id,
       });
 
       // 将 DraggableItemData 的自定义属性存储到 fabric 对象上
@@ -212,7 +218,7 @@ export default function Creator({ className }: AssistantProps) {
   const removeSelectedItem = () => {
     const canvas = canvasRef.current;
     if (canvas) {
-      const activeObject = canvas.getActiveObject();
+      const activeObject = canvas.getActiveObject() as fabric.FabricImage;
       const activeGroup = canvas.getActiveObjects(); // 如果选中了多个对象，则获取所有选中的对象
 
       if (activeGroup && activeGroup.length > 1) {
@@ -221,6 +227,9 @@ export default function Creator({ className }: AssistantProps) {
       } else if (activeObject) {
         // 如果选中了单个对象
         canvas.remove(activeObject);
+        setClothes(
+          clothes.filter((e) => e.id.toString() != activeObject.cacheKey)
+        );
       } else {
         console.log("没有选中对象可移除。");
       }
@@ -236,26 +245,33 @@ export default function Creator({ className }: AssistantProps) {
     const canvas = canvasRef.current;
     if (canvas) {
       canvas.clear(); // 从画布中清除所有对象
-      // object:removed 监听器将更新 objectCount 状态（至 0）
+      setClothes([]);
     }
   };
 
   // 保存穿搭 (将画布状态序列化为 JSON)
-  const saveOutfit = () => {
+  const saveOutfit = async () => {
     const canvas = canvasRef.current;
     if (canvas) {
-      // 使用 canvas.toJSON() 获取画布状态的 JSON 表示
-      // 包含你添加的任何自定义属性 (例如 customId, customCategory, customRemark, customPictureUrl)
-      const json = canvas.toJSON([
-        "customId",
-        "customCategory",
-        "customRemark",
-        "customPictureUrl",
-      ]);
-      console.log("保存穿搭 (Fabric JSON):", JSON.stringify(json, null, 2));
-
-      // 在实际应用中，你会将此 'json' 对象发送到你的后端
-      alert("Canvas 状态已打印到控制台 (JSON)");
+      // const json = canvas.toJSON([
+      //   "customId",
+      //   "customCategory",
+      //   "customRemark",
+      //   "customPictureUrl",
+      // ]);
+      // console.log("保存穿搭 (Fabric JSON):", JSON.stringify(json, null, 2));
+      // console.log("[ clothes ] >", clothes);
+      const config = JSON.stringify(canvas.toJSON());
+      const blob = await canvas.toBlob({
+        format: "png",
+        quality: 1.0,
+        multiplier: 2,
+      });
+      const formData = new FormData();
+      if (blob) formData.append("file", blob, `${new Date()}.png`);
+      const imgUrl = await upload(formData);
+      await saveSuitFn({ config, photo: imgUrl });
+      toast.success("保存穿搭成功~", { duration: 1000 });
     }
   };
 
@@ -300,8 +316,7 @@ export default function Creator({ className }: AssistantProps) {
 
   return (
     // 确保容器尺寸根据你的网格布局正确设置
-    // lg:col-span-2 (假设根据你的布局描述，在大屏幕上应跨越 2 列)
-    <div className={`lg:col-span-2 md:col-span-2 ${className}`}>
+    <div className={`${className}`}>
       <Card className="h-full">
         <CardContent className="p-6 h-full flex flex-col">
           <div className="flex justify-between items-center mb-4">

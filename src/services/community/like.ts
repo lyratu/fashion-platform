@@ -1,6 +1,6 @@
 import axios from "@/lib/axios";
 import { like } from "@/types/like";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const likeOrUnlike = async (postId: number) => {
   const response = await axios.post<like>(
@@ -20,4 +20,20 @@ export const useLikeOrUnlike = () => {
   });
 
   return { likeOrUnlikeFn, data, error };
+};
+
+export const likeCount = async (id: number) => {
+  const response = await axios.get<{ count: number }>(
+    `/app/community/like/likeCount?id=${id}`,
+    {}
+  );
+  return response.data;
+};
+
+export const useLikeCount = (id: number) => {
+  return useQuery({
+    queryKey: ["likeCount"],
+    queryFn: () => likeCount(id),
+    staleTime: 0,
+  });
 };

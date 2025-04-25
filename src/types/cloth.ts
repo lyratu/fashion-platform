@@ -7,5 +7,26 @@ export interface cloth {
   status: number;
   season: number[];
   createUserId: number;
-  suitId: number;
+}
+
+export interface suit {
+  id: number;
+  photo: string;
+
+  temperature: number[];
+
+  season: number[];
+
+  scene: string;
+
+  style: string;
+
+  tags: string[];
+
+  remark: string;
+
+  config: string;
+  createTime: string;
+  nickName: string;
+  avatarUrl: string;
 }

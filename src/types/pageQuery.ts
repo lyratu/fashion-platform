@@ -7,6 +7,7 @@ export interface pageQuery {
   category?: string;
   type?: string;
   name?: string;
+  id?: string;
 }
 
 export interface pageQueryResponse<T> {

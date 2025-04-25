@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useGetActiveUser, useGetTrend } from "@/services/community";
 import { Ribbon } from "lucide-react";
 
@@ -10,6 +10,7 @@ interface props extends React.HTMLAttributes<HTMLDivElement> {
 export const Sidebar: React.FC<props> = ({ setTopic }) => {
   const { data } = useGetActiveUser();
   const { data: trend } = useGetTrend();
+  const navigate = useNavigate();
   return (
     <div className="w-full md:w-80 space-y-6">
       <Card>
@@ -44,14 +45,34 @@ export const Sidebar: React.FC<props> = ({ setTopic }) => {
           <div className="space-y-4">
             {data?.map((info, index) => (
               <div className="flex items-center gap-3" key={index}>
-                <Avatar>
+                <Avatar
+                  className=" cursor-pointer"
+                  onClick={() =>
+                    navigate(`/profile/${info.user.nickName}`, {
+                      state: {
+                        userId: info.userId,
+                      },
+                    })
+                  }
+                >
                   <AvatarImage src={info.user.avatarUrl} alt="Jessica T." />
                   <AvatarFallback>
                     {info.user.nickName.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="font-medium">{info.user.nickName}</p>
+                  <p
+                    className="font-medium hover:underline cursor-pointer"
+                    onClick={() =>
+                      navigate(`/profile/${info.user.nickName}`, {
+                        state: {
+                          userId: info.userId,
+                        },
+                      })
+                    }
+                  >
+                    {info.user.nickName}
+                  </p>
                   {info.user.position && (
                     <p className="text-sm text-muted-foreground flex items-center">
                       <Ribbon className="w-3 mr-1" />

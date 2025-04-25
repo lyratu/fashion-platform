@@ -12,6 +12,7 @@ import {
   Trash2,
   Loader,
   Edit,
+  Luggage,
 } from "lucide-react";
 import { ChangeEvent, useRef, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -50,7 +51,9 @@ import { useDelCloth, useGetClothes, useUploadCloth } from "@/services/clothes";
 import { useQueryClient } from "@tanstack/react-query";
 import { useDragStore } from "@/stores/dragStore";
 import { toast } from "sonner";
-
+import cap from "@/assets/resource/cap.svg";
+import skirt from "@/assets/resource/skirt.svg";
+import { cloth } from "@/types/cloth";
 /* 表单 */
 const formSchema = z.object({
   img: z.string().min(1, { message: "图片不能为空" }),
@@ -60,17 +63,6 @@ interface AssistantProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 export default function MyWardrobe({ className }: AssistantProps) {
-  type ClothingItem = {
-    id: number;
-    category: string;
-    picture: string;
-    remark: string;
-    x?: number;
-    y?: number;
-    width?: number;
-    height?: number;
-    dragging?: boolean;
-  };
   const types = [
     { name: "上衣", value: "0" },
     { name: "下装", value: "1" },
@@ -110,14 +102,8 @@ export default function MyWardrobe({ className }: AssistantProps) {
   /* 拖拽 */
   const { startDrag, endDrag } = useDragStore();
   // 开始拖拽
-  const handleDragStart = (item: ClothingItem) => {
-    const newItem = {
-      id: item.id,
-      category: item.category,
-      remark: item.remark,
-      picture: item.picture,
-    };
-    startDrag(newItem);
+  const handleDragStart = (item: cloth) => {
+    startDrag(item);
   };
   // 结束拖拽
   const handleDragEnd = () => {
@@ -171,7 +157,7 @@ export default function MyWardrobe({ className }: AssistantProps) {
     }
   };
   return (
-    <Card className={`aspect-[1/1] ${className}`}>
+    <Card className={`${className}`}>
       {/* Reduced height to make room for AI assistant */}
       <CardContent className="p-4 h-full flex flex-col">
         <div className="flex items-center  mb-4">
@@ -289,21 +275,24 @@ export default function MyWardrobe({ className }: AssistantProps) {
           onValueChange={setActiveTab}
           className="flex-1 flex flex-col"
         >
-          <TabsList className="grid grid-cols-5">
+          <TabsList className="grid grid-cols-6">
             <TabsTrigger value="0" className="cursor-pointer">
               <Tshirt className="h-4 w-4 " />
             </TabsTrigger>
             <TabsTrigger value="1" className="cursor-pointer">
-              <Pants className="h-4 w-4" />
+              <img src={skirt} className="h-4 w-4" />
             </TabsTrigger>
             <TabsTrigger value="2" className="cursor-pointer">
-              <BriefcaseBusiness className="h-4 w-4" />
+              <Shoe className="h-4 w-4" />
             </TabsTrigger>
             <TabsTrigger value="3" className="cursor-pointer">
-              <Plus className="h-4 w-4" />
+              <BriefcaseBusiness className="h-4 w-4" />
             </TabsTrigger>
             <TabsTrigger value="4" className="cursor-pointer">
-              <Shoe className="h-4 w-4" />
+              <img src={cap} className="h-4 w-4" />
+            </TabsTrigger>
+            <TabsTrigger value="5" className="cursor-pointer">
+              <Luggage className="h-4 w-4" />
             </TabsTrigger>
           </TabsList>
 
@@ -326,17 +315,19 @@ export default function MyWardrobe({ className }: AssistantProps) {
                         src={item.picture || "/placeholder.svg"}
                         className="object-cover pointer-events-none block"
                       />
-                      {isEdit ? (
-                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-background/60 rounded-md">
-                          <Button
-                            variant="destructive"
-                            size="icon"
-                            onClick={() => handleDel(item.id)}
-                          >
-                            <Trash2 className="h-4 w-4 text-white" />
-                          </Button>
-                        </div>
-                      ) : null}
+                      <div
+                        className={`${
+                          isEdit ? "opacity-100" : ""
+                        } absolute inset-0 flex items-center justify-center opacity-0 transition-opacity bg-background/60 rounded-md`}
+                      >
+                        <Button
+                          variant="destructive"
+                          size="icon"
+                          onClick={() => handleDel(item.id)}
+                        >
+                          <Trash2 className="h-4 w-4 text-white" />
+                        </Button>
+                      </div>
                     </div>
                   ))
                 )}

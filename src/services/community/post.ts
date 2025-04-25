@@ -67,7 +67,7 @@ export const useGetActiveUser = () => {
   });
 };
 
-/* 滚动分页请求社区文章 */
+/* 滚动分页请求社区全部文章 */
 
 export const getPostList = async (data: pageQuery) => {
   const response = await axios.post<pageQueryResponse<post>>(
@@ -82,6 +82,34 @@ export const useGetPostList = (data: pageQuery) => {
     queryKey: ["postPage", data],
     queryFn: ({ pageParam }) =>
       getPostList({ ...data, page: pageParam as number }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      const loadedArticles = allPages.reduce(
+        (acc, page) => acc + page.list.length,
+        0
+      );
+      if (loadedArticles < lastPage.pagination.total) {
+        return allPages.length + 1;
+      }
+      return undefined;
+    },
+  });
+};
+
+/* 滚动分页请求社区用户文章 */
+export const getUserPost = async (data: pageQuery) => {
+  const response = await axios.post<pageQueryResponse<post>>(
+    `/app/community/post/getUserPost`,
+    data
+  );
+  return response.data;
+};
+
+export const useGetUserPost = (data: pageQuery) => {
+  return useInfiniteQuery<pageQueryResponse<post>, Error>({
+    queryKey: ["userPostList", data],
+    queryFn: ({ pageParam }) =>
+      getUserPost({ ...data, page: pageParam as number }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
       const loadedArticles = allPages.reduce(

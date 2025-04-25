@@ -8,7 +8,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 
-import { ArrowLeft, Heart, Share2, MoreHorizontal, X } from "lucide-react";
+import { ArrowLeft, Heart, Share2, MoreHorizontal, Trash2 } from "lucide-react";
 // import {
 //   DropdownMenu,
 //   DropdownMenuContent,
@@ -16,18 +16,30 @@ import { ArrowLeft, Heart, Share2, MoreHorizontal, X } from "lucide-react";
 //   DropdownMenuTrigger,
 // } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
-import { useGetPostDet, useLikeOrUnlike } from "@/services/community";
+import {
+  useDelPost,
+  useGetPostDet,
+  useLikeOrUnlike,
+} from "@/services/community";
 import { CommentSection } from "./components/comment-section";
 import { queryClient } from "@/lib/query-client";
-import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import { useAuthStore } from "@/stores/auth";
 
 export default function PostDetailPage() {
   const navigate = useNavigate();
   const params = useParams();
+  const userInfo = useAuthStore((state) => state.user);
   const [currentImg, setCurrentImg] = useState("");
   const { data: post } = useGetPostDet(params.id as string);
-
+  const { delPostFn } = useDelPost();
   // const formatDate = (dateString: string) => {
   //   return new Date(dateString).toLocaleDateString("en-US", {
   //     year: "numeric",
@@ -60,6 +72,20 @@ export default function PostDetailPage() {
     });
   };
 
+  /* 文章删除 */
+  const handlePostDel = (ids: number[]) => {
+    delPostFn(ids, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["postPage"] });
+        queryClient.invalidateQueries({ queryKey: ["userPostList"] });
+        toast.success("删除成功~", {
+          duration: 1000,
+        });
+        navigate("/community");
+      },
+    });
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <div>
@@ -67,10 +93,10 @@ export default function PostDetailPage() {
           variant="ghost"
           size="sm"
           className="mb-4 cursor-pointer"
-          onClick={() => navigate("/community")}
+          onClick={() => navigate(-1)}
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          返回社区
+          返回
         </Button>
       </div>
 
@@ -104,7 +130,6 @@ export default function PostDetailPage() {
                     <div>
                       <span
                         onClick={() => {
-                          console.log("[ post.userId ] >", post.userId);
                           navigate(`/profile/${post.user?.nickName}`, {
                             state: {
                               userId: post.userId,
@@ -123,27 +148,31 @@ export default function PostDetailPage() {
                       <span className="text-xs text-muted-foreground">
                         {post.createTime}
                       </span>
-                      {/* <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 cursor-pointer"
-                          >
-                            <MoreHorizontal className="h-4 w-4" />
-                            <span className="sr-only">更多选项</span>
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem
-                            className=" cursor-pointer"
-                            onClick={() => {}}
-                          >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            删除文章
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu> */}
+                      {post.userId == userInfo?.id ? (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 cursor-pointer"
+                            >
+                              <MoreHorizontal className="h-4 w-4" />
+                              <span className="sr-only">更多选项</span>
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem
+                              className=" cursor-pointer"
+                              onClick={async () => {
+                                handlePostDel([post.id as number]);
+                              }}
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              删除文章
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      ) : null}
                     </div>
                   </div>
                 </div>

@@ -89,7 +89,7 @@ export default function Assistant({ className }: AssistantProps) {
   };
 
   return (
-    <Card className={`aspect-square ${className}`}>
+    <Card className={`${className}`}>
       <CardContent className="p-4 flex flex-col">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold">AI时尚助手</h2>

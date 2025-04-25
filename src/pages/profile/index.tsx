@@ -27,6 +27,7 @@ import { useGetMyGoodsCollect, useGetMyInfo } from "@/services/profile";
 import { RecentOrder } from "./components/recent-order";
 import { AccountSetPage } from "./accountSet";
 import AddressesPage from "./address";
+import { MyClothesPage } from "./myClothes";
 import { AvatarUpload } from "./components/avatarUpload";
 import { toast } from "sonner";
 import { NotifyPage } from "./notify";
@@ -126,7 +127,6 @@ export default function ProfilePage() {
                 active={activeTab === "wishlist"}
                 onClick={() => setActiveTab("wishlist")}
               />
-
               {/* <NavItem
                 icon={<Bell className="h-4 w-4" />}
                 label="通知"
@@ -141,9 +141,9 @@ export default function ProfilePage() {
               />
               <NavItem
                 icon={<Shirt className="h-4 w-4" />}
-                label="我的穿搭"
+                label="我的搭配"
                 active={activeTab === "wardrobe"}
-                onClick={() => router("/wardrobe")}
+                onClick={() => setActiveTab("suit")}
               />
               <NavItem
                 icon={<Settings className="h-4 w-4" />}
@@ -288,6 +288,11 @@ export default function ProfilePage() {
             <TabsContent value="address" className="mt-0">
               <AddressesPage />
             </TabsContent>
+            {/* 我的搭配 Tab */}
+            <TabsContent value="suit" className="mt-0">
+              <MyClothesPage />
+            </TabsContent>
+
             {/* 设置 Tab */}
             <TabsContent value="settings" className="mt-0 space-y-6">
               <AccountSetPage />

@@ -42,14 +42,34 @@ export const PostItem: React.FC<childProps> = ({
       <CardHeader className="pb-3">
         {item.user && (
           <div className="flex items-start gap-3">
-            <Avatar>
+            <Avatar
+              className=" cursor-pointer"
+              onClick={() => {
+                navigate(`/profile/${item.user?.nickName}`, {
+                  state: {
+                    userId: item.userId,
+                  },
+                });
+              }}
+            >
               <AvatarImage src={item.user.avatarUrl} alt={item.user.nickName} />
               <AvatarFallback>{item.user.nickName.charAt(0)}</AvatarFallback>
             </Avatar>
             <div className="flex-1">
               <div className="flex gap-2 items-start">
                 <div>
-                  <h4 className="font-medium">{item.user.nickName}</h4>
+                  <h4
+                    className="font-medium hover:underline cursor-pointer"
+                    onClick={() => {
+                      navigate(`/profile/${item.user?.nickName}`, {
+                        state: {
+                          userId: item.userId,
+                        },
+                      });
+                    }}
+                  >
+                    {item.user.nickName}
+                  </h4>
                   <p className="text-xs text-muted-foreground">
                     {item.user.position}
                   </p>

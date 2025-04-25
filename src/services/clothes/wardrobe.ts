@@ -66,5 +66,6 @@ export const useGetClothes = (data: pageQuery) => {
       }
       return undefined;
     },
+    staleTime: 0,
   });
 };

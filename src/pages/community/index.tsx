@@ -1,6 +1,6 @@
 import UseScrollToBottom from "@/hooks/use-scroll";
 import { useAddPost, useGetPostList } from "@/services/community/post";
-import { useGetMyInfo } from "@/services/profile";
+// import { useGetMyInfo } from "@/services/profile";
 
 import { PostForm } from "./components/postForm";
 import { PostItem } from "./components/postItem";
@@ -10,12 +10,15 @@ import { post } from "@/types/post";
 import { useDelPost } from "@/services/community/post";
 import { useLikeOrUnlike } from "@/services/community/like";
 import { like } from "@/types/like";
-import { ChevronLeft, ChevronRight, Loader } from "lucide-react";
+import { ChevronLeft, Loader } from "lucide-react";
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/stores/auth";
+import { User } from "@/types/user";
 
 export default function CommunityPage() {
-  const { data: userInfo } = useGetMyInfo();
+  // const { data: userInfo } = useGetMyInfo();
+  const userInfo = useAuthStore((state) => state.user);
   const [topicName, setTopicName] = useState("");
   const {
     data: posts,
@@ -30,7 +33,6 @@ export default function CommunityPage() {
     sort: "desc",
   });
 
-  const loadRef = useRef(null);
   const { delPostFn } = useDelPost();
   const { addPostFn } = useAddPost();
   const { likeOrUnlikeFn } = useLikeOrUnlike();
@@ -68,6 +70,7 @@ export default function CommunityPage() {
     });
   };
 
+  const loadRef = useRef(null);
   /* 触底刷新list */
   UseScrollToBottom(loadRef, () => {
     if (hasNextPage && !isFetchingNextPage) fetchNextPage();
@@ -79,7 +82,7 @@ export default function CommunityPage() {
         {/* 主体 */}
         <div className="flex-1">
           {/* 文章发布 */}
-          <PostForm user={userInfo} handleSubmit={handlePostSubmit} />
+          <PostForm user={userInfo as User} handleSubmit={handlePostSubmit} />
           {topicName ? (
             <Button
               variant="outline"
@@ -99,7 +102,7 @@ export default function CommunityPage() {
               arr?.list.map((item) => (
                 <PostItem
                   key={item.id}
-                  user={userInfo}
+                  user={userInfo as User}
                   item={item}
                   handleDel={handlePostDel}
                   handleLike={handlePostLike}
