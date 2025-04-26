@@ -9,15 +9,31 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useGetOrderList } from "@/services/mall";
+import {
+  useConfirmGoods,
+  useGetLocation,
+  useGetOrderList,
+} from "@/services/mall";
 import { Separator } from "@radix-ui/react-separator";
 import { Loader } from "lucide-react";
-import { useRef } from "react";
 import { useNavigate } from "react-router";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useRef, useState } from "react";
+import { Timeline } from "antd";
+import { TimeLineItemProps } from "antd/es/timeline/TimelineItem";
+import { useQueryClient } from "@tanstack/react-query";
 // import { Input } from "@/components/ui/input";
 
 export const OrderPage = () => {
   const loadRef = useRef(null);
+  const [timeLine, setTimeLine] = useState(false);
+  const [items, setItems] = useState<TimeLineItemProps[]>([]);
   const {
     data: orders,
     isFetchingNextPage,
@@ -29,7 +45,12 @@ export const OrderPage = () => {
     size: 4,
     sort: "desc",
   });
+  const { confirmGoodsFn } = useConfirmGoods();
+  const { getLocationFn } = useGetLocation();
+  const queryClient = useQueryClient();
   const status = ["待支付", "已支付", "已发货", "已完成", "已取消"];
+  const colorStatus = ["blue", "green", "red"];
+
   // nav
   const navigate = useNavigate();
   /* 触底刷新list */
@@ -68,7 +89,9 @@ export const OrderPage = () => {
                         //   order.status === "Delivered" ? "outline" : "default"
                         // }
                         >
-                          {status[order.payStatus]}
+                          {order.payStatus == 2 && order.logisticsStatus == 1
+                            ? "已签收"
+                            : status[order.payStatus]}
                         </Badge>
                       </div>
                       <p className="text-sm text-muted-foreground select-none">
@@ -94,9 +117,78 @@ export const OrderPage = () => {
                           支付
                         </Button>
                       ) : (
-                        <Button variant="outline" size="sm">
-                          跟踪订单
-                        </Button>
+                        <>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={async () => {
+                              await getLocationFn(
+                                {
+                                  order: "createTime",
+                                  page: 1,
+                                  size: 120,
+                                  sort: "desc",
+                                  logisticsNumber: order.trackingNumber || "-1",
+                                },
+                                {
+                                  onSuccess: (list) => {
+                                    if (list.list.length > 0) {
+                                      setItems(
+                                        list.list.flatMap((e) => ({
+                                          color: colorStatus[e.status],
+                                          label: e.recordTime.toString(),
+                                          children: (
+                                            <>
+                                              <p>{e.detailedAddress}</p>
+                                              <p
+                                                style={{
+                                                  color:
+                                                    e.status == 2
+                                                      ? "#F56C6C"
+                                                      : "",
+                                                }}
+                                              >
+                                                {e.locationDescription}
+                                              </p>
+                                            </>
+                                          ),
+                                        }))
+                                      );
+                                    } else {
+                                      setItems([
+                                        {
+                                          label: order.createTime,
+                                          children: "订单确认，已通知商家配货",
+                                        },
+                                      ]);
+                                    }
+                                    setTimeLine(true);
+                                  },
+                                }
+                              );
+                            }}
+                          >
+                            快递详情
+                          </Button>
+                          {order.logisticsStatus == 1 &&
+                          order.payStatus != 3 ? (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                confirmGoodsFn(order.id, {
+                                  onSuccess: () => {
+                                    queryClient.invalidateQueries({
+                                      queryKey: ["getOrderList"],
+                                    });
+                                  },
+                                });
+                              }}
+                            >
+                              确认收货
+                            </Button>
+                          ) : null}
+                        </>
                       )}
                       {/* <Button variant="outline" size="sm">
                     查看详情
@@ -124,16 +216,18 @@ export const OrderPage = () => {
                               <p>数量: {item.count}件</p>
                             </div>
                             <div className="flex gap-2 mt-2">
-                              <Button
-                                variant="link"
-                                size="sm"
-                                className="h-auto p-0 text-sm"
-                                onClick={() =>
-                                  navigate(`/mall/product/${item.goodsId}`)
-                                }
-                              >
-                                再次购买
-                              </Button>
+                              {order.payStatus == 3 ? (
+                                <Button
+                                  variant="link"
+                                  size="sm"
+                                  className="h-auto p-0 text-sm"
+                                  onClick={() =>
+                                    navigate(`/mall/product/${item.goodsId}`)
+                                  }
+                                >
+                                  再次购买
+                                </Button>
+                              ) : null}
                               <Separator
                                 orientation="vertical"
                                 className="h-4 my-auto"
@@ -181,6 +275,15 @@ export const OrderPage = () => {
             </div>
           </div>
         </ScrollArea>
+        <Dialog open={timeLine} onOpenChange={setTimeLine}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>运输信息</DialogTitle>
+              <DialogDescription></DialogDescription>
+            </DialogHeader>
+            <Timeline items={items} mode={"left"} />
+          </DialogContent>
+        </Dialog>
       </CardContent>
     </Card>
   );

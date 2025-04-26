@@ -1,5 +1,6 @@
 import axios from "@/lib/axios";
-import { order } from "@/types/order";
+import { ApiResponse } from "@/types/apiResponse";
+import { location, order } from "@/types/order";
 import { pageQuery, pageQueryResponse } from "@/types/pageQuery";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 type response = {
@@ -25,6 +26,7 @@ export const useCreateOrder = () => {
   return { createOrderFn, data, error };
 };
 
+/* 获取订单信息 */
 export const getOrderInfo = async (id: string) => {
   const response = await axios.get<order>(`/app/order/order/info?id=${id}`, {});
   return response.data;
@@ -49,6 +51,7 @@ export const useGetOrderList = (data: pageQuery) => {
     queryFn: ({ pageParam }) =>
       getOrderList({ ...data, page: pageParam as number }),
     initialPageParam: 1,
+    staleTime: 0,
     getNextPageParam: (lastPage, allPages) => {
       const loadedArticles = allPages.reduce(
         (acc, page) => acc + page.list.length,
@@ -62,6 +65,7 @@ export const useGetOrderList = (data: pageQuery) => {
   });
 };
 
+/*  确认订单 */
 export const confirmPayment = async (id: number) => {
   const response = await axios.post<response>(
     `/app/order/order/confirmPayment?id=${id}`,
@@ -80,4 +84,50 @@ export const useConfirmPayment = () => {
   });
 
   return { confirmPaymentFn, data, error };
+};
+
+/* 确认收货 */
+export const confirmGoods = async (id: number) => {
+  const response = await axios.post<response>(
+    `/app/order/order/confirmGoods?id=${id}`,
+    {}
+  );
+  return response.data;
+};
+
+export const useConfirmGoods = () => {
+  const {
+    error,
+    data,
+    mutateAsync: confirmGoodsFn,
+  } = useMutation({
+    mutationFn: confirmGoods,
+  });
+
+  return { confirmGoodsFn, data, error };
+};
+
+/* 获取快递信息 */
+type locationItems = {
+  list: location[];
+  total: number;
+};
+
+export const getLocation = async (data: pageQuery) => {
+  const response = await axios.post<locationItems>(
+    `/app/order/logisticsLocation/page`,
+    data
+  );
+  return response.data;
+};
+export const useGetLocation = () => {
+  const {
+    error,
+    data,
+    mutateAsync: getLocationFn,
+  } = useMutation({
+    mutationFn: getLocation,
+  });
+
+  return { getLocationFn, data, error };
 };

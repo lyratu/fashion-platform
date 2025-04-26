@@ -8,6 +8,7 @@ export interface pageQuery {
   type?: string;
   name?: string;
   id?: string;
+  logisticsNumber?: string;
 }
 
 export interface pageQueryResponse<T> {

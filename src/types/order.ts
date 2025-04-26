@@ -18,6 +18,7 @@ export interface order {
   trackingNumber: string;
   paymentType: number;
   orderItems: orderItem[];
+  logisticsStatus: number;
 }
 
 export interface orderItem {
@@ -29,4 +30,17 @@ export interface orderItem {
   mainImage: string;
   title: string;
   goodsSpecification: string;
+}
+
+export interface location {
+  id: number;
+  logisticsId: number;
+
+  status: number;
+
+  detailedAddress: string;
+
+  recordTime: Date;
+
+  locationDescription: string;
 }
