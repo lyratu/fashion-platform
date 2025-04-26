@@ -47,13 +47,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useDelCloth, useGetClothes, useUploadCloth } from "@/services/clothes";
+import {
+  useDelCloth,
+  useGetClothes,
+  useGetMySuit,
+  useUploadCloth,
+} from "@/services/clothes";
 import { useQueryClient } from "@tanstack/react-query";
 import { useDragStore } from "@/stores/dragStore";
 import { toast } from "sonner";
 import cap from "@/assets/resource/cap.svg";
 import skirt from "@/assets/resource/skirt.svg";
-import { cloth } from "@/types/cloth";
+import { cloth, suit } from "@/types/cloth";
 /* 表单 */
 const formSchema = z.object({
   img: z.string().min(1, { message: "图片不能为空" }),
@@ -98,11 +103,25 @@ export default function MyWardrobe({ className }: AssistantProps) {
     size: 5,
     sort: "desc",
   });
+
+  const suitLoadRef = useRef(null);
+  const {
+    data: suits,
+    isFetchingNextPage: suitIsFetchingNextPage,
+    hasNextPage: suitHasNextPage,
+    fetchNextPage: suitFetchNextPage,
+  } = useGetMySuit({
+    order: "createTime",
+    page: 1,
+    size: 6,
+    sort: "desc",
+  });
+
   const { delClothFn } = useDelCloth();
   /* 拖拽 */
   const { startDrag, endDrag } = useDragStore();
   // 开始拖拽
-  const handleDragStart = (item: cloth) => {
+  const handleDragStart = (item: cloth | suit) => {
     startDrag(item);
   };
   // 结束拖拽
@@ -111,8 +130,11 @@ export default function MyWardrobe({ className }: AssistantProps) {
   };
   /* 触底刷新list */
   UseScrollToBottom(loadRef, () => {
-    console.log("[ 123 ] >", hasNextPage);
     if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+  });
+  /* 触底刷新suitList */
+  UseScrollToBottom(suitLoadRef, () => {
+    if (suitHasNextPage && !suitIsFetchingNextPage) suitFetchNextPage();
   });
   /* 删除衣服 */
   const handleDel = async (id: number) => {
@@ -296,7 +318,10 @@ export default function MyWardrobe({ className }: AssistantProps) {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value={activeTab} className="flex-1 mt-0">
+          <TabsContent
+            value={activeTab != "5" ? activeTab : ""}
+            className="flex-1 mt-0"
+          >
             <ScrollArea className="aspect-square">
               {/* Reduced height */}
               <div className="columns-2 md:columns-2 gap-3 p-1 ">
@@ -323,6 +348,7 @@ export default function MyWardrobe({ className }: AssistantProps) {
                         <Button
                           variant="destructive"
                           size="icon"
+                          disabled={!isEdit}
                           onClick={() => handleDel(item.id)}
                         >
                           <Trash2 className="h-4 w-4 text-white" />
@@ -348,6 +374,63 @@ export default function MyWardrobe({ className }: AssistantProps) {
                   <Shirt className="h-12 w-12 mx-auto text-muted-foreground/40" />
                   <h2 className="text-sm font-medium mt-1 text-muted-foreground">
                     暂无衣物
+                  </h2>
+                </div>
+              )}
+            </ScrollArea>
+          </TabsContent>
+          <TabsContent value={"5"} className="flex-1 mt-0">
+            <ScrollArea className="aspect-square">
+              {/* Reduced height */}
+              <div className="columns-2 md:columns-2 gap-3 p-1 ">
+                {suits?.pages.map((e) =>
+                  e.list.map((item) => (
+                    <div
+                      key={item.id}
+                      className={`${
+                        isEdit ? " border-blue-400" : ""
+                      } group relative mb-2 border rounded-md p-2 cursor-grab hover:bg-muted/50 transition-colors`}
+                      draggable={!isEdit}
+                      onDragEnd={handleDragEnd}
+                      onDragStart={() => handleDragStart(item)}
+                    >
+                      <img
+                        src={item.photo || "/placeholder.svg"}
+                        className="object-cover pointer-events-none block"
+                      />
+                      <div
+                        className={`${
+                          isEdit ? "opacity-100" : ""
+                        } absolute inset-0 flex items-center justify-center opacity-0 transition-opacity bg-background/60 rounded-md`}
+                      >
+                        <Button
+                          variant="destructive"
+                          size="icon"
+                          onClick={() => handleDel(item.id)}
+                        >
+                          <Trash2 className="h-4 w-4 text-white" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))
+                )}
+                <div ref={suitLoadRef}>
+                  {suitIsFetchingNextPage ? (
+                    <div className="flex items-center justify-center text-sm">
+                      <Loader className="animate-spin" />
+                      <span>加载中...</span>
+                    </div>
+                  ) : !suitHasNextPage ? (
+                    <div className="text-center text-gray-500"></div>
+                  ) : null}
+                </div>
+              </div>
+
+              {(suits && suits?.pages[0].list.length > 0) || (
+                <div className="flex flex-col items-center justify-center p-4">
+                  <Luggage className="h-12 w-12 mx-auto text-muted-foreground/40" />
+                  <h2 className="text-sm font-medium mt-1 text-muted-foreground">
+                    暂无搭配
                   </h2>
                 </div>
               )}

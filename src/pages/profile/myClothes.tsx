@@ -8,21 +8,19 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { useDelSuit, useEditSuit, useGetMySuit } from "@/services/clothes";
 import dateTool from "@/utils/dateTool";
-import { Copy, Loader } from "lucide-react";
+import { Loader } from "lucide-react";
 import UseScrollToBottom from "@/hooks/use-scroll";
 import { useRef, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { suit } from "@/types/cloth";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
-import { DialogHeader, DialogFooter } from "@/components/ui/dialog";
+import { DialogHeader } from "@/components/ui/dialog";
 import {
   Dialog,
-  DialogTrigger,
   DialogContent,
   DialogTitle,
   DialogDescription,
-  DialogClose,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";

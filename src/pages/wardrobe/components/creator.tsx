@@ -154,6 +154,15 @@ export default function Creator({ className }: AssistantProps) {
       // 从 Zustand store 获取物品数据
       const droppedItem: DraggableItemData = draggedItem;
       console.log("从 store 放置的物品:", droppedItem);
+      if (droppedItem.config) {
+        const config = JSON.parse(droppedItem.config);
+
+        const newObjs: fabric.Object[] = await fabric.util.enlivenObjects(
+          config.objects
+        );
+        canvas.add(...newObjs);
+        return canvas?.renderAll();
+      }
       setClothes([...clothes, droppedItem]);
       // 计算相对于画布的放置位置
       // 注意: e.clientX/Y 是相对于视口的
@@ -307,7 +316,8 @@ export default function Creator({ className }: AssistantProps) {
   const handleBringToFront = () => {
     const canvas = canvasRef.current;
     if (canvas && selectedObject) {
-      canvas.bringObjectToFront(selectedObject);
+      const activeObj = canvas.getActiveObjects();
+      activeObj.map((item) => canvas.bringObjectToFront(item));
       canvas.discardActiveObject();
       canvas.renderAll();
       toast.success("选中衣物已被置顶~");
