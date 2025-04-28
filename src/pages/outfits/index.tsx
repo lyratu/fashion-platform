@@ -16,12 +16,15 @@ export default function ArticlesPage() {
   const loadRef = useRef(null);
   const { data: types } = useGetDictInfo(["category"]);
   const [category, setCategory] = useState("0");
+    const [inputText, setInputText] = useState("");
+    const [searchText, setSearchText] = useState("");
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useGetOutfitsPage({
       order: "createTime",
       page: 1,
       size: 20,
       sort: "desc",
+      title:searchText,
       category,
     });
   console.log(
@@ -68,10 +71,34 @@ export default function ArticlesPage() {
 
         <div className="flex justify-end">
           <div className="flex w-full max-w-sm items-center space-x-2 mb-6">
-            <Input type="email" placeholder="请输入关键词..." />
-            <Button variant="secondary" className=" cursor-pointer">
+            <Input
+              type="email"
+              value={inputText}
+              placeholder="请输入关键词..."
+              onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setInputText(e.target.value)
+              }
+            />
+            <Button
+              className=" cursor-pointer"
+              onClick={() => {
+                setSearchText(inputText);
+              }}
+            >
               搜索
             </Button>
+            {inputText.trim() && (
+              <Button
+                variant="secondary"
+                className="cursor-pointer"
+                onClick={() => {
+                  setSearchText("");
+                  setInputText("");
+                }}
+              >
+                重置
+              </Button>
+            )}
           </div>
         </div>
 

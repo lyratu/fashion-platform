@@ -9,37 +9,24 @@ import HomeCarousel from "./components/homeCarousel";
 export default function HomePage() {
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* <section className="mb-6">
-        <div className="flex flex-col items-center text-center mb-8">
-          <h1 className="text-4xl font-bold mb-4">Welcome to StyleConnect</h1>
-          <p className="text-xl text-muted-foreground max-w-2xl">
-           您的时装社区的灵感，购物和创建完美的衣柜
-          </p>
-          <div className="flex gap-4 mt-6">
-            <Button asChild size="lg">
-              <Link to="/register">现在加入</Link>
-            </Button>
-            <Button variant="outline" size="lg" asChild>
-              <Link to="/explore">探索</Link>
-            </Button>
-          </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <HomeCarousel />
         </div>
-      </section> */}
-      <HomeCarousel />
-      <section className="mb-6">
-        <h2 className="text-2xl font-bold mb-6">时尚分享</h2>
-        <FeaturedArticles />
-      </section>
+        <section className="mb-6">
+          <FeaturedArticles />
+        </section>
+      </div>
 
       <section className="mb-6">
         <h2 className="text-2xl font-bold mb-6">潮流服饰</h2>
         <TrendingOutfits />
       </section>
 
-      <section className="mb-6">
+      {/* <section className="mb-6">
         <h2 className="text-2xl font-bold mb-6">热门评论</h2>
         <CommunityHighlights />
-      </section>
+      </section> */}
 
       <section className="grid md:grid-cols-3 gap-6 mb-6">
         <Card>

@@ -7,14 +7,14 @@ export default function FeaturedArticles() {
   const { data } = useGetOutfitsRec();
 
   return (
-    <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2  gap-3">
       {data?.map((article) => (
         <Card key={article.id} className="overflow-hidden">
           <div className="relative z-0">
             <img
               src={article.coverImage || "/placeholder.svg"}
               alt={article.title}
-              className="object-cover object-top aspect-[4/3] w-full"
+              className="object-cover object-top aspect-[5/2] h-full"
             />
           </div>
           <CardContent className="p-4 z-10 relative">
@@ -25,10 +25,7 @@ export default function FeaturedArticles() {
               </span>
             </div>
             <h3 className="text-lg font-bold mb-2">{article.title}</h3>
-            <p className="text-sm text-muted-foreground select-none mb-3">
-              {article.description}
-            </p>
-            <div className="flex justify-between items-center">
+            {/* <div className="flex justify-between items-center">
               <span className="text-xs"></span>
               <Link
                 to={`/outfits/${article.id}`}
@@ -36,7 +33,7 @@ export default function FeaturedArticles() {
               >
                 查看更多
               </Link>
-            </div>
+            </div> */}
           </CardContent>
         </Card>
       ))}

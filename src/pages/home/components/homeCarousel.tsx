@@ -17,10 +17,10 @@ export default function HomeCarousel() {
   return (
     <>
       {isLoading ? (
-        <Skeleton className="w-full aspect-[5/2] mb-6 hidden md:block" />
+        <Skeleton className="w-full aspect-[4/3] mb-6 hidden md:block" />
       ) : (
         <Carousel
-          className="w-full aspect-[5/2] mb-6 hidden md:block"
+          className="w-full aspect-[4/3] mb-6 hidden md:block"
           opts={{
             loop: true,
           }}
@@ -43,7 +43,7 @@ export default function HomeCarousel() {
                     >
                       <img
                         src={_.CarouselImg}
-                        className="w-auto aspect-[5/2] object-cover object-top rounded-lg"
+                        className="w-auto aspect-[4/3] object-cover object-top rounded-lg"
                         alt="网络错误，未获取到图片"
                       />
                       <div className="absolute left-4 bottom-4 right-4 p-4 bg-black/50 rounded-b-lg">
