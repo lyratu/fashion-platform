@@ -16,15 +16,15 @@ export default function ArticlesPage() {
   const loadRef = useRef(null);
   const { data: types } = useGetDictInfo(["category"]);
   const [category, setCategory] = useState("0");
-    const [inputText, setInputText] = useState("");
-    const [searchText, setSearchText] = useState("");
+  const [inputText, setInputText] = useState("");
+  const [searchText, setSearchText] = useState("");
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useGetOutfitsPage({
       order: "createTime",
       page: 1,
       size: 20,
       sort: "desc",
-      title:searchText,
+      title: searchText,
       category,
     });
   console.log(
@@ -39,7 +39,7 @@ export default function ArticlesPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold mb-2">时尚穿搭分享</h1>
           <p className="text-muted-foreground">
@@ -51,7 +51,7 @@ export default function ArticlesPage() {
       {/* Category Tabs */}
       <Tabs
         defaultValue="0"
-        className="mb-8"
+        className="mb-8 mt-8"
         onValueChange={(i) => setCategory(i)}
       >
         <TabsList className="flex flex-wrap h-auto mb-2">
@@ -118,7 +118,9 @@ export default function ArticlesPage() {
                     <Badge variant="outline" className="mb-2">
                       {article.categoryText.name}
                     </Badge>
-                    <h3 className="text-lg font-bold mb-2">{article.title}</h3>
+                    <h3 className="text-lg font-bold mb-2 line-clamp-1">
+                      {article.title}
+                    </h3>
                     <p className="text-sm text-muted-foreground select-none line-clamp-2 mb-3">
                       {article.description}
                     </p>

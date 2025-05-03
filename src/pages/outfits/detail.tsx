@@ -14,11 +14,12 @@ import dateTool from "@/utils/dateTool";
 export default function ArticlePage() {
   const { id } = useParams();
 
-  const { data: info } = useGetOutfitsDet(id as string);
+  const { data: info, isError } = useGetOutfitsDet(id as string);
 
   const { doLikeFn } = useDoLike();
   const { doCollectFn } = useDoCollect();
   const navigate = useNavigate();
+  if (isError) navigate("/error", { replace: true });
   return (
     <>
       <div className="container max-w-screen-xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -49,7 +50,7 @@ export default function ArticlePage() {
                 </Badge>
 
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
+                  {/* <div className="flex items-center gap-2">
                     <Avatar>
                       <AvatarImage
                         src={info.user.avatarUrl}
@@ -67,7 +68,7 @@ export default function ArticlePage() {
                         {info.user.position}
                       </p>
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className="flex items-center gap-2 text-sm text-muted-foreground select-none">
                     <Calendar className="h-4 w-4" />

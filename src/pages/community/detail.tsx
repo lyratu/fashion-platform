@@ -179,7 +179,7 @@ export default function PostDetailPage() {
               </div>
             </CardHeader>
             <CardContent className="pb-3">
-              <p className="mb-4 whitespace-pre-line">{post.content}</p>
+              <p className="mb-4 break-all">{post.content}</p>
               {post.topics && post.topics.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-4">
                   {post.topics.map((topic, index) => (

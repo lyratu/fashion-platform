@@ -50,8 +50,10 @@ export const PostForm: React.FC<childProps> = ({ user, handleSubmit }) => {
   ) => {
     if (e.key === "Enter") {
       const newValue = e.target.value;
-      setTopicList([...topicList, { name: newValue }]);
+      if (topicList.findIndex((e) => e.name == newValue) == -1)
+        setTopicList([...topicList, { name: newValue }]);
       setOpen(false);
+      SetTitle("");
     }
   };
 
@@ -211,10 +213,15 @@ export const PostForm: React.FC<childProps> = ({ user, handleSubmit }) => {
                               value={item.name}
                               className=" cursor-pointer"
                               onSelect={(currentValue) => {
-                                setTopicList([
-                                  ...topicList,
-                                  { id: item.id, name: currentValue },
-                                ]);
+                                if (
+                                  topicList.findIndex(
+                                    (e) => e.name == currentValue
+                                  ) == -1
+                                )
+                                  setTopicList([
+                                    ...topicList,
+                                    { id: item.id, name: currentValue },
+                                  ]);
                                 setOpen(false);
                               }}
                             >

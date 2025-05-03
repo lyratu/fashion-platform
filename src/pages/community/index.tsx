@@ -15,6 +15,7 @@ import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/auth";
 import { User } from "@/types/user";
+import { toast } from "sonner";
 
 export default function CommunityPage() {
   // const { data: userInfo } = useGetMyInfo();
@@ -66,6 +67,10 @@ export default function CommunityPage() {
     addPostFn(data, {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["postPage"] });
+        queryClient.invalidateQueries({ queryKey: ["topic"] });
+      },
+      onError: (e) => {
+        toast.error(e.message);
       },
     });
   };

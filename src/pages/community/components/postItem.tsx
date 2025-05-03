@@ -90,7 +90,7 @@ export const PostItem: React.FC<childProps> = ({
         )}
       </CardHeader>
       <CardContent className="pb-3">
-        <p className="mb-2">{item.content}</p>
+        <p className="mb-2 line-clamp-2 break-all">{item.content}</p>
         <div>
           {item.topics &&
             item.topics.map((topic, index) => (

@@ -13,7 +13,7 @@ export default function FeaturedArticles() {
 
   return (
     <>
-      <section className="mb-12">
+      <section>
         {data && data?.length > 0 ? (
           <>
             <h2 className="text-2xl font-bold mb-6">精选文章</h2>
@@ -32,8 +32,8 @@ export default function FeaturedArticles() {
                       </Badge>
                     </div>
                   </div>
-                  <CardContent className=" relative p-6 z-10">
-                    <div className="flex items-center gap-2 mb-3">
+                  <CardContent className=" relative p-4 z-10">
+                    {/* <div className="flex items-center gap-2 mb-3">
                       <Avatar>
                         <AvatarImage
                           src={article.user.avatarUrl}
@@ -51,9 +51,11 @@ export default function FeaturedArticles() {
                           {article.user.position}
                         </p>
                       </div>
-                    </div>
-                    <h3 className="text-xl font-bold mb-2">{article.title}</h3>
-                    <p className="text-muted-foreground mb-4">
+                    </div> */}
+                    <h3 className="text-xl font-bold mb-2 line-clamp-1">
+                      {article.title}
+                    </h3>
+                    <p className="text-muted-foreground mb-4 line-clamp-2">
                       {article.description}
                     </p>
                     <div className="flex justify-between items-center">

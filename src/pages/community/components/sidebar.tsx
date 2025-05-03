@@ -19,21 +19,23 @@ export const Sidebar: React.FC<props> = ({ setTopic }) => {
         </CardHeader>
         <CardContent className="pb-3">
           <ul className="space-y-2">
-            {trend?.map((item) => (
-              <li key={item.id}>
-                <Link
-                  to="#"
-                  onClick={() => setTopic(item.name)}
-                  className="text-[#1d9bf0] hover:underline "
-                >
-                  #{item.name}
-                </Link>
-                <p className="text-xs text-muted-foreground">
-                  {item.postCount} 篇
-                </p>
-              </li>
-            ))}
+            {trend?.length &&
+              trend?.map((item) => (
+                <li key={item.id}>
+                  <Link
+                    to="#"
+                    onClick={() => setTopic(item.name)}
+                    className="text-[#1d9bf0] hover:underline "
+                  >
+                    #{item.name}
+                  </Link>
+                  <p className="text-xs text-muted-foreground">
+                    {item.postCount} 篇
+                  </p>
+                </li>
+              ))}
           </ul>
+          {trend?.length ? "" : <div>暂无流行话题</div>}
         </CardContent>
       </Card>
 
@@ -85,6 +87,7 @@ export const Sidebar: React.FC<props> = ({ setTopic }) => {
                   </Button> */}
               </div>
             ))}
+            {data?.length ? "" : <div>暂无活跃用户</div>}
           </div>
         </CardContent>
       </Card>

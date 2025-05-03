@@ -2,24 +2,20 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import FeaturedArticles from "@/pages/home/components/featured-articles";
 import TrendingOutfits from "@/pages/home/components/featured-goods";
-import CommunityHighlights from "@/pages/home/components/community-highlights";
+// import CommunityHighlights from "@/pages/home/components/community-highlights";
 import { Link } from "react-router-dom";
 import HomeCarousel from "./components/homeCarousel";
 
 export default function HomePage() {
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <HomeCarousel />
-        </div>
-        <section className="mb-6">
-          <FeaturedArticles />
-        </section>
+      <div className="flex gap-4 mb-4">
+        <HomeCarousel className="flex-1" />
+        <FeaturedArticles className=" flex-1" />
       </div>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-bold mb-6">潮流服饰</h2>
+        <h2 className="text-2xl font-bold mb-4">潮流服饰</h2>
         <TrendingOutfits />
       </section>
 
@@ -28,7 +24,7 @@ export default function HomePage() {
         <CommunityHighlights />
       </section> */}
 
-      <section className="grid md:grid-cols-3 gap-6 mb-6">
+      <section className="grid md:grid-cols-3 gap-6">
         <Card>
           <CardContent className="p-6">
             <h3 className="text-xl font-bold mb-2">穿搭分享</h3>

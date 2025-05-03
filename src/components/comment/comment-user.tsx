@@ -55,7 +55,7 @@ export const CommentUser: React.FC<ChildProps> = ({
       </Avatar>
 
       {/* 评论主体 */}
-      <div className="flex-1 space-y-2">
+      <div className="flex-1 space-y-2 w-full">
         {/* 用户名、日期与删除操作 */}
         <div className="flex items-center justify-between">
           <div>
@@ -102,10 +102,10 @@ export const CommentUser: React.FC<ChildProps> = ({
         </div>
 
         {/* 评论内容 */}
-        <p className="text-sm">
+        <div className="text-sm">
           {comment.replyTo && <span>回复 {comment.replyTo}：</span>}
-          {comment.content}
-        </p>
+          <div className="break-all">{comment.content}</div>
+        </div>
 
         {/* 点赞与回复操作 */}
         <div className="flex items-center gap-2">
