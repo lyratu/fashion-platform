@@ -10,6 +10,7 @@ import { useNavigate, useParams } from "react-router";
 import { useDoCollect, useDoLike, useGetOutfitsDet } from "@/services/outfits";
 import { toast } from "sonner";
 import dateTool from "@/utils/dateTool";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function ArticlePage() {
   const { id } = useParams();
@@ -22,11 +23,20 @@ export default function ArticlePage() {
   if (isError) navigate("/error", { replace: true });
   return (
     <>
-      <div className="container max-w-screen-xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Main Content - 8 columns on desktop */}
+      <div className="container max-w-screen-xl mx-auto px-4 py-8">
         {info ? (
-          <div className="lg:col-span-8">
-            <div className="space-y-8">
+          <div className="grid grid-cols-2 gap-8 container mx-auto">
+            <div>
+              {/* Featured Image */}
+              <div className="relative overflow-hidden rounded-lg h-full bg-[#f7f7f7] flex items-center">
+                <img
+                  src={info.coverImage || "/placeholder.svg"}
+                  alt={info.title}
+                  className="w-full object-cover max-h-[calc(100vh-12.5rem)]"
+                />
+              </div>
+            </div>
+            <ScrollArea className="max-h-[calc(100vh-12.5rem)] pr-4">
               {/* Article Header */}
               <div className="space-y-4">
                 <Button
@@ -42,34 +52,17 @@ export default function ArticlePage() {
                 <h1 className="text-2xl font-bold tracking-tight lg:text-4xl">
                   {info.title}
                 </h1>
-                <Badge
-                  variant="outline"
-                  className="bg-primary/10 hover:bg-primary/20"
-                >
-                  {info.categoryText.name}
-                </Badge>
+                <div>{info.description}</div>
+                {info.categoryText?.name ? (
+                  <Badge
+                    variant="outline"
+                    className="bg-primary/10 hover:bg-primary/20"
+                  >
+                    {info.categoryText?.name}
+                  </Badge>
+                ) : null}
 
                 <div className="flex items-center justify-between">
-                  {/* <div className="flex items-center gap-2">
-                    <Avatar>
-                      <AvatarImage
-                        src={info.user.avatarUrl}
-                        alt={info.user.nickName}
-                      />
-                      <AvatarFallback>
-                        {info.user.nickName.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="text-sm font-medium">
-                        {info.user.nickName}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {info.user.position}
-                      </p>
-                    </div>
-                  </div> */}
-
                   <div className="flex items-center gap-2 text-sm text-muted-foreground select-none">
                     <Calendar className="h-4 w-4" />
                     <span>
@@ -79,17 +72,8 @@ export default function ArticlePage() {
                 </div>
               </div>
 
-              {/* Featured Image */}
-              <div className="relative aspect-video overflow-hidden rounded-lg">
-                <img
-                  src={info.coverImage || "/placeholder.svg"}
-                  alt={info.title}
-                  className="h-full"
-                />
-              </div>
-
               {/* Article Content */}
-              <div className="richText prose prose-lg dark:prose-invert max-w-none">
+              <div className="richText prose prose-lg dark:prose-invert max-w-none pb-4">
                 <div
                   dangerouslySetInnerHTML={{
                     __html: info.content as string,
@@ -170,30 +154,22 @@ export default function ArticlePage() {
                 </div>
               </div>
 
-              {/* 作者卡片 */}
-              {/* <AuthorCard author={article.author} /> */}
-
               {/* Comments Section */}
               <CommentSection userId={info.authorId} />
-            </div>
+            </ScrollArea>
           </div>
         ) : (
           ""
         )}
 
-        {/* Sidebar - 4 columns on desktop */}
-        <div className="lg:col-span-4 space-y-8">
-          {/* Sticky sidebar content */}
+        {/* 相关推荐 */}
+        {/* <div className="lg:col-span-4 space-y-8">
           <div className="sticky top-20 space-y-8">
-            {/* Table of Contents */}
-            {/* <ArticleTableOfContents toc={article.tableOfContents} /> */}
-
-            {/* Related Articles */}
             <div className="space-y-4">
               <RelatedArticles />
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );

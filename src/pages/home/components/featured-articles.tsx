@@ -16,7 +16,9 @@ export default function FeaturedArticles({ className }: props) {
       {data?.map((article) => (
         <Card
           key={article.id}
-          className={`overflow-hidden cursor-pointer h-fit ${data?.length > 2 ? "h-full" : ""}`}
+          className={`overflow-hidden cursor-pointer h-fit ${
+            data?.length > 2 ? "h-full" : ""
+          }`}
           onClick={() => navigate(`/outfits/${article.id}`)}
         >
           <div className="relative z-0">
@@ -36,9 +38,7 @@ export default function FeaturedArticles({ className }: props) {
             <h3 className="text-sm xl:text-md font-bold mb-2 line-clamp-1">
               {article.title}
             </h3>
-            <span className="text-xs hidden 2xl:block line-clamp-2">
-              {article.description}
-            </span>
+            <span className="text-xs  line-clamp-2">{article.description}</span>
             {/* <div className="flex justify-between items-center">
               <span className="text-xs"></span>
               <Link
