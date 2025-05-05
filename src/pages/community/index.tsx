@@ -128,7 +128,7 @@ export default function CommunityPage() {
         </div>
 
         {/* 侧边功能区 */}
-        <Sidebar setTopic={setTopicName} />
+        <Sidebar setTopic={setTopicName}/>
       </div>
     </div>
   );
