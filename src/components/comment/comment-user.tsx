@@ -50,7 +50,7 @@ export const CommentUser: React.FC<ChildProps> = ({
     <div className={`flex gap-4 ${className || ""}`}>
       {/* 头像 */}
       <Avatar>
-        <AvatarImage src={comment.user.avatarUrl} alt={comment.user.nickName} />
+        <AvatarImage src={comment.user.avatarUrl} alt={comment.user.nickName} className=" object-contain"/>
         <AvatarFallback>{comment.user.nickName.charAt(0)}</AvatarFallback>
       </Avatar>
 

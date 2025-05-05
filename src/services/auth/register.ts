@@ -14,11 +14,10 @@ export const useRegister = () => {
   const {
     error,
     isPending: regLoading,
-    data,
     mutateAsync: registerFn,
   } = useMutation({
     mutationFn: register,
   });
 
-  return { register: registerFn, regLoading, data, error };
+  return { register: registerFn, regLoading, error };
 };

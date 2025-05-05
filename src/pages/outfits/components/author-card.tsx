@@ -19,7 +19,7 @@ export function AuthorCard({ author }: AuthorCardProps) {
       <CardContent className="p-6">
         <div className="flex flex-col sm:flex-row gap-4 items-center sm:items-start">
           <Avatar className="h-20 w-20">
-            <AvatarImage src={author.avatar} alt={author.name} />
+            <AvatarImage src={author.avatar} alt={author.name}  className=" object-contain"/>
             <AvatarFallback className="text-2xl">
               {author.name.charAt(0)}
             </AvatarFallback>

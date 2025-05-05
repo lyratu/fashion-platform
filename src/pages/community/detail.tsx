@@ -119,6 +119,7 @@ export default function PostDetailPage() {
                     <AvatarImage
                       src={post.user?.avatarUrl}
                       alt={post.user?.nickName}
+                      className=" object-contain"
                     />
                     <AvatarFallback>
                       {post.user?.nickName.charAt(0)}
@@ -237,9 +238,9 @@ export default function PostDetailPage() {
         </>
       )}
       <Dialog open={!!currentImg} onOpenChange={() => setCurrentImg("")}>
-        <DialogContent className=" !max-w-5xl">
+        <DialogContent className="!max-w-3xl">
           <div className="p-4">
-            <img src={currentImg} className="w-full h-auto" />
+            <img src={currentImg} className="h-full w-auto" />
           </div>
         </DialogContent>
       </Dialog>

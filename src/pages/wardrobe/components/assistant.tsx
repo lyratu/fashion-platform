@@ -112,6 +112,7 @@ export default function Assistant({ className }: AssistantProps) {
                       <AvatarImage
                         src="/placeholder.svg?height=32&width=32"
                         alt="AI"
+                        className=" object-contain"
                       />
                       <AvatarFallback>AI</AvatarFallback>
                     </Avatar>

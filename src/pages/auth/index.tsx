@@ -45,7 +45,7 @@ const formSchema = z.object({
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(false);
   const { login, logLoading } = useLogin();
-  const { register, regLoading, data } = useRegister();
+  const { register, regLoading } = useRegister();
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -61,16 +61,14 @@ export default function LoginPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!isLogin) {
       if (values.rePassword !== values.password)
-        form.setError("rePassword", {
+        return form.setError("rePassword", {
           type: "manual",
           message: "两次密码输入不一致",
         });
       await register(values);
-      if (data?.status == 200) {
-        setIsLogin(true);
-        form.reset();
-        toast.success("注册成功，请登录~");
-      }
+      setIsLogin(true);
+      form.reset();
+      toast.success("注册成功，请登录~");
     } else await login(values);
   }
   return (

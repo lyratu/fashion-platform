@@ -128,8 +128,11 @@ export const MyClothesPage = () => {
           <div className=" grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
             {data?.pages.map((page) =>
               page.list.map((item) => (
-                <div className=" border rounded-sm h-fit">
-                  <img src={item.photo} />
+                <div className=" border rounded-sm ">
+                  <img
+                    src={item.photo}
+                    className=" object-contain h-64 w-full"
+                  />
                   <Separator />
                   <div className=" space-y-2 p-2">
                     {item.remark ? (

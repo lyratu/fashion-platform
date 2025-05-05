@@ -51,7 +51,11 @@ export default function OtherProfile() {
         </div>
         <div className=" flex justify-center">
           <Avatar className="rounded-full border w-35 h-35 object-cover object-center">
-            <AvatarImage src={data.avatarUrl} alt={data.nickName} />
+            <AvatarImage
+              src={data.avatarUrl}
+              alt={data.nickName}
+              className=" object-contain"
+            />
             <AvatarFallback>{data.nickName.charAt(0)}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col ml-12 space-y-1.5">

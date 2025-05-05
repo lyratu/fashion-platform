@@ -52,7 +52,7 @@ export const PostItem: React.FC<childProps> = ({
                 });
               }}
             >
-              <AvatarImage src={item.user.avatarUrl} alt={item.user.nickName} />
+              <AvatarImage src={item.user.avatarUrl} alt={item.user.nickName} className=" object-contain"/>
               <AvatarFallback>{item.user.nickName.charAt(0)}</AvatarFallback>
             </Avatar>
             <div className="flex-1">
@@ -94,13 +94,12 @@ export const PostItem: React.FC<childProps> = ({
         <div>
           {item.topics &&
             item.topics.map((topic, index) => (
-              <Link
+              <span
                 key={index}
-                to={`/community/tag/${topic.name.replace("#", "")}`}
-                className="text-[#1d9bf0] text-sm hover:underline mr-2"
+                className="text-[#1d9bf0] text-sm mr-2"
               >
                 #{topic.name}
-              </Link>
+              </span>
             ))}
         </div>
         <div className=" grid md:grid-cols-2 gap-2 xl:grid-cols-3 mt-2">

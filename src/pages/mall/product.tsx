@@ -123,7 +123,7 @@ export default function ProductDetailPage() {
                   "/placeholder.svg"
                 }
                 alt={data?.title}
-                className="object-cover object-top h-full"
+                className=" object-contain  h-full"
               />
             </div>
             <div className="flex gap-2 overflow-auto pb-2">

@@ -38,7 +38,11 @@ export default function FeaturedArticles({ className }: props) {
             <h3 className="text-sm xl:text-md font-bold mb-2 line-clamp-1">
               {article.title}
             </h3>
-            <span className="text-xs  line-clamp-2">{article.description}</span>
+            <div className=" hidden xl:block">
+              <span className="text-xs line-clamp-2">
+                {article.description}
+              </span>
+            </div>
             {/* <div className="flex justify-between items-center">
               <span className="text-xs"></span>
               <Link

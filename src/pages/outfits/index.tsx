@@ -13,7 +13,6 @@ import { Input } from "@/components/ui/input";
 import { Loader } from "lucide-react";
 
 export default function ArticlesPage() {
-  const loadRef = useRef(null);
   const { data: types } = useGetDictInfo(["category"]);
   const [category, setCategory] = useState("0");
   const [inputText, setInputText] = useState("");
@@ -22,17 +21,14 @@ export default function ArticlesPage() {
     useGetOutfitsPage({
       order: "createTime",
       page: 1,
-      size: 20,
+      size: 4,
       sort: "desc",
       title: searchText,
       category,
     });
-  console.log(
-    "%c [ data ]-18",
-    "font-size:13px; background:pink; color:#bf2c9f;",
-    data
-  );
 
+
+  const loadRef = useRef(null);
   UseScrollToBottom(loadRef, () => {
     if (hasNextPage && !isFetchingNextPage) fetchNextPage();
   });

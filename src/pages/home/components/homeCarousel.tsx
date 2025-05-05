@@ -24,14 +24,14 @@ export default function HomeCarousel({ className }: props) {
       ) : (
         <Carousel
           className={`${className} hidden md:block`}
-          // opts={{
-          //   loop: true,
-          // }}
-          // plugins={[
-          //   Autoplay({
-          //     delay: 5000,
-          //   }),
-          // ]}
+          opts={{
+            loop: true,
+          }}
+          plugins={[
+            Autoplay({
+              delay: 5000,
+            }),
+          ]}
         >
           <CarouselContent>
             {data?.map((_, index) => (
@@ -56,9 +56,9 @@ export default function HomeCarousel({ className }: props) {
                 </Card>
               </CarouselItem>
             ))}
-            <CarouselPrevious className="left-6 " />
-            <CarouselNext className="right-6 " />
           </CarouselContent>
+          <CarouselPrevious className="left-6 " />
+          <CarouselNext className="right-6 " />
         </Carousel>
       )}
     </>

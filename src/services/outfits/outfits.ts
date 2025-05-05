@@ -1,6 +1,6 @@
 import axios from "@/lib/axios";
 import { outfits } from "@/types/outfits";
-import { pageQuery } from "@/types/pageQuery";
+import { pageQuery, pageQueryResponse } from "@/types/pageQuery";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 export const getOutfits = async (type: number) => {
@@ -29,14 +29,9 @@ export const useGetOutfitsFea = () => {
   });
 };
 
-type pageOutfits = {
-  list: Array<outfits>;
-  total: number;
-};
-
 export const getOutfitsPage = async (data: pageQuery) => {
   if (data.category == "0") delete data.category;
-  const response = await axios.post<pageOutfits>(
+  const response = await axios.post<pageQueryResponse<outfits>>(
     `/app/outfits/info/page`,
     data
   );
@@ -44,7 +39,7 @@ export const getOutfitsPage = async (data: pageQuery) => {
 };
 
 export const useGetOutfitsPage = (data: pageQuery) => {
-  return useInfiniteQuery<pageOutfits, Error>({
+  return useInfiniteQuery<pageQueryResponse<outfits>, Error>({
     queryKey: ["outfitsPage", data],
     queryFn: ({ pageParam }) =>
       getOutfitsPage({ ...data, page: pageParam as number }),
@@ -54,7 +49,7 @@ export const useGetOutfitsPage = (data: pageQuery) => {
         (acc, page) => acc + page.list.length,
         0
       );
-      if (loadedArticles < lastPage.total) {
+      if (loadedArticles < lastPage.pagination.total) {
         return allPages.length + 1;
       }
       return undefined;

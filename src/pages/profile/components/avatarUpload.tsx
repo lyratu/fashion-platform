@@ -141,7 +141,7 @@ export function AvatarUpload({
     <div className="relative inline-block">
       <Avatar className={sizeClasses[size]}>
         <AvatarImage
-          className=" object-cover object-center"
+          className=" object-contain"
           src={currentAvatar}
           alt={username}
         />

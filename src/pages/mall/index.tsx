@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Heart, ShoppingCart } from "lucide-react";
+import { Heart, Loader, ShoppingCart } from "lucide-react";
 import { useGetGoods } from "@/services/mall";
 import { useGetDictInfo } from "@/services/dict";
 import { useCartQuantityStore } from "@/stores/cart";
@@ -11,18 +11,18 @@ import { useAddCard } from "@/services/mall/cart";
 import { goods } from "@/types/goods";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
-
+import UseScrollToBottom from "@/hooks/use-scroll";
 export default function MallPage() {
   const { data: types } = useGetDictInfo(["goodsType"]);
   const [type, setType] = useState("0");
   const [searchText, setSearchText] = useState("");
   const [inputText, setInputText] = useState("");
-  const { data } = useGetGoods({
+  const { data, isFetchingNextPage, hasNextPage, fetchNextPage } = useGetGoods({
     order: "createTime",
     page: 1,
-    size: 6,
+    size: 12,
     type,
     title: searchText,
     sort: "desc",
@@ -30,6 +30,12 @@ export default function MallPage() {
   const queryClient = useQueryClient();
 
   const { addCardFn } = useAddCard();
+
+  const loadRef = useRef(null);
+  /* 触底刷新list */
+  UseScrollToBottom(loadRef, () => {
+    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+  });
 
   const { incrementQuantity, getTotalQuantity } = useCartQuantityStore();
   const totalQuantity = getTotalQuantity();
@@ -180,6 +186,16 @@ export default function MallPage() {
                 </Card>
               ))
             )}
+            <div ref={loadRef}>
+              {isFetchingNextPage ? (
+                <div className="flex items-center justify-center text-sm">
+                  <Loader className="animate-spin" />
+                  <span>加载中...</span>
+                </div>
+              ) : !hasNextPage ? (
+                <div className="text-center text-gray-500"></div>
+              ) : null}
+            </div>
           </div>
         </TabsContent>
 

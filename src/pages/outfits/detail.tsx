@@ -49,7 +49,7 @@ export default function ArticlePage() {
                   返回
                 </Button>
 
-                <h1 className="text-2xl font-bold tracking-tight lg:text-4xl">
+                <h1 className="text-2xl font-bold tracking-tight lg:text-3xl">
                   {info.title}
                 </h1>
                 <div>{info.description}</div>

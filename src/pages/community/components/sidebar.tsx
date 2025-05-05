@@ -57,7 +57,7 @@ export const Sidebar: React.FC<props> = ({ setTopic }) => {
                     })
                   }
                 >
-                  <AvatarImage src={info.user.avatarUrl} alt="Jessica T." />
+                  <AvatarImage src={info.user.avatarUrl} alt="Jessica T."  className=" object-contain"/>
                   <AvatarFallback>
                     {info.user.nickName.charAt(0)}
                   </AvatarFallback>

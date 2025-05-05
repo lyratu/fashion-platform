@@ -112,7 +112,11 @@ export const PostForm: React.FC<childProps> = ({ user, handleSubmit }) => {
       <CardContent>
         <div className="flex gap-4">
           <Avatar>
-            <AvatarImage src={user?.avatarUrl} alt="Your avatar" />
+            <AvatarImage
+              src={user?.avatarUrl}
+              alt="Your avatar"
+              className=" object-contain"
+            />
             <AvatarFallback>YA</AvatarFallback>
           </Avatar>
           <div className="flex-1">

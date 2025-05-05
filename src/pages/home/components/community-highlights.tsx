@@ -28,6 +28,7 @@ export default function CommunityHighlights() {
                 <AvatarImage
                   src={post.user.avatarUrl}
                   alt={post.user.avatarUrl}
+                  className=" object-contain"
                 />
                 <AvatarFallback>{post.user.nickName?.charAt(0)}</AvatarFallback>
               </Avatar>
