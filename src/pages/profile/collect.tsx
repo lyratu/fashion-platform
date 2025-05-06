@@ -57,7 +57,7 @@ export const CollectPage = () => {
               {wishlist?.pages.map((pages) =>
                 pages.list.map((item) => (
                   <div key={item.id} className="relative group">
-                    <div className="relative h-32 aspect-[1/1] overflow-hidden rounded-md border">
+                    <div className="relative mx-auto h-32 aspect-[1/1] overflow-hidden rounded-md border">
                       <img
                         src={item.goods.mainImage || "/placeholder.svg"}
                         alt={item.goods.title}
@@ -124,11 +124,11 @@ export const CollectPage = () => {
               {outfits?.pages.map((pages) =>
                 pages.list.map((item) => (
                   <div key={item.id} className="relative group">
-                    <div className="relative h-32 aspect-[1/1] overflow-hidden rounded-md border">
+                    <div className="relative mx-auto h-32 aspect-[1/1] overflow-hidden rounded-md border">
                       <img
                         src={item.coverImage || "/placeholder.svg"}
                         alt={item.title}
-                        className="object-cover object-top"
+                        className="object-contain w-full object-top"
                       />
                       {/* {!item.inStock && (
                     <div className="absolute inset-0 bg-background/80 flex items-center justify-center">

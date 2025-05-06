@@ -14,7 +14,7 @@ export default function TrendingGoods() {
           key={outfit.id}
           className="overflow-hidden cursor-pointer"
           onClick={() => {
-            navigate("/mall/product/1");
+            navigate(`/mall/product/${outfit.id}`);
           }}
         >
           <div className="relative w-full">
