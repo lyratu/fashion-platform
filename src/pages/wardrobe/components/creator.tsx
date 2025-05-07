@@ -262,14 +262,6 @@ export default function Creator({ className }: AssistantProps) {
   const saveOutfit = async () => {
     const canvas = canvasRef.current;
     if (canvas) {
-      // const json = canvas.toJSON([
-      //   "customId",
-      //   "customCategory",
-      //   "customRemark",
-      //   "customPictureUrl",
-      // ]);
-      // console.log("保存穿搭 (Fabric JSON):", JSON.stringify(json, null, 2));
-      // console.log("[ clothes ] >", clothes);
       const config = JSON.stringify(canvas.toJSON());
       const blob = await canvas.toBlob({
         format: "png",

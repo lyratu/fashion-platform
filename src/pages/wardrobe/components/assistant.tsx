@@ -61,23 +61,9 @@ export default function Assistant({ className }: AssistantProps) {
     msgList.push(userMessage);
     setChatMessages([...chatMessages, ...msgList]);
     setInputMessage("");
-    const res = await sendFn(
-      [
-        ...msgList,
-        // {
-        //   role: "assistant",
-        //   content: [
-        //     {
-        //       type: "text",
-        //       text: "一个时装助手，不是图片检测，根据用户对话的内容，以下一条内容为重点,如果存在图片，以内容中的图片作为参考，注意你应该回复给user",
-        //     },
-        //   ],
-        // },
-      ],
-      {
-        onError: (e) => toast.error(e.message),
-      }
-    );
+    const res = await sendFn([...msgList], {
+      onError: (e) => toast.error(e.message),
+    });
     const data: { role: "user" | "assistant"; content: string } =
       res.choices[0].message;
     const assistantMessage: message = {
