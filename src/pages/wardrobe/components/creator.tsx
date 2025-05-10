@@ -319,8 +319,8 @@ export default function Creator({ className }: AssistantProps) {
   return (
     // 确保容器尺寸根据你的网格布局正确设置
     <div className={`${className}`}>
-      <Card className="h-full">
-        <CardContent className="p-6 h-full flex flex-col">
+      <Card className=" aspect-[4/3] sticky top-20">
+        <CardContent className="p-6 flex flex-col h-full">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold">穿搭编辑器</h2>
             <div className="flex gap-2">
