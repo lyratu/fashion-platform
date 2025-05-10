@@ -44,7 +44,7 @@ export default function TrendingGoods() {
             <h3 className="font-medium">{outfit.title}</h3>
             <div className="flex justify-between text-xs text-muted-foreground mt-1">
               <span>{outfit.collectCount} 收藏</span>
-              <span>{outfit.sales} 已售</span>
+              {/* <span>{outfit.sales} 已售</span> */}
             </div>
           </CardContent>
         </Card>
