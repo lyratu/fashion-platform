@@ -115,9 +115,6 @@ export const Sidebar: React.FC<props> = ({ setTopic }) => {
               <li>
                 <strong>专注领域</strong> - 讨论需围绕时尚主题
               </li>
-              <li>
-                <strong>共建安全环境</strong> - 发现违规内容立即举报
-              </li>
             </ul>
           </CardContent>
         </Card>

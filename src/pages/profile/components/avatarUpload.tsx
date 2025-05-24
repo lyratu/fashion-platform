@@ -18,6 +18,8 @@ import { toast } from "sonner";
 import { useUpload } from "@/services/base";
 import { useUpdateUser } from "@/services/profile";
 import { getFileFromDiv } from "@/utils/fileFromDiv";
+import { useAuthStore } from "@/stores/auth";
+import { User } from "@/types/user";
 
 interface AvatarUploadProps {
   currentAvatar?: string;
@@ -43,7 +45,8 @@ export function AvatarUpload({
 
   const { uploadFn } = useUpload();
   const { updateUserFn } = useUpdateUser();
-
+  const user = useAuthStore((state) => state.user);
+  const setUser = useAuthStore((state) => state.setUser);
   // Size mapping for avatar
   const sizeClasses = {
     sm: "h-16 w-16",
@@ -120,6 +123,10 @@ export function AvatarUpload({
         const data = await uploadFn(form);
         if (onAvatarChange) onAvatarChange(data);
         await updateUserFn({ avatarUrl: data });
+        if (user) {
+          user.avatarUrl = data;
+          setUser(user);
+        }
       } catch (e) {
         toast.error(e as string);
       }

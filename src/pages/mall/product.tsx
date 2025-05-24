@@ -306,10 +306,10 @@ export default function ProductDetailPage() {
                 <Truck className="h-4 w-4" />
                 <span>订单满200元免配送费</span>
               </div>
-              <div className="flex items-center gap-2 text-sm">
+              {/* <div className="flex items-center gap-2 text-sm">
                 <RotateCcw className="h-4 w-4" />
                 <span>7天无理由退款</span>
-              </div>
+              </div> */}
               <div className="flex items-center gap-2 text-sm">
                 <Shield className="h-4 w-4" />
                 <span>1年质量保证</span>

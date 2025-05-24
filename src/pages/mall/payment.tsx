@@ -31,7 +31,7 @@ const Payment = () => {
   const { confirmPaymentFn } = useConfirmPayment();
   setTimeout(() => {
     setIsComplete(true);
-  }, 5000);
+  }, 1000);
 
   // 确认支付
   const handleConfirm = async () => {

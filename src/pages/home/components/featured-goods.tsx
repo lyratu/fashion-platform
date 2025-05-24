@@ -24,7 +24,7 @@ export default function TrendingGoods() {
               className="object-cover object-top aspect-[1/1] w-full"
             />
             <div className="absolute top-2 right-2 flex gap-2">
-              <Button
+              {/* <Button
                 size="icon"
                 variant="secondary"
                 className="h-8 w-8 rounded-full"
@@ -37,7 +37,7 @@ export default function TrendingGoods() {
                 className="h-8 w-8 rounded-full"
               >
                 <ShoppingBag className="h-4 w-4" />
-              </Button>
+              </Button> */}
             </div>
           </div>
           <CardContent className="p-3">

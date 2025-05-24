@@ -96,18 +96,18 @@ export default function OtherProfile() {
             <div className=" grid gap-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2">
               {posts?.pages.map((page) =>
                 page.list.map((item) => (
-                  <div key={item.id} className=" border rounded-sm p-2">
+                  <div
+                    key={item.id}
+                    className=" border rounded-sm p-2 cursor-pointer"
+                    onClick={() => navigate(`/community/post/${item.id}`)}
+                  >
                     {item.images.length > 0 ? (
                       <img
                         src={item.images[0]}
-                        onClick={() => navigate(`/community/post/${item.id}`)}
-                        className=" cursor-pointer border rounded w-full aspect-square object-cover"
+                        className="border rounded w-full aspect-square object-cover"
                       />
                     ) : null}
-                    <div
-                      onClick={() => navigate(`/community/post/${item.id}`)}
-                      className={` py-2 cursor-pointer`}
-                    >
+                    <div className={` py-2 `}>
                       <span className=" line-clamp-2 overflow-hidden text-ellipsis">
                         {item.content}
                       </span>

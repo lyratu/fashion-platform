@@ -83,6 +83,7 @@ export const useGetPostList = (data: pageQuery) => {
     queryFn: ({ pageParam }) =>
       getPostList({ ...data, page: pageParam as number }),
     initialPageParam: 1,
+    staleTime: 0,
     getNextPageParam: (lastPage, allPages) => {
       const loadedArticles = allPages.reduce(
         (acc, page) => acc + page.list.length,

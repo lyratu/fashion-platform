@@ -1,7 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-const apiKey = "2a44656b116e4beb868faad52d4190b6.1zDgdBIEm42ZfPn2";
-const token = localStorage.getItem("token");
+const apiKey = "2a44656b116e4beb***********6.1zDgdBIEm42ZfPn2";
 const http = axios.create({
   baseURL: "https://open.bigmodel.cn/api/paas/v4/chat/completions",
   headers: {
@@ -10,6 +9,14 @@ const http = axios.create({
   },
   timeout: 1000 * 10,
 });
+
+export const send = async (messages: message[]) => {
+  const response = await http.post("", {
+    model: "GLM-4V-PLUS",
+    messages,
+  });
+  return response.data;
+};
 
 interface TextContent {
   type: "text";
@@ -27,14 +34,6 @@ export interface message {
   role: "user" | "assistant";
   content: ContentItem[];
 }
-export const send = async (messages: message[]) => {
-  const response = await http.post("", {
-    model: "GLM-4V-PLUS",
-    messages,
-    // request_id: token?.substring(0, 8),
-  });
-  return response.data;
-};
 
 export const useSend = () => {
   const {
