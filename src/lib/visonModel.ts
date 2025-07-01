@@ -1,23 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-const apiKey = "2a44656b116e4beb***********6.1zDgdBIEm42ZfPn2";
-const http = axios.create({
-  baseURL: "https://open.bigmodel.cn/api/paas/v4/chat/completions",
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${apiKey}`,
-  },
-  timeout: 1000 * 10,
-});
-
-export const send = async (messages: message[]) => {
-  const response = await http.post("", {
-    model: "GLM-4V-PLUS",
-    messages,
-  });
-  return response.data;
-};
-
+const apiKey = import.meta.env.VITE_GLM_API_KEY;
+const baseURL = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
 interface TextContent {
   type: "text";
   text: string;
@@ -29,11 +12,32 @@ interface ImageUrlContent {
     url: string;
   };
 }
+
 type ContentItem = TextContent | ImageUrlContent;
 export interface message {
   role: "user" | "assistant";
   content: ContentItem[];
 }
+
+export const send = async (messages: message[]) => {
+  const res = await fetch(baseURL, {
+    headers: {
+      "content-type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    method: "POST",
+    body: JSON.stringify({
+      model: "GLM-4V-PLUS",
+      messages,
+      stream: true,
+    }),
+  });
+  if (!res.ok) {
+    new Error("网络请求失败，请稍后再试,status: " + res.status);
+    return null;
+  }
+  return res.body;
+};
 
 export const useSend = () => {
   const {

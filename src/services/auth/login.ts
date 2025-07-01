@@ -35,6 +35,7 @@ export const useLogin = () => {
       return { token, userInfo };
     },
     onSuccess: (data) => {
+      queryClient.removeQueries({ queryKey: ["user"] });
       setUser(data.userInfo);
       setToken(data.token);
       queryClient.setQueryData(["user"], data.userInfo);
@@ -43,7 +44,6 @@ export const useLogin = () => {
     onError: () => {
       // 登录失败时清理状态
       localStorage.removeItem("token");
-      queryClient.removeQueries({ queryKey: ["user"] });
       setUser(null);
     },
   });

@@ -9,6 +9,7 @@ import { message, useSend } from "@/lib/visonModel";
 import Markdown from "markdown-to-jsx";
 import { UseCanvasStore } from "@/stores/canvasStore";
 import { toast } from "sonner";
+import { log } from "console";
 interface AssistantProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
@@ -31,6 +32,8 @@ export default function Assistant({ className }: AssistantProps) {
       ],
     },
   ]);
+  const typingRef = useRef<{ buffer: string; index: number; full: string }>({ buffer: "", index: 0, full: "" });
+  const typingFrame = useRef<number | null>(null);
   useEffect(() => {
     if (chatEndRef.current) {
       chatEndRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -46,9 +49,8 @@ export default function Assistant({ className }: AssistantProps) {
 
   // Handle sending a message to the AI assistant
   const handleSendMessage = async () => {
-    console.log("[ canvasObjects ] >", canvasBase64Image);
     if (!inputMessage.trim()) return;
-    const msgList = [];
+
     const userMessage: message = {
       role: "user",
       content: [{ type: "text", text: inputMessage }],
@@ -58,20 +60,96 @@ export default function Assistant({ className }: AssistantProps) {
         type: "image_url",
         image_url: { url: canvasBase64Image as string },
       });
-    msgList.push(userMessage);
-    setChatMessages([...chatMessages, ...msgList]);
+
+    // 先加入用户消息
+    setChatMessages((prev) => [...prev, userMessage]);
     setInputMessage("");
-    const res = await sendFn([...msgList], {
-      onError: (e) => toast.error(e.message),
-    });
-    const data: { role: "user" | "assistant"; content: string } =
-      res.choices[0].message;
-    const assistantMessage: message = {
-      role: data.role,
-      content: [{ type: "text", text: data.content }],
-    };
-    msgList.push(assistantMessage);
-    setChatMessages([...chatMessages, ...msgList]);
+
+    // 先插入一条空的 assistant 消息用于打字机效果
+    setChatMessages((prev) => [
+      ...prev,
+      {
+        role: "assistant",
+        content: [{ type: "text" as const, text: "" }],
+      },
+    ]);
+
+    try {
+      const msgList = [
+        ...chatMessages,
+        userMessage,
+      ];
+      const res = await sendFn(msgList, {
+        onError: (e) => toast.error(e.message),
+      });
+      const reader = res?.getReader();
+      if (!reader) throw new Error("无法获取流");
+      let done = false;
+      let fullText = "";
+      // 打字机动画
+      const typeWriter = () => {
+        if (typingRef.current.buffer.length > 0) {
+          // 每帧输出一个字符
+          typingRef.current.index++;
+          fullText += typingRef.current.buffer[0];
+          typingRef.current.buffer = typingRef.current.buffer.slice(1);
+          setChatMessages((prev) => {
+            const last = prev[prev.length - 1];
+            if (last.role === "assistant") {
+              // 只更新最后一条 assistant 消息
+              const updated = {
+                ...last,
+                content: [{ type: "text" as const, text: fullText }],
+              };
+              return [...prev.slice(0, -1), updated];
+            }
+            return prev;
+          });
+        }
+        if (typingRef.current.buffer.length > 0 || !done) {
+          typingFrame.current = requestAnimationFrame(typeWriter);
+        } else {
+          typingFrame.current = null;
+        }
+      };
+      // 读取流
+      while (!done) {
+        const { value, done: streamDone } = await reader.read();
+        done = streamDone;
+        if (value) {
+          const chunk = new TextDecoder("utf-8").decode(value);
+          // 处理多行 data: {json}\n
+          const lines = chunk.split(/\r?\n/).filter(Boolean);
+          for (const line of lines) {
+            if (line.startsWith("data: ")) {
+              const jsonStr = line.replace("data: ", "").trim();
+              if (!jsonStr || jsonStr === "[DONE]") continue;
+              try {
+                const data = JSON.parse(jsonStr);
+                const deltaContent = data.choices?.[0]?.delta?.content;
+                if (typeof deltaContent === "string") {
+                  typingRef.current.buffer += deltaContent;
+                  // 启动打字机动画
+                  if (!typingFrame.current) {
+                    typingRef.current.index = 0;
+                    typingFrame.current.full = fullText;
+                    typingFrame.current = requestAnimationFrame(typeWriter);
+                  }
+                }
+              } catch (e) {
+                // 忽略解析失败的行
+              }
+            }
+          }
+        }
+      }
+      // 收尾：确保剩余 buffer 输出
+      if (typingRef.current.buffer.length > 0 && !typingFrame.current) {
+        typingFrame.current = requestAnimationFrame(typeWriter);
+      }
+    } catch {
+      toast.error("处理流式响应时出错，请稍后再试。");
+    }
   };
 
   return (
@@ -110,17 +188,13 @@ export default function Assistant({ className }: AssistantProps) {
                         : "bg-muted"
                     }`}
                   >
-                    {message.content.map((item, index) =>
-                      item.type == "text" ? (
+                    {message.content.map((item, idx) =>
+                      item.type === "text" ? (
                         <Markdown
-                          key={index}
-                          // Markdown 文本作为 children 或 markdown prop 传入
+                          key={idx}
                           children={item.text}
-                          // 或者 markdown={markdownText}
-                          // 配置选项
                           options={{
-                            forceBlock: false, // 根据需要设置是否强制所有内容为块级元素
-                            // 其他选项...
+                            forceBlock: false,
                           }}
                         />
                       ) : null

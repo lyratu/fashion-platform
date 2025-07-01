@@ -76,7 +76,7 @@ export default function NavBar() {
       <footer className="border-t py-6 md:py-0">
         <div className="mx-auto container flex flex-col items-center justify-between gap-4 md:h-16 md:flex-row">
           <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-            © 2025 武汉匿迹科技有限公司 版权所有
+            Copyright © LYRATU | 鄂ICP备2025113993号
           </p>
           {/* <div className="flex gap-4">
             <Link

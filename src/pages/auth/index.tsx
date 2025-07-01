@@ -180,7 +180,7 @@ export default function LoginPage() {
                   />
                 )}
 
-                {isLogin ? (
+                {/* {isLogin ? (
                   <div className="flex items-center justify-between">
                     <FormField
                       control={form.control}
@@ -202,7 +202,8 @@ export default function LoginPage() {
                   </div>
                 ) : (
                   ""
-                )}
+                )} */}
+
                 <Button
                   type="submit"
                   className="w-full"

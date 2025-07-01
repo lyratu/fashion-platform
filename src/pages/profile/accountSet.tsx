@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { useUpdatePassword } from "@/services/profile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 export const AccountSetPage = () => {
@@ -60,7 +61,18 @@ export const AccountSetPage = () => {
         type: "manual",
         message: "两次密码输入不一致",
       });
-    updatePasswordFn({ currentPwd, newPwd });
+    updatePasswordFn(
+      { currentPwd, newPwd },
+      {
+        onSuccess: () => {
+          form.reset();
+          form.clearErrors();
+          toast.success("密码更新成功~", {
+            duration: 1000,
+          });
+        },
+      }
+    );
   };
   return (
     <Card>
