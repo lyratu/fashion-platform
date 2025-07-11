@@ -39,7 +39,7 @@ export const RecentOrder: React.FC<order> = ({ setActiveTab }) => {
               <div key={order.id} className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
                   <div className="relative h-12 w-12 overflow-hidden rounded-md border">
-                    <img
+                    <img loading="lazy" 
                       src={order.orderItems[0].mainImage || "/placeholder.svg"}
                       alt={order.orderItems[0].title}
                       className="object-cover object-top"

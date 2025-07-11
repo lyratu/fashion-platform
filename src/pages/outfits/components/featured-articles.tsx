@@ -21,7 +21,7 @@ export default function FeaturedArticles() {
               {data?.map((article) => (
                 <Card key={article.id} className="overflow-hidden h-fit">
                   <div className="relative w-full z-0">
-                    <img
+                    <img loading="lazy" 
                       src={article.coverImage || "/placeholder.svg"}
                       alt={article.title}
                       className="object-cover object-top aspect-[4/3] w-full"

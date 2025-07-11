@@ -126,7 +126,7 @@ export default function CartPage() {
                       className="relative w-20 flex-shrink-0 cursor-pointer"
                       onClick={() => navigate(`/mall/product/${item.goodsId}`)}
                     >
-                      <img
+                      <img loading="lazy" 
                         src={item.mainImage || "/placeholder.svg"}
                         alt={item.title}
                         className="object-cover object-top rounded-md"

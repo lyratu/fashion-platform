@@ -197,7 +197,7 @@ export default function PostDetailPage() {
               <div className="relative rounded-md  grid md:grid-cols-2 gap-2 mt-2">
                 {post.images &&
                   post.images.map((url) => (
-                    <img
+                    <img loading="lazy" 
                       src={url || "/placeholder.svg"}
                       alt="Post image"
                       onClick={() => setCurrentImg(url)}
@@ -240,7 +240,7 @@ export default function PostDetailPage() {
       <Dialog open={!!currentImg} onOpenChange={() => setCurrentImg("")}>
         <DialogContent className="!max-w-3xl">
           <div className="p-4">
-            <img src={currentImg} className="h-full w-auto" />
+            <img loading="lazy"  src={currentImg} className="h-full w-auto" />
           </div>
         </DialogContent>
       </Dialog>

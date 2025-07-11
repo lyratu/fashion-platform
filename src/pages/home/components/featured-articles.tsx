@@ -22,7 +22,7 @@ export default function FeaturedArticles({ className }: props) {
           onClick={() => navigate(`/outfits/${article.id}`)}
         >
           <div className="relative z-0">
-            <img
+            <img loading="lazy" 
               src={article.coverImage || "/placeholder.svg"}
               alt={article.title}
               className="object-cover object-top aspect-[5/2] h-full"

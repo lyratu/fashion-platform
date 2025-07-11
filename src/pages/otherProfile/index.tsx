@@ -102,7 +102,7 @@ export default function OtherProfile() {
                     onClick={() => navigate(`/community/post/${item.id}`)}
                   >
                     {item.images.length > 0 ? (
-                      <img
+                      <img loading="lazy" 
                         src={item.images[0]}
                         className="border rounded w-full aspect-square object-cover"
                       />

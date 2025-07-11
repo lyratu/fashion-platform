@@ -58,7 +58,7 @@ export const CollectPage = () => {
                 pages.list.map((item) => (
                   <div key={item.id} className="relative group">
                     <div className="relative mx-auto h-32 aspect-[1/1] overflow-hidden rounded-md border">
-                      <img
+                      <img loading="lazy" 
                         src={item.goods.mainImage || "/placeholder.svg"}
                         alt={item.goods.title}
                         className="object-cover object-top"
@@ -125,7 +125,7 @@ export const CollectPage = () => {
                 pages.list.map((item) => (
                   <div key={item.id} className="relative group">
                     <div className="relative mx-auto h-32 aspect-[1/1] overflow-hidden rounded-md border">
-                      <img
+                      <img loading="lazy" 
                         src={item.coverImage || "/placeholder.svg"}
                         alt={item.title}
                         className="object-contain w-full object-top"

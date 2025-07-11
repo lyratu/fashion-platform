@@ -143,7 +143,7 @@ export const PostForm: React.FC<childProps> = ({ user, handleSubmit }) => {
                         <Trash2 className="text-white" />
                       </Button>
                     </div>
-                    <img
+                    <img loading="lazy" 
                       src={url}
                       className="rounded-md border h-64 aspect-[1/1] object-cover"
                     />

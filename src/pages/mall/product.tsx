@@ -117,7 +117,7 @@ export default function ProductDetailPage() {
           {/* Product Images */}
           <div className="space-y-4">
             <div className="relative aspect-[4/5] w-full overflow-hidden rounded-lg border">
-              <img
+              <img loading="lazy" 
                 src={
                   (data?.subPics && data?.subPics[selectedImage]) ||
                   "/placeholder.svg"
@@ -136,7 +136,7 @@ export default function ProductDetailPage() {
                     }`}
                     onClick={() => setSelectedImage(index)}
                   >
-                    <img
+                    <img loading="lazy" 
                       src={image || "/placeholder.svg"}
                       className="object-cover object-top"
                     />

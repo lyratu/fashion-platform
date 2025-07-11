@@ -129,7 +129,7 @@ export const MyClothesPage = () => {
             {data?.pages.map((page) =>
               page.list.map((item) => (
                 <div className=" border rounded-sm ">
-                  <img
+                  <img loading="lazy" 
                     src={item.photo}
                     className=" object-contain h-64 w-full"
                   />

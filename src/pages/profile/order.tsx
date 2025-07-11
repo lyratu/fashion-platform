@@ -200,7 +200,7 @@ export const OrderPage = () => {
                       {order.orderItems.map((item) => (
                         <div key={item.id} className="flex gap-4">
                           <div className="relative h-20 w-16 flex-shrink-0">
-                            <img
+                            <img loading="lazy" 
                               src={item?.mainImage || "/placeholder.svg"}
                               alt={item?.title}
                               className="object-cover object-top rounded-md"

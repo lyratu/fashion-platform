@@ -3,7 +3,7 @@
  *
  * transform 示例："rotate(90deg) scale(0.5)"
  *
- * @param div 一个 HTMLDivElement，其中包含一个 <img> 元素，且 div 的内联 transform 同时设置了旋转和缩放信息
+ * @param div 一个 HTMLDivElement，其中包含一个 <img loading="lazy" > 元素，且 div 的内联 transform 同时设置了旋转和缩放信息
  * @returns 返回一个 Promise，成功后 resolve 经过旋转和缩放处理的图片 File 对象
  */
 export function getFileFromDiv(div: HTMLDivElement): Promise<File> {
@@ -33,7 +33,7 @@ export function getFileFromDiv(div: HTMLDivElement): Promise<File> {
       }
     }
 
-    // 从 div 内部查找 <img> 元素
+    // 从 div 内部查找 <img loading="lazy" > 元素
     const imgEl = div.querySelector("img") as HTMLImageElement | null;
     if (!imgEl) {
       reject(new Error("div 内未找到 img 元素"));

@@ -29,7 +29,7 @@ export default function ArticlePage() {
             <div>
               {/* Featured Image */}
               <div className="relative overflow-hidden rounded-lg h-full bg-[#f7f7f7] flex items-center">
-                <img
+                <img loading="lazy" 
                   src={info.coverImage || "/placeholder.svg"}
                   alt={info.title}
                   className="w-full object-cover max-h-[calc(100vh-12.5rem)]"

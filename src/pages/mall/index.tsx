@@ -143,7 +143,7 @@ export default function MallPage() {
                 <Card key={product.id} className="overflow-hidden">
                   <div className="relative">
                     <div className="relative h-64 w-full">
-                      <img
+                      <img loading="lazy" 
                         src={product.mainImage || "/placeholder.svg"}
                         alt={product.title}
                         className="h-full  object-cover object-top w-full"
@@ -209,7 +209,7 @@ export default function MallPage() {
                   <Card key={product.id} className="overflow-hidden">
                     <div className="relative">
                       <div className="relative h-64 w-full">
-                        <img
+                        <img loading="lazy" 
                           src={product.image || "/placeholder.svg"}
                           alt={product.name}
                           className="object-cover object-top"

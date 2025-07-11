@@ -218,7 +218,7 @@ export default function CheckoutPage() {
                         htmlFor={`payment-1`}
                         className="flex items-center gap-2 ml-4 cursor-pointer"
                       >
-                        <img src={zfb} alt="支付宝" className="w-8 h-auto" />
+                        <img loading="lazy"  src={zfb} alt="支付宝" className="w-8 h-auto" />
                         <span className="font-medium capitalize">支付宝</span>
                       </Label>
                     </div>
@@ -232,7 +232,7 @@ export default function CheckoutPage() {
                         htmlFor={`payment-2`}
                         className="flex items-center gap-2 ml-4 cursor-pointer"
                       >
-                        <img src={wx} alt="微信" className="w-8 h-auto" />
+                        <img loading="lazy"  src={wx} alt="微信" className="w-8 h-auto" />
                         <span className="font-medium capitalize">微信</span>
                       </Label>
                     </div>
@@ -275,7 +275,7 @@ export default function CheckoutPage() {
                         .map((item) => (
                           <div key={item.id} className="flex gap-3">
                             <div className="relative h-16 w-16 flex-shrink-0">
-                              <img
+                              <img loading="lazy" 
                                 src={item.mainImage || "/placeholder.svg"}
                                 alt={item.title}
                                 className="object-cover rounded-md"
@@ -323,12 +323,12 @@ export default function CheckoutPage() {
                     <div className="text-sm text-muted-foreground mt-1">
                       {selectedPaymentMethod == 1 ? (
                         <>
-                          <img src={zfb} className="w-8 h-auto" />
+                          <img loading="lazy"  src={zfb} className="w-8 h-auto" />
                           <span className="font-medium capitalize">支付宝</span>
                         </>
                       ) : (
                         <>
-                          <img src={wx} className="w-8 h-auto" />
+                          <img loading="lazy"  src={wx} className="w-8 h-auto" />
                           <span className="font-medium capitalize">微信</span>
                         </>
                       )}

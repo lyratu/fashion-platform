@@ -72,7 +72,7 @@ const Payment = () => {
                 {data?.orderItems.map((item) => (
                   <div key={item.id} className="flex gap-3">
                     <div className="relative h-16 w-16 flex-shrink-0">
-                      <img
+                      <img loading="lazy" 
                         src={item?.mainImage || "/placeholder.svg"}
                         alt={item?.title}
                         className="object-cover rounded-md"
@@ -121,12 +121,12 @@ const Payment = () => {
             <div className="flex h-full items-center container mx-auto">
               {type == 2 ? (
                 <>
-                  <img src={wxLogo} alt="" className="h-10 w-auto" />
+                  <img loading="lazy"  src={wxLogo} alt="" className="h-10 w-auto" />
                   <div className=" text-3xl font-bold ml-2">微信</div>
                 </>
               ) : (
                 <>
-                  <img src={zfbLogo} alt="" className="h-10 w-auto" />
+                  <img loading="lazy"  src={zfbLogo} alt="" className="h-10 w-auto" />
                   <div className=" text-3xl font-bold ml-2">支付宝</div>
                 </>
               )}
@@ -143,18 +143,18 @@ const Payment = () => {
               </div>
               <div className="mt-4 p-2 relative shadow shadow-[#ccc] border border-[#d3d3d3]">
                 {type == 2 ? (
-                  <img src={wx} alt="" className=" w-48 aspect-[1/1]" />
+                  <img loading="lazy"  src={wx} alt="" className=" w-48 aspect-[1/1]" />
                 ) : (
-                  <img src={zfb} alt="" className=" w-48 aspect-[1/1]" />
+                  <img loading="lazy"  src={zfb} alt="" className=" w-48 aspect-[1/1]" />
                 )}
 
-                <img
+                <img loading="lazy" 
                   src={codeTips}
                   alt=""
                   className=" absolute h-32 top-[40%] left-[100%] transform -translate-y-full"
                 />
                 <div className=" flex items-center justify-center my-1">
-                  <img src={scan} className="h-full" />
+                  <img loading="lazy"  src={scan} className="h-full" />
                   <div className=" text-sm ml-2">
                     <div>打开手机{type == 2 ? "微信" : "支付宝"}</div>
                     <div>扫一扫继续付款</div>

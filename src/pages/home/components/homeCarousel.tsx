@@ -38,7 +38,7 @@ export default function HomeCarousel({ className }: props) {
               <CarouselItem key={index} className="h-full">
                 <Card>
                   <CardContent className="p-3 relative text-white">
-                    <img
+                    <img loading="lazy" 
                       src={_.CarouselImg}
                       className="rounded-lg object-cover aspect-[4/3]"
                       alt="网络错误，未获取到图片"

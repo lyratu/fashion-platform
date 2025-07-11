@@ -15,7 +15,7 @@ export function RelatedArticles() {
             <Card key={article.id} className="overflow-hidden">
               <Link to={`/outfits/${article.id}`} className="block">
                 <div className="relative">
-                  <img
+                  <img loading="lazy" 
                     src={article.coverImage || "/placeholder.svg"}
                     alt={article.title}
                     className="object-cover object-top aspect-[4/3] w-full"

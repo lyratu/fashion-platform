@@ -18,7 +18,7 @@ export default function TrendingGoods() {
           }}
         >
           <div className="relative w-full">
-            <img
+            <img loading="lazy" 
               src={outfit.mainImage || "/placeholder.svg"}
               alt={outfit.title}
               className="object-cover object-top aspect-[1/1] w-full"

@@ -104,7 +104,7 @@ export const PostItem: React.FC<childProps> = ({
         </div>
         <div className=" grid md:grid-cols-2 gap-2 xl:grid-cols-3 mt-2">
           {item.images.map((url, index) => (
-            <img
+            <img loading="lazy" 
               src={url}
               key={index}
               alt="Post image"

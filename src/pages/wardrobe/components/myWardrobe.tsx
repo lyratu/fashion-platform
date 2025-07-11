@@ -210,7 +210,7 @@ export default function MyWardrobe({ className }: AssistantProps) {
                         <FormControl>
                           {uploadImg ? (
                             <div className="group relative">
-                              <img
+                              <img loading="lazy" 
                                 src={uploadImg}
                                 className=" h-128 object-cover rounded-md"
                               />
@@ -302,7 +302,7 @@ export default function MyWardrobe({ className }: AssistantProps) {
               <Tshirt className="h-4 w-4 " />
             </TabsTrigger>
             <TabsTrigger value="1" className="cursor-pointer">
-              <img src={skirt} className="h-4 w-4" />
+              <img loading="lazy"  src={skirt} className="h-4 w-4" />
             </TabsTrigger>
             <TabsTrigger value="2" className="cursor-pointer">
               <Shoe className="h-4 w-4" />
@@ -311,7 +311,7 @@ export default function MyWardrobe({ className }: AssistantProps) {
               <BriefcaseBusiness className="h-4 w-4" />
             </TabsTrigger>
             <TabsTrigger value="4" className="cursor-pointer">
-              <img src={cap} className="h-4 w-4" />
+              <img loading="lazy"  src={cap} className="h-4 w-4" />
             </TabsTrigger>
             <TabsTrigger value="5" className="cursor-pointer">
               <Luggage className="h-4 w-4" />
@@ -336,7 +336,7 @@ export default function MyWardrobe({ className }: AssistantProps) {
                       onDragEnd={handleDragEnd}
                       onDragStart={() => handleDragStart(item)}
                     >
-                      <img
+                      <img loading="lazy" 
                         src={item.picture || "/placeholder.svg"}
                         className="object-cover pointer-events-none block"
                       />
@@ -394,7 +394,7 @@ export default function MyWardrobe({ className }: AssistantProps) {
                       onDragEnd={handleDragEnd}
                       onDragStart={() => handleDragStart(item)}
                     >
-                      <img
+                      <img loading="lazy" 
                         src={item.photo || "/placeholder.svg"}
                         className="object-cover pointer-events-none block"
                       />

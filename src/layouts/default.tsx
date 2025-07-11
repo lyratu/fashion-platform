@@ -25,7 +25,7 @@ export default function NavBar() {
         <div className=" mx-auto container flex h-16 items-center justify-between">
           <div className="flex items-center gap-6">
             <Link to="/" className="font-bold text-xl flex items-center">
-              <img src={logo} className="w-8 h-8 mr-2" />
+              <img loading="lazy"  src={logo} className="w-8 h-8 mr-2" />
               <span>时尚穿搭交流平台</span>
             </Link>
             <MainNav />

@@ -210,7 +210,7 @@ export default function ProfilePage() {
                       {wishlist?.map((item) => (
                         <div key={item.id} className="relative group">
                           <div className="relative h-32 w-full overflow-hidden rounded-md border">
-                            <img
+                            <img loading="lazy" 
                               src={item.goods.mainImage || "/placeholder.svg"}
                               alt={item.goods.title}
                               className="object-cover object-top"
