@@ -18,20 +18,23 @@ export default defineConfig({
     react(),
     cdn({
       modules: [
-        "axios",
-        "lodash",
-        {
-          name: "fabric",
-          var: "fabric",
-          path: "https://cdn.jsdelivr.net/npm/fabric@latest/dist/index.min.js",
-        },
+        // "react",
+        // "react-dom",
+        // "react-router-dom",
+        // "axios",
+        // "lodash",
+        // {
+        //   name: "fabric",
+        //   var: "fabric",
+        //   path: "https://cdn.jsdelivr.net/npm/fabric@latest/dist/index.min.js",
+        // },
       ],
     }),
     tailwindcss(),
     visualizer({ open: true }),
     removeConsole(),
     viteCompression({
-      threshold: 1024 * 20,
+      threshold: 1024 * 5,
       algorithm: "gzip",
       ext: ".gz",
     }),
@@ -65,20 +68,26 @@ export default defineConfig({
             if (id.includes("tailwindcss")) {
               return "tailwindcss";
             }
-            if (id.includes("react")) {
-              return "react";
-            }
-            if (id.includes("react-dom")) {
-              return "react-dom";
-            }
-            if (id.includes("react-router-dom")) {
-              return "react-react-router-dom";
-            }
+            // if (id.includes("react")) {
+            //   return "react";
+            // }
+            // if (id.includes("react-dom")) {
+            //   return "react-dom";
+            // }
+            // if (id.includes("react-router-dom")) {
+            //   return "react-router-dom";
+            // }
+            // if (id.includes("react-router")) {
+            //   return "react-router";
+            // }
             if (id.includes("axios")) {
               return "axios";
             }
             if (id.includes("lodash")) {
               return "lodash";
+            }
+             if (id.includes("fabric")) {
+              return "fabric";
             }
           }
         },
